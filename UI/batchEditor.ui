@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>BatchEditor</class>
+ <widget class="QMainWindow" name="BatchEditor">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>500</width>
+    <height>500</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Batch Editor</string>
+  </property>
+  <property name="documentMode">
+   <bool>false</bool>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout" columnstretch="0">
+    <property name="sizeConstraint">
+     <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
+    </property>
+    <property name="horizontalSpacing">
+     <number>0</number>
+    </property>
+    <property name="verticalSpacing">
+     <number>5</number>
+    </property>
+    <item row="1" column="0">
+     <widget class="QLabel" name="optionsLabel">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Shape::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Plain</enum>
+      </property>
+      <property name="text">
+       <string>OPTIONS</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <layout class="QGridLayout" name="optionsGrid" columnstretch="0,0,0">
+      <property name="verticalSpacing">
+       <number>16</number>
+      </property>
+      <item row="1" column="0">
+       <widget class="QLabel" name="exportForLabel">
+        <property name="text">
+         <string>Export option:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QPushButton" name="multitrackTuning">
+        <property name="text">
+         <string>multitrack tuning</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" colspan="2">
+       <widget class="QComboBox" name="exportSelector">
+        <item>
+         <property name="text">
+          <string>Premiere Pro</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Da Vinci Resolve</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Final Cut Pro</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>ShotCut</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Kdenlive</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>clip seuqence</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="5" column="0" colspan="3">
+       <widget class="QCheckBox" name="preview">
+        <property name="text">
+         <string>preview before starting</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="3">
+       <widget class="QCheckBox" name="organizeIntoFolders">
+        <property name="text">
+         <string>Organize files into folders</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+        <property name="tristate">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="3">
+       <widget class="QCheckBox" name="splitOnly">
+        <property name="text">
+         <string>split clips only</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0" colspan="3">
+       <widget class="QCheckBox" name="separateTracks">
+        <property name="text">
+         <string>keep audio tracks separate</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="audioThresholdLabel">
+        <property name="text">
+         <string>Audio threshold:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QSlider" name="audiothresholdSlider">
+        <property name="mouseTracking">
+         <bool>false</bool>
+        </property>
+        <property name="tabletTracking">
+         <bool>false</bool>
+        </property>
+        <property name="contextMenuPolicy">
+         <enum>Qt::ContextMenuPolicy::DefaultContextMenu</enum>
+        </property>
+        <property name="acceptDrops">
+         <bool>false</bool>
+        </property>
+        <property name="autoFillBackground">
+         <bool>true</bool>
+        </property>
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="value">
+         <number>10</number>
+        </property>
+        <property name="sliderPosition">
+         <number>10</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="invertedAppearance">
+         <bool>false</bool>
+        </property>
+        <property name="invertedControls">
+         <bool>false</bool>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TickPosition::TicksBelow</enum>
+        </property>
+        <property name="tickInterval">
+         <number>10</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="4" column="0">
+     <layout class="QVBoxLayout" name="StartGrid">
+      <property name="spacing">
+       <number>12</number>
+      </property>
+      <item>
+       <widget class="QPushButton" name="startButton">
+        <property name="text">
+         <string>Start</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QProgressBar" name="progressBar">
+        <property name="acceptDrops">
+         <bool>false</bool>
+        </property>
+        <property name="value">
+         <number>0</number>
+        </property>
+        <property name="textVisible">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="3" column="0">
+     <layout class="QHBoxLayout" name="editConfigLayout">
+      <property name="sizeConstraint">
+       <enum>QLayout::SizeConstraint::SetFixedSize</enum>
+      </property>
+      <item>
+       <widget class="QPushButton" name="saveConfig">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Save config as default</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="resetConfig">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>reset config</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+    <item row="0" column="0">
+     <layout class="QGridLayout" name="SelectionGrid" columnstretch="2,0,0,0">
+      <property name="spacing">
+       <number>8</number>
+      </property>
+      <item row="5" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>video files to edit: </string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Policy::Fixed</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>110</width>
+          <height>16</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item row="0" column="0">
+       <widget class="QPushButton" name="selectRootDirectoryButton">
+        <property name="text">
+         <string>select root directory</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="3">
+       <widget class="QLineEdit" name="rootDirectoryLabel">
+        <property name="placeholderText">
+         <string>no directory selected</string>
+        </property>
+        <property name="cursorMoveStyle">
+         <enum>Qt::CursorMoveStyle::LogicalMoveStyle</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_1">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Select files longer than (minutes:) </string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>video files found:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QSpinBox" name="minLengthSpinbox"/>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLineEdit" name="filesFoundLabel">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QLineEdit" name="filesToEditLabel">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QPushButton" name="editSelectedFilesButton">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>edit selection</string>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionasdasddas">
+   <property name="text">
+    <string>asdasddas</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
