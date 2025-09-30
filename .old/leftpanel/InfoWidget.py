@@ -37,8 +37,12 @@ class InfoWidget(tk.Frame):
     def resetInfo(self):
         self.toEditLengthMinutes.set(value="00:00 min")
         self.toEditLength = 0
-        self.videoFilesFoundAmount.set(0)
+
         self.videoFilesFound ={}
+        self.videoFilesFoundAmount.set(0)
+
+        self.videoFilesToEdit = {}
+        self.videoFilesToEditAmount.set(0)
 
 
     def updateInfo(self, dir):
