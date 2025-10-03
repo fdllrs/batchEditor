@@ -98,3 +98,7 @@ def createFolderFor(path, elements, folderName):
     if elements > 0:
         os.makedirs(os.path.join(path, folderName))
         print(f"- hay {elements} {folderName}")
+
+
+
+
