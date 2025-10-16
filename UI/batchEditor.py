@@ -1,7 +1,6 @@
 import sys
 from PySide6 import QtCore
 from PySide6 import QtWidgets
-from PySide6 import QtGui
 from batchEditor_ui import Ui_BatchEditor
 from pathlib import Path
 from utils import * 
@@ -27,10 +26,19 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
         self.minLengthSpinbox.valueChanged.connect(self.updateToEditFiles)
 
 
+        self.audiothresholdSlider.valueChanged.connect(self.__updateSpinboxFromSlider)
+        self.audioThresholdSpinbox.valueChanged.connect(self.__updateSliderFromSpinbox)
+
+
     def start(self):
         self.options['exportOption'] = self.exportSelector.currentText()
         self.options['directory'] = self.rootDirectoryLabel.text() 
         self.options['threshold'] = self.audioThresholdSpinbox.value()
+        self.options['filesIntoFolders'] = self.organizeIntoFolders.isChecked()
+        self.options['splitOnly'] = self.splitOnly.isChecked()
+        self.options['preview'] = self.preview.isChecked()
+        self.options['separateTracks'] = self.separateTracks.isChecked()
+
 
 
         print(self.options)
@@ -40,18 +48,26 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
 
 
 
+    def __updateSpinboxFromSlider(self, value):
+        self.audioThresholdSpinbox.blockSignals(True)
+        self.audioThresholdSpinbox.setValue(value / 100)
+        self.audioThresholdSpinbox.blockSignals(False)
+
+    def __updateSliderFromSpinbox(self, value):
+        self.audiothresholdSlider.blockSignals(True)
+        self.audiothresholdSlider.setValue(value * 100)
+        self.audiothresholdSlider.blockSignals(False)
+
+
 
     def setRootDirectory(self):
         folder_path = QtWidgets.QFileDialog.getExistingDirectory(self, "Select Root Directory")
-
 
         if folder_path:
             self.rootDirectoryLabel.setText(folder_path)
             self.startButton.setEnabled(True)
 
             self.searchVideoFiles(folder_path)
-
-
 
         else:
             self.rootDirectoryLabel.setText(self.rootDirectoryLabel.placeholderText())
@@ -61,11 +77,11 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
 
 
     def searchVideoFiles(self, folder_path):
+        self.foundFilesProgressBar.reset()
+
         self.progressBarLabel.setVisible(True)
         self.progressBarLabel.setText('Working...')
-
         self.foundFilesProgressBar.setVisible(True)
-        self.foundFilesProgressBar.reset()
 
         self.foundFilesProgressBar.setRange(0,0)
 
@@ -77,7 +93,7 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
 
 
 
-    def updateFoundFiles(self, filesFound):
+    def onPartiallyFinished(self, filesFound):
         
         self.videoFilesFound = filesFound
         self.filesFoundSpinbox.setText(str(len(self.videoFilesFound)))
@@ -86,12 +102,17 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
     def onSearchFinished(self):
 
         self.progressBar.reset()
+        self.progressBarDone()
+
+        self.updateToEditFiles(self.minLengthSpinbox.value())
+        self.totalLengthFoundSpinbox.setText(str(self.totalLengthOf(self.videoFilesFound)))
+
+    def progressBarDone(self):
         self.progressBarLabel.setText('Done!')
         self.foundFilesProgressBar.setRange(0, 100)
         self.foundFilesProgressBar.setValue(100)
-        self.updateToEditFiles(self.minLengthSpinbox.value())
 
-        self.totalLengthFoundSpinbox.setText(str(round(sum(self.videoFilesFound.values()) / 60, 2 )))
+
 
 
     def updateToEditFiles(self, minLengthMinutes):
@@ -109,7 +130,11 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
                 self.toEditLength += duration
 
         self.filesToEditSpinbox.setText(str(len(self.videoFilesToEdit)))
-        self.totalLengthToEditSpinbox.setText(str(round(sum(self.videoFilesToEdit.values()) / 60, 2 )))
+        self.totalLengthToEditSpinbox.setText(str(self.totalLengthOf(self.videoFilesToEdit)))
+
+
+    def totalLengthOf(self, dict):
+        return round(sum(dict.values()) / 60, 2 )
 
    
 
@@ -123,7 +148,7 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
         self.send_to_worker.connect(self.worker.startSearch)
         
         
-        self.worker.partiallyFinished.connect(self.updateFoundFiles)
+        self.worker.partiallyFinished.connect(self.onPartiallyFinished)
 
         self.worker.finished.connect(self.mythread.quit)
         self.worker.finished.connect(self.worker.deleteLater)
@@ -136,10 +161,3 @@ if __name__ == "__main__":
     window = batchEditorWindow()
     window.show()
     sys.exit(app.exec())
-
-
-
-
-
-
-
