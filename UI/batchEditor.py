@@ -48,7 +48,7 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
             self.startButton.setEnabled(True)
 
             self.searchVideoFiles(folder_path)
-
+            self.videoFilesFoundHelpText.setText('working...')
 
 
 
@@ -60,35 +60,38 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
 
 
     def searchVideoFiles(self, folder_path):
+        self.__prepareThread()
+
+        self.send_to_worker.emit(Path(folder_path))
+        self.mythread.start()
+
+
+    def __prepareThread(self):
         self.mythread = QtCore.QThread()
         self.worker = Worker()
         self.worker.moveToThread(self.mythread)
+        self.send_to_worker.connect(self.worker.startSearch)
+        self.mythread.started.connect(self.worker.startSearch)
+        
+        self.mythread.finished.connect(lambda: self.__updateLabel('working...'))
+        
+        self.worker.partiallyFinished.connect(self.__updateFoundFiles)
 
-        self.send_to_worker.connect(self.worker.searchDirectory)
-
-
-        self.mythread.started.connect(self.worker.searchDirectory)
-        self.worker.finished.connect(self.onSearchFinished)
         self.worker.finished.connect(self.mythread.quit)
         self.worker.finished.connect(self.worker.deleteLater)
         self.mythread.finished.connect(self.mythread.deleteLater)
-
-        # start
-        self.mythread.start()
-        self.send_to_worker.emit(Path(folder_path))
-
-
-
-    def onSearchFinished(self, result):
+        self.mythread.finished.connect(lambda: self.__updateLabel('done!'))
         
+
+
+    def __updateLabel(self, text):
+        self.videoFilesFoundHelpText.setText(text)
+
+    def __updateFoundFiles(self, result):
         self.videoFilesFound = result
         self.filesFoundLabel.setText(str(len(self.videoFilesFound)))
-
-    
-
-
-
-    def updateToEditVideoFiles(self, newThreshholdMinutes):
+        
+    def __updateToEditFiles(self, newThreshholdMinutes):
 
         self.toEditLength = 0
 
