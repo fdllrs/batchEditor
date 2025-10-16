@@ -9,7 +9,6 @@ from worker import Worker
 
 
 
-
 class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
 
     options = {}
@@ -19,8 +18,13 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
         super().__init__()
         self.setupUi(self)
         self.videoFilesFound = {}
+        self.videoFilesToEdit = {}
+        self.foundFilesProgressBar.setVisible(False)
+        self.progressBarLabel.setVisible(False)
+
         self.startButton.clicked.connect(self.start)
         self.selectRootDirectoryButton.clicked.connect(self.setRootDirectory)
+        self.minLengthSpinbox.valueChanged.connect(self.updateToEditFiles)
 
 
     def start(self):
@@ -29,11 +33,9 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
         self.options['threshold'] = self.audioThresholdSpinbox.value()
 
 
-        print(self.audiothresholdSlider.value())
         print(self.options)
 
 
-        # self.startButton.setText('working...')
         # self.startButton.setEnabled(False)
 
 
@@ -48,7 +50,6 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
             self.startButton.setEnabled(True)
 
             self.searchVideoFiles(folder_path)
-            self.videoFilesFoundHelpText.setText('working...')
 
 
 
@@ -60,10 +61,59 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
 
 
     def searchVideoFiles(self, folder_path):
+        self.progressBarLabel.setVisible(True)
+        self.progressBarLabel.setText('Working...')
+
+        self.foundFilesProgressBar.setVisible(True)
+        self.foundFilesProgressBar.reset()
+
+        self.foundFilesProgressBar.setRange(0,0)
+
+
         self.__prepareThread()
 
         self.send_to_worker.emit(Path(folder_path))
         self.mythread.start()
+
+
+
+    def updateFoundFiles(self, filesFound):
+        
+        self.videoFilesFound = filesFound
+        self.filesFoundSpinbox.setText(str(len(self.videoFilesFound)))
+
+        
+    def onSearchFinished(self):
+
+        self.progressBar.reset()
+        self.progressBarLabel.setText('Done!')
+        self.foundFilesProgressBar.setRange(0, 100)
+        self.foundFilesProgressBar.setValue(100)
+        self.updateToEditFiles(self.minLengthSpinbox.value())
+
+        self.totalLengthFoundSpinbox.setText(str(round(sum(self.videoFilesFound.values()) / 60, 2 )))
+
+
+    def updateToEditFiles(self, minLengthMinutes):
+
+        self.toEditLength = 0
+        self.videoFilesToEdit = {}
+        minLengthSeconds = minLengthMinutes * 60
+
+
+        for file_path, duration in self.videoFilesFound.items():
+            
+
+            if duration > minLengthSeconds:
+                self.videoFilesToEdit[file_path] = duration
+                self.toEditLength += duration
+
+        self.filesToEditSpinbox.setText(str(len(self.videoFilesToEdit)))
+        self.totalLengthToEditSpinbox.setText(str(round(sum(self.videoFilesToEdit.values()) / 60, 2 )))
+
+   
+
+
 
 
     def __prepareThread(self):
@@ -71,45 +121,15 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
         self.worker = Worker()
         self.worker.moveToThread(self.mythread)
         self.send_to_worker.connect(self.worker.startSearch)
-        self.mythread.started.connect(self.worker.startSearch)
         
-        self.mythread.finished.connect(lambda: self.__updateLabel('working...'))
         
-        self.worker.partiallyFinished.connect(self.__updateFoundFiles)
+        self.worker.partiallyFinished.connect(self.updateFoundFiles)
 
         self.worker.finished.connect(self.mythread.quit)
         self.worker.finished.connect(self.worker.deleteLater)
         self.mythread.finished.connect(self.mythread.deleteLater)
-        self.mythread.finished.connect(lambda: self.__updateLabel('done!'))
+        self.mythread.finished.connect(self.onSearchFinished)
         
-
-
-    def __updateLabel(self, text):
-        self.videoFilesFoundHelpText.setText(text)
-
-    def __updateFoundFiles(self, result):
-        self.videoFilesFound = result
-        self.filesFoundLabel.setText(str(len(self.videoFilesFound)))
-        
-    def __updateToEditFiles(self, newThreshholdMinutes):
-
-        self.toEditLength = 0
-
-        filtered_dict = {}
-
-        newThreshholdSeconds = newThreshholdMinutes *60
-        for file_path, duration in self.videoFilesFound.items():
-            if duration > newThreshholdSeconds:
-                filtered_dict[file_path] = duration
-                self.toEditLength += duration
-
-        
-        self.videoFilesToEdit = filtered_dict
-        
-
-
-
-
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
 
