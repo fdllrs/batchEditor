@@ -6,77 +6,60 @@ import subprocess
 
 
 
-class videoProcessor(QtCore.QObject):
+class videoProcessor(QtCore.QRunnable):
 
-
-    send_to_worker = QtCore.Signal(Path)  
-
-
-    def __init__(self, options):
+    def __init__(self, options, toEdit):
         super().__init__()
-        
+        self.signals = videoProcessorSignals()
         self.options = options
+        self.videoFilesToEdit = toEdit
+        self.threadpool = QtCore.QThreadPool()
 
 
-    def process(self, path):
-
-        self.__prepareThread()
-
-        self.send_to_worker.emit(path)
-        self.mythread.start()
-
+    def run(self):
+        for filePath in self.videoFilesToEdit.keys():
+            
+            self.worker = videoProcessorWorker(options=self.options, path=filePath, signal=self.signals.partiallyFinished)
+            self.threadpool.start(self.worker)
 
 
-
-    def __prepareThread(self):
-        self.mythread = QtCore.QThread()
-        self.worker = processorWorker()
-        self.worker.moveToThread(self.mythread)
-        self.send_to_worker.connect(self.worker.runcommand)
-        
-        
-        self.worker.partiallyFinished.connect(self.onPartiallyFinished)
-
-        self.worker.finished.connect(self.mythread.quit)
-        self.worker.finished.connect(self.worker.deleteLater)
-        self.mythread.finished.connect(self.mythread.deleteLater)
-        self.mythread.finished.connect(self.onSearchFinished)
-
-
-
-    def onPartiallyFinished(self):
-        print("partially done")
-
-
-
-    def onSearchFinished(self):
-        print("done")
+        self.signals.finished.emit()
 
 
 
 
-class processorWorker(QtCore.QObject):
 
-    partiallyFinished = QtCore.Signal(object) 
-    finished = QtCore.Signal()         # emits result
-
-
+class videoProcessorSignals(QtCore.QObject):
+    partiallyFinished = QtCore.Signal() 
+    finished = QtCore.Signal()
 
 
-    def runcommand(self, videoPath: Path):
-        autoEditorCommand = f'py -m auto_editor {videoPath} --margin 0.03sec --edit  "(or audio:stream=0 audio:threshold=0.7%, audio:stream=1 audio:threshold=2%, audio:stream=2 audio:threshold=1%)" --export premiere'
+
+class videoProcessorWorker(QtCore.QRunnable):
+
+
+    def __init__(self, options, path, signal):
+        super().__init__()
+        self.options = options
+        self.path = path
+        self.signal = signal
+
+
+    def run(self):
+        self.runcommand()
+        self.signal.emit()
+
+
+    def runcommand(self):
+        autoEditorCommand = f'py -m auto_editor {self.path} --margin 0.03sec --edit  "(or audio:stream=0 audio:threshold=0.7%, audio:stream=1 audio:threshold=2%, audio:stream=2 audio:threshold=1%)" --export premiere'
         try:
             subprocess.run(
                 autoEditorCommand,
-                cwd=videoPath.cwd(),
+                cwd=self.path.cwd(),
                 check=True,
                 text=True,
                 encoding="utf-8",
             )
 
         except subprocess.CalledProcessError as e:
-            print(f"Error in {videoPath}: {e.stderr}")
-
-
-        self.finished.emit()
-    
+            print(f"Error in {self.path}: {e}")
