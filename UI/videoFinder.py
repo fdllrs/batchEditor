@@ -6,23 +6,23 @@ from utils import videoLength
 VIDEOFORMATS= ("mp4", "mkv")
 
 
-class Worker(QtCore.QObject):
+class videoFinder(QtCore.QRunnable):
 
-    partiallyFinished = QtCore.Signal(object) 
-    finished = QtCore.Signal()         # emits result
-
-    def __init__(self, *args):
+    def __init__(self, path):
         super().__init__()
 
+        self.directoryPath = path
         self.videoFilesFound = {}
         self._running = True
+        self.signals = videoFinderSignals()
+        
 
 
-    def startSearch(self, directoryPath: Path):
 
-        self.searchDirectory(directoryPath)
-        self.finished.emit()
+    def run(self):
 
+        self.searchDirectory(self.directoryPath)
+        self.signals.finished.emit()
 
 
     def searchDirectory(self, directoryPath: Path):
@@ -34,7 +34,7 @@ class Worker(QtCore.QObject):
 
             elif item.is_dir():
                 self.searchDirectory(item)
-        self.partiallyFinished.emit(self.videoFilesFound)
+        self.signals.partiallyFinished.emit(self.videoFilesFound)
 
 
     def addRecording(self, itemPath):
@@ -42,5 +42,11 @@ class Worker(QtCore.QObject):
         duration = videoLength(itemPath)
         self.videoFilesFound[itemPath] = duration
 
-    def stop(self):
-        self._running = False
+
+
+
+
+class videoFinderSignals(QtCore.QObject):
+
+    partiallyFinished = QtCore.Signal(object)
+    finished = QtCore.Signal()

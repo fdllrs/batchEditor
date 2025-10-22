@@ -87,6 +87,7 @@ class Ui_BatchEditor(object):
         self.minLengthSpinbox.setMaximumSize(QSize(60, 16777215))
         self.minLengthSpinbox.setMinimum(0)
         self.minLengthSpinbox.setMaximum(9999)
+        self.minLengthSpinbox.setValue(3)
 
         self.SelectionGrid.addWidget(self.minLengthSpinbox, 6, 1, 1, 1)
 
@@ -375,16 +376,22 @@ class Ui_BatchEditor(object):
         self.statusbar.setObjectName(u"statusbar")
         BatchEditor.setStatusBar(self.statusbar)
         QWidget.setTabOrder(self.selectRootDirectoryButton, self.rootDirectoryLabel)
-        QWidget.setTabOrder(self.rootDirectoryLabel, self.totalLengthToEditSpinbox)
+        QWidget.setTabOrder(self.rootDirectoryLabel, self.minLengthSpinbox)
+        QWidget.setTabOrder(self.minLengthSpinbox, self.editSelectedFilesButton)
+        QWidget.setTabOrder(self.editSelectedFilesButton, self.filesToEditSpinbox)
+        QWidget.setTabOrder(self.filesToEditSpinbox, self.totalLengthToEditSpinbox)
         QWidget.setTabOrder(self.totalLengthToEditSpinbox, self.exportSelector)
         QWidget.setTabOrder(self.exportSelector, self.audiothresholdSlider)
         QWidget.setTabOrder(self.audiothresholdSlider, self.audioThresholdSpinbox)
         QWidget.setTabOrder(self.audioThresholdSpinbox, self.multitrackTuningButton)
         QWidget.setTabOrder(self.multitrackTuningButton, self.organizeIntoFolders)
         QWidget.setTabOrder(self.organizeIntoFolders, self.separateTracks)
-        QWidget.setTabOrder(self.separateTracks, self.saveConfig)
+        QWidget.setTabOrder(self.separateTracks, self.preview)
+        QWidget.setTabOrder(self.preview, self.splitOnly)
+        QWidget.setTabOrder(self.splitOnly, self.saveConfig)
         QWidget.setTabOrder(self.saveConfig, self.resetConfig)
-        QWidget.setTabOrder(self.resetConfig, self.startButton)
+        QWidget.setTabOrder(self.resetConfig, self.resetConfig_2)
+        QWidget.setTabOrder(self.resetConfig_2, self.startButton)
 
         self.retranslateUi(BatchEditor)
 

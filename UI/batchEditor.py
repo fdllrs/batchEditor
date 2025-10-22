@@ -4,20 +4,25 @@ from PySide6 import QtWidgets
 from batchEditor_ui import Ui_BatchEditor
 from pathlib import Path
 from utils import * 
-from worker import Worker
+from videoFinder import videoFinder
 from videoProcessor import videoProcessor
 
 
 class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
 
     options = {}
-    send_to_worker = QtCore.Signal(Path)  
+    
 
     def __init__(self):
         super().__init__()
         self.setupUi(self)
         self.videoFilesFound = {}
         self.videoFilesToEdit = {}
+        self.threadpool = QtCore.QThreadPool()
+        print(f'multithreading with maximum {self.threadpool.maxThreadCount()} threads')
+    
+    
+    
         self.foundFilesProgressBar.setVisible(False)
         self.progressBarLabel.setVisible(False)
 
@@ -38,18 +43,25 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
         self.options['splitOnly'] = self.splitOnly.isChecked()
         self.options['preview'] = self.preview.isChecked()
         self.options['separateTracks'] = self.separateTracks.isChecked()
+        self.progressBar.reset()
+        self.progressBar.setRange(0, len(self.videoFilesToEdit))
 
 
-
-        print(self.options)
+        # print(self.options)
         self.startButton.setEnabled(False)
-        self.processor = videoProcessor(self.options)
+        self.processor = videoProcessor(options=self.options, toEdit=self.videoFilesToEdit)
+        self.processor.signals.finished.connect(self.onProcessingFinished)
+        self.processor.signals.partiallyFinished.connect(self.onProcessingPartiallyFinished)
+        self.threadpool.start(self.processor)
+
+    def onProcessingPartiallyFinished(self):
+        self.progressBar.setValue(self.progressBar.value() + 1)
 
 
-        self.processor.process(self.videoFilesToEdit.popitem()[0])
 
 
-
+    def onProcessingFinished(self):
+        print('done')
 
 
     def __updateSpinboxFromSlider(self, value):
@@ -90,22 +102,21 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
         self.foundFilesProgressBar.setRange(0,0)
 
 
-        self.__prepareThread()
-
-        self.send_to_worker.emit(Path(folder_path))
-        self.mythread.start()
+        self.videoFinder = videoFinder(path=Path(folder_path))
+        self.videoFinder.signals.partiallyFinished.connect(self.onPartiallyFinished)
+        self.videoFinder.signals.finished.connect(self.onSearchFinished)
+        self.threadpool.start(self.videoFinder)
 
 
 
     def onPartiallyFinished(self, filesFound):
-        
         self.videoFilesFound = filesFound
         self.filesFound.setText(str(len(self.videoFilesFound)))
 
         
     def onSearchFinished(self):
 
-        self.progressBar.reset()
+        self.foundFilesProgressBar.reset()
         self.progressBarDone()
 
         self.updateToEditFiles(self.minLengthSpinbox.value())
@@ -142,20 +153,6 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
 
 
 
-    def __prepareThread(self):
-        self.mythread = QtCore.QThread()
-        self.worker = Worker()
-        self.worker.moveToThread(self.mythread)
-        self.send_to_worker.connect(self.worker.startSearch)
-        
-        
-        self.worker.partiallyFinished.connect(self.onPartiallyFinished)
-
-        self.worker.finished.connect(self.mythread.quit)
-        self.worker.finished.connect(self.worker.deleteLater)
-        self.mythread.finished.connect(self.mythread.deleteLater)
-        self.mythread.finished.connect(self.onSearchFinished)
-        
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
 
