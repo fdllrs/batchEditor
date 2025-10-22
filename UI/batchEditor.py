@@ -5,7 +5,7 @@ from batchEditor_ui import Ui_BatchEditor
 from pathlib import Path
 from utils import * 
 from worker import Worker
-
+from videoProcessor import videoProcessor
 
 
 class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
@@ -42,9 +42,13 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
 
 
         print(self.options)
+        self.startButton.setEnabled(False)
+        self.processor = videoProcessor(self.options)
 
 
-        # self.startButton.setEnabled(False)
+        self.processor.process(self.videoFilesToEdit.popitem()[0])
+
+
 
 
 
@@ -96,7 +100,7 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
     def onPartiallyFinished(self, filesFound):
         
         self.videoFilesFound = filesFound
-        self.filesFoundSpinbox.setText(str(len(self.videoFilesFound)))
+        self.filesFound.setText(str(len(self.videoFilesFound)))
 
         
     def onSearchFinished(self):
@@ -105,7 +109,7 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
         self.progressBarDone()
 
         self.updateToEditFiles(self.minLengthSpinbox.value())
-        self.totalLengthFoundSpinbox.setText(str(self.totalLengthOf(self.videoFilesFound)))
+        self.totalLength.setText(str(self.__totalLengthOf(self.videoFilesFound)) + ' min')
 
     def progressBarDone(self):
         self.progressBarLabel.setText('Done!')
@@ -130,14 +134,11 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
                 self.toEditLength += duration
 
         self.filesToEditSpinbox.setText(str(len(self.videoFilesToEdit)))
-        self.totalLengthToEditSpinbox.setText(str(self.totalLengthOf(self.videoFilesToEdit)))
+        self.totalLengthToEditSpinbox.setText(str(self.__totalLengthOf(self.videoFilesToEdit)))
 
 
-    def totalLengthOf(self, dict):
+    def __totalLengthOf(self, dict):
         return round(sum(dict.values()) / 60, 2 )
-
-   
-
 
 
 

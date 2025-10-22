@@ -40,33 +40,26 @@ class Ui_BatchEditor(object):
         self.SelectionGrid = QGridLayout()
         self.SelectionGrid.setSpacing(8)
         self.SelectionGrid.setObjectName(u"SelectionGrid")
-        self.progressBarLabel = QLabel(self.centralwidget)
-        self.progressBarLabel.setObjectName(u"progressBarLabel")
-        self.progressBarLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.filesToEditSpinbox = QLineEdit(self.centralwidget)
+        self.filesToEditSpinbox.setObjectName(u"filesToEditSpinbox")
+        self.filesToEditSpinbox.setMaximumSize(QSize(60, 16777215))
+        self.filesToEditSpinbox.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.filesToEditSpinbox.setReadOnly(True)
 
-        self.SelectionGrid.addWidget(self.progressBarLabel, 1, 4, 1, 1)
+        self.SelectionGrid.addWidget(self.filesToEditSpinbox, 7, 1, 1, 1)
 
-        self.totalLengthFoundSpinbox = QLineEdit(self.centralwidget)
-        self.totalLengthFoundSpinbox.setObjectName(u"totalLengthFoundSpinbox")
-        self.totalLengthFoundSpinbox.setMaximumSize(QSize(60, 16777215))
-        self.totalLengthFoundSpinbox.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.totalLengthFoundSpinbox.setReadOnly(True)
+        self.line_3 = QFrame(self.centralwidget)
+        self.line_3.setObjectName(u"line_3")
+        self.line_3.setFrameShape(QFrame.Shape.HLine)
+        self.line_3.setFrameShadow(QFrame.Shadow.Sunken)
 
-        self.SelectionGrid.addWidget(self.totalLengthFoundSpinbox, 5, 1, 1, 1)
+        self.SelectionGrid.addWidget(self.line_3, 9, 0, 1, 7)
 
-        self.filesFoundSpinbox = QLineEdit(self.centralwidget)
-        self.filesFoundSpinbox.setObjectName(u"filesFoundSpinbox")
-        self.filesFoundSpinbox.setMaximumSize(QSize(60, 16777215))
-        self.filesFoundSpinbox.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.filesFoundSpinbox.setReadOnly(True)
+        self.totalLengthToEditLabel = QLabel(self.centralwidget)
+        self.totalLengthToEditLabel.setObjectName(u"totalLengthToEditLabel")
+        self.totalLengthToEditLabel.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
 
-        self.SelectionGrid.addWidget(self.filesFoundSpinbox, 3, 1, 1, 1)
-
-        self.videoFilesFoundLabel = QLabel(self.centralwidget)
-        self.videoFilesFoundLabel.setObjectName(u"videoFilesFoundLabel")
-        self.videoFilesFoundLabel.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-
-        self.SelectionGrid.addWidget(self.videoFilesFoundLabel, 3, 0, 1, 1)
+        self.SelectionGrid.addWidget(self.totalLengthToEditLabel, 8, 0, 1, 1)
 
         self.minLabel_2 = QLabel(self.centralwidget)
         self.minLabel_2.setObjectName(u"minLabel_2")
@@ -77,15 +70,66 @@ class Ui_BatchEditor(object):
         self.minLabel_2.setSizePolicy(sizePolicy)
         self.minLabel_2.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
 
-        self.SelectionGrid.addWidget(self.minLabel_2, 6, 2, 1, 1)
+        self.SelectionGrid.addWidget(self.minLabel_2, 8, 2, 1, 1)
 
-        self.filesToEditSpinbox = QLineEdit(self.centralwidget)
-        self.filesToEditSpinbox.setObjectName(u"filesToEditSpinbox")
-        self.filesToEditSpinbox.setMaximumSize(QSize(60, 16777215))
-        self.filesToEditSpinbox.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.filesToEditSpinbox.setReadOnly(True)
+        self.selectRootDirectoryButton = QPushButton(self.centralwidget)
+        self.selectRootDirectoryButton.setObjectName(u"selectRootDirectoryButton")
 
-        self.SelectionGrid.addWidget(self.filesToEditSpinbox, 4, 1, 1, 1)
+        self.SelectionGrid.addWidget(self.selectRootDirectoryButton, 0, 0, 1, 1)
+
+        self.minLengthSpinbox = QSpinBox(self.centralwidget)
+        self.minLengthSpinbox.setObjectName(u"minLengthSpinbox")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.minLengthSpinbox.sizePolicy().hasHeightForWidth())
+        self.minLengthSpinbox.setSizePolicy(sizePolicy1)
+        self.minLengthSpinbox.setMaximumSize(QSize(60, 16777215))
+        self.minLengthSpinbox.setMinimum(0)
+        self.minLengthSpinbox.setMaximum(9999)
+
+        self.SelectionGrid.addWidget(self.minLengthSpinbox, 6, 1, 1, 1)
+
+        self.filesLongerThanLabel = QLabel(self.centralwidget)
+        self.filesLongerThanLabel.setObjectName(u"filesLongerThanLabel")
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.filesLongerThanLabel.sizePolicy().hasHeightForWidth())
+        self.filesLongerThanLabel.setSizePolicy(sizePolicy2)
+        self.filesLongerThanLabel.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+
+        self.SelectionGrid.addWidget(self.filesLongerThanLabel, 6, 0, 1, 1)
+
+        self.videoFilesToEditLabel = QLabel(self.centralwidget)
+        self.videoFilesToEditLabel.setObjectName(u"videoFilesToEditLabel")
+        self.videoFilesToEditLabel.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+
+        self.SelectionGrid.addWidget(self.videoFilesToEditLabel, 7, 0, 1, 1)
+
+        self.editSelectedFilesButton = QPushButton(self.centralwidget)
+        self.editSelectedFilesButton.setObjectName(u"editSelectedFilesButton")
+        self.editSelectedFilesButton.setEnabled(False)
+        sizePolicy1.setHeightForWidth(self.editSelectedFilesButton.sizePolicy().hasHeightForWidth())
+        self.editSelectedFilesButton.setSizePolicy(sizePolicy1)
+        self.editSelectedFilesButton.setCheckable(False)
+        self.editSelectedFilesButton.setChecked(False)
+        self.editSelectedFilesButton.setFlat(False)
+
+        self.SelectionGrid.addWidget(self.editSelectedFilesButton, 6, 3, 1, 4)
+
+        self.filesFoundLabel = QLabel(self.centralwidget)
+        self.filesFoundLabel.setObjectName(u"filesFoundLabel")
+        self.filesFoundLabel.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+
+        self.SelectionGrid.addWidget(self.filesFoundLabel, 1, 0, 1, 1)
+
+        self.rootDirectoryLabel = QLineEdit(self.centralwidget)
+        self.rootDirectoryLabel.setObjectName(u"rootDirectoryLabel")
+        self.rootDirectoryLabel.setReadOnly(True)
+        self.rootDirectoryLabel.setCursorMoveStyle(Qt.CursorMoveStyle.LogicalMoveStyle)
+
+        self.SelectionGrid.addWidget(self.rootDirectoryLabel, 0, 1, 1, 6)
 
         self.foundFilesProgressBar = QProgressBar(self.centralwidget)
         self.foundFilesProgressBar.setObjectName(u"foundFilesProgressBar")
@@ -93,88 +137,7 @@ class Ui_BatchEditor(object):
         self.foundFilesProgressBar.setValue(0)
         self.foundFilesProgressBar.setTextVisible(False)
 
-        self.SelectionGrid.addWidget(self.foundFilesProgressBar, 1, 0, 1, 4)
-
-        self.filesLongerThanLabel = QLabel(self.centralwidget)
-        self.filesLongerThanLabel.setObjectName(u"filesLongerThanLabel")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.filesLongerThanLabel.sizePolicy().hasHeightForWidth())
-        self.filesLongerThanLabel.setSizePolicy(sizePolicy1)
-        self.filesLongerThanLabel.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-
-        self.SelectionGrid.addWidget(self.filesLongerThanLabel, 2, 0, 1, 1)
-
-        self.editSelectedFilesButton = QPushButton(self.centralwidget)
-        self.editSelectedFilesButton.setObjectName(u"editSelectedFilesButton")
-        self.editSelectedFilesButton.setEnabled(False)
-        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.editSelectedFilesButton.sizePolicy().hasHeightForWidth())
-        self.editSelectedFilesButton.setSizePolicy(sizePolicy2)
-        self.editSelectedFilesButton.setCheckable(False)
-        self.editSelectedFilesButton.setChecked(False)
-        self.editSelectedFilesButton.setFlat(False)
-
-        self.SelectionGrid.addWidget(self.editSelectedFilesButton, 2, 3, 1, 2)
-
-        self.totalLengthToEditLabel = QLabel(self.centralwidget)
-        self.totalLengthToEditLabel.setObjectName(u"totalLengthToEditLabel")
-        self.totalLengthToEditLabel.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-
-        self.SelectionGrid.addWidget(self.totalLengthToEditLabel, 6, 0, 1, 1)
-
-        self.totalLengthFoundLabel = QLabel(self.centralwidget)
-        self.totalLengthFoundLabel.setObjectName(u"totalLengthFoundLabel")
-        self.totalLengthFoundLabel.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-
-        self.SelectionGrid.addWidget(self.totalLengthFoundLabel, 5, 0, 1, 1)
-
-        self.selectRootDirectoryButton = QPushButton(self.centralwidget)
-        self.selectRootDirectoryButton.setObjectName(u"selectRootDirectoryButton")
-
-        self.SelectionGrid.addWidget(self.selectRootDirectoryButton, 0, 0, 1, 1)
-
-        self.minLabel_3 = QLabel(self.centralwidget)
-        self.minLabel_3.setObjectName(u"minLabel_3")
-        sizePolicy.setHeightForWidth(self.minLabel_3.sizePolicy().hasHeightForWidth())
-        self.minLabel_3.setSizePolicy(sizePolicy)
-        self.minLabel_3.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-
-        self.SelectionGrid.addWidget(self.minLabel_3, 2, 2, 1, 1)
-
-        self.videoFilesToEditLabel = QLabel(self.centralwidget)
-        self.videoFilesToEditLabel.setObjectName(u"videoFilesToEditLabel")
-        self.videoFilesToEditLabel.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-
-        self.SelectionGrid.addWidget(self.videoFilesToEditLabel, 4, 0, 1, 1)
-
-        self.minLengthSpinbox = QSpinBox(self.centralwidget)
-        self.minLengthSpinbox.setObjectName(u"minLengthSpinbox")
-        sizePolicy2.setHeightForWidth(self.minLengthSpinbox.sizePolicy().hasHeightForWidth())
-        self.minLengthSpinbox.setSizePolicy(sizePolicy2)
-        self.minLengthSpinbox.setMaximumSize(QSize(60, 16777215))
-        self.minLengthSpinbox.setMinimum(0)
-        self.minLengthSpinbox.setMaximum(9999)
-
-        self.SelectionGrid.addWidget(self.minLengthSpinbox, 2, 1, 1, 1)
-
-        self.rootDirectoryLabel = QLineEdit(self.centralwidget)
-        self.rootDirectoryLabel.setObjectName(u"rootDirectoryLabel")
-        self.rootDirectoryLabel.setReadOnly(True)
-        self.rootDirectoryLabel.setCursorMoveStyle(Qt.CursorMoveStyle.LogicalMoveStyle)
-
-        self.SelectionGrid.addWidget(self.rootDirectoryLabel, 0, 1, 1, 4)
-
-        self.minLabel = QLabel(self.centralwidget)
-        self.minLabel.setObjectName(u"minLabel")
-        sizePolicy.setHeightForWidth(self.minLabel.sizePolicy().hasHeightForWidth())
-        self.minLabel.setSizePolicy(sizePolicy)
-        self.minLabel.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
-
-        self.SelectionGrid.addWidget(self.minLabel, 5, 2, 1, 1)
+        self.SelectionGrid.addWidget(self.foundFilesProgressBar, 3, 0, 1, 4)
 
         self.totalLengthToEditSpinbox = QLineEdit(self.centralwidget)
         self.totalLengthToEditSpinbox.setObjectName(u"totalLengthToEditSpinbox")
@@ -183,7 +146,54 @@ class Ui_BatchEditor(object):
         self.totalLengthToEditSpinbox.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.totalLengthToEditSpinbox.setReadOnly(True)
 
-        self.SelectionGrid.addWidget(self.totalLengthToEditSpinbox, 6, 1, 1, 1)
+        self.SelectionGrid.addWidget(self.totalLengthToEditSpinbox, 8, 1, 1, 1)
+
+        self.progressBarLabel = QLabel(self.centralwidget)
+        self.progressBarLabel.setObjectName(u"progressBarLabel")
+        self.progressBarLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.SelectionGrid.addWidget(self.progressBarLabel, 3, 4, 1, 2)
+
+        self.minLabel_3 = QLabel(self.centralwidget)
+        self.minLabel_3.setObjectName(u"minLabel_3")
+        sizePolicy.setHeightForWidth(self.minLabel_3.sizePolicy().hasHeightForWidth())
+        self.minLabel_3.setSizePolicy(sizePolicy)
+        self.minLabel_3.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+
+        self.SelectionGrid.addWidget(self.minLabel_3, 6, 2, 1, 1)
+
+        self.line = QFrame(self.centralwidget)
+        self.line.setObjectName(u"line")
+        self.line.setFrameShape(QFrame.Shape.HLine)
+        self.line.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.SelectionGrid.addWidget(self.line, 5, 0, 1, 7)
+
+        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Maximum)
+
+        self.SelectionGrid.addItem(self.verticalSpacer_3, 3, 6, 1, 1)
+
+        self.filesFound = QLabel(self.centralwidget)
+        self.filesFound.setObjectName(u"filesFound")
+        sizePolicy.setHeightForWidth(self.filesFound.sizePolicy().hasHeightForWidth())
+        self.filesFound.setSizePolicy(sizePolicy)
+        self.filesFound.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.SelectionGrid.addWidget(self.filesFound, 1, 1, 1, 1)
+
+        self.totalLength = QLabel(self.centralwidget)
+        self.totalLength.setObjectName(u"totalLength")
+        sizePolicy.setHeightForWidth(self.totalLength.sizePolicy().hasHeightForWidth())
+        self.totalLength.setSizePolicy(sizePolicy)
+        self.totalLength.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.SelectionGrid.addWidget(self.totalLength, 1, 4, 1, 1)
+
+        self.totalLengthLabel = QLabel(self.centralwidget)
+        self.totalLengthLabel.setObjectName(u"totalLengthLabel")
+        self.totalLengthLabel.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+
+        self.SelectionGrid.addWidget(self.totalLengthLabel, 1, 2, 1, 2)
 
 
         self.gridLayout.addLayout(self.SelectionGrid, 0, 0, 1, 1)
@@ -205,7 +215,7 @@ class Ui_BatchEditor(object):
         self.optionsLabel.setFrameShadow(QFrame.Shadow.Plain)
         self.optionsLabel.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.gridLayout.addWidget(self.optionsLabel, 2, 0, 1, 1)
+        self.gridLayout.addWidget(self.optionsLabel, 1, 0, 1, 1)
 
         self.StartGrid = QVBoxLayout()
         self.StartGrid.setSpacing(12)
@@ -229,11 +239,42 @@ class Ui_BatchEditor(object):
         self.StartGrid.addItem(self.verticalSpacer_2)
 
 
-        self.gridLayout.addLayout(self.StartGrid, 7, 0, 1, 1)
+        self.gridLayout.addLayout(self.StartGrid, 6, 0, 1, 1)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Maximum)
+        self.editConfigLayout = QHBoxLayout()
+        self.editConfigLayout.setObjectName(u"editConfigLayout")
+        self.editConfigLayout.setSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
+        self.saveConfig = QPushButton(self.centralwidget)
+        self.saveConfig.setObjectName(u"saveConfig")
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.saveConfig.sizePolicy().hasHeightForWidth())
+        self.saveConfig.setSizePolicy(sizePolicy4)
 
-        self.gridLayout.addItem(self.verticalSpacer, 1, 0, 1, 1)
+        self.editConfigLayout.addWidget(self.saveConfig)
+
+        self.resetConfig = QPushButton(self.centralwidget)
+        self.resetConfig.setObjectName(u"resetConfig")
+        sizePolicy4.setHeightForWidth(self.resetConfig.sizePolicy().hasHeightForWidth())
+        self.resetConfig.setSizePolicy(sizePolicy4)
+
+        self.editConfigLayout.addWidget(self.resetConfig)
+
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.editConfigLayout.addItem(self.horizontalSpacer)
+
+        self.resetConfig_2 = QPushButton(self.centralwidget)
+        self.resetConfig_2.setObjectName(u"resetConfig_2")
+        self.resetConfig_2.setEnabled(False)
+        sizePolicy4.setHeightForWidth(self.resetConfig_2.sizePolicy().hasHeightForWidth())
+        self.resetConfig_2.setSizePolicy(sizePolicy4)
+
+        self.editConfigLayout.addWidget(self.resetConfig_2)
+
+
+        self.gridLayout.addLayout(self.editConfigLayout, 5, 0, 1, 1)
 
         self.optionsGrid = QGridLayout()
         self.optionsGrid.setObjectName(u"optionsGrid")
@@ -265,11 +306,11 @@ class Ui_BatchEditor(object):
         self.multitrackTuningButton = QPushButton(self.centralwidget)
         self.multitrackTuningButton.setObjectName(u"multitrackTuningButton")
         self.multitrackTuningButton.setEnabled(False)
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Maximum)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.multitrackTuningButton.sizePolicy().hasHeightForWidth())
-        self.multitrackTuningButton.setSizePolicy(sizePolicy4)
+        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Maximum)
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(0)
+        sizePolicy5.setHeightForWidth(self.multitrackTuningButton.sizePolicy().hasHeightForWidth())
+        self.multitrackTuningButton.setSizePolicy(sizePolicy5)
 
         self.optionsGrid.addWidget(self.multitrackTuningButton, 1, 4, 1, 1)
 
@@ -287,11 +328,11 @@ class Ui_BatchEditor(object):
 
         self.audiothresholdSlider = QSlider(self.centralwidget)
         self.audiothresholdSlider.setObjectName(u"audiothresholdSlider")
-        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        sizePolicy5.setHorizontalStretch(9)
-        sizePolicy5.setVerticalStretch(0)
-        sizePolicy5.setHeightForWidth(self.audiothresholdSlider.sizePolicy().hasHeightForWidth())
-        self.audiothresholdSlider.setSizePolicy(sizePolicy5)
+        sizePolicy6 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+        sizePolicy6.setHorizontalStretch(9)
+        sizePolicy6.setVerticalStretch(0)
+        sizePolicy6.setHeightForWidth(self.audiothresholdSlider.sizePolicy().hasHeightForWidth())
+        self.audiothresholdSlider.setSizePolicy(sizePolicy6)
         self.audiothresholdSlider.setMouseTracking(False)
         self.audiothresholdSlider.setTabletTracking(False)
         self.audiothresholdSlider.setContextMenuPolicy(Qt.ContextMenuPolicy.DefaultContextMenu)
@@ -327,54 +368,14 @@ class Ui_BatchEditor(object):
         self.optionsGrid.addWidget(self.splitOnly, 5, 0, 1, 5)
 
 
-        self.gridLayout.addLayout(self.optionsGrid, 3, 0, 1, 1)
-
-        self.editConfigLayout = QHBoxLayout()
-        self.editConfigLayout.setObjectName(u"editConfigLayout")
-        self.editConfigLayout.setSizeConstraint(QLayout.SizeConstraint.SetFixedSize)
-        self.saveConfig = QPushButton(self.centralwidget)
-        self.saveConfig.setObjectName(u"saveConfig")
-        sizePolicy6 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
-        sizePolicy6.setHorizontalStretch(0)
-        sizePolicy6.setVerticalStretch(0)
-        sizePolicy6.setHeightForWidth(self.saveConfig.sizePolicy().hasHeightForWidth())
-        self.saveConfig.setSizePolicy(sizePolicy6)
-
-        self.editConfigLayout.addWidget(self.saveConfig)
-
-        self.resetConfig = QPushButton(self.centralwidget)
-        self.resetConfig.setObjectName(u"resetConfig")
-        sizePolicy6.setHeightForWidth(self.resetConfig.sizePolicy().hasHeightForWidth())
-        self.resetConfig.setSizePolicy(sizePolicy6)
-
-        self.editConfigLayout.addWidget(self.resetConfig)
-
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.editConfigLayout.addItem(self.horizontalSpacer)
-
-        self.resetConfig_2 = QPushButton(self.centralwidget)
-        self.resetConfig_2.setObjectName(u"resetConfig_2")
-        self.resetConfig_2.setEnabled(False)
-        sizePolicy6.setHeightForWidth(self.resetConfig_2.sizePolicy().hasHeightForWidth())
-        self.resetConfig_2.setSizePolicy(sizePolicy6)
-
-        self.editConfigLayout.addWidget(self.resetConfig_2)
-
-
-        self.gridLayout.addLayout(self.editConfigLayout, 6, 0, 1, 1)
+        self.gridLayout.addLayout(self.optionsGrid, 2, 0, 1, 1)
 
         BatchEditor.setCentralWidget(self.centralwidget)
         self.statusbar = QStatusBar(BatchEditor)
         self.statusbar.setObjectName(u"statusbar")
         BatchEditor.setStatusBar(self.statusbar)
         QWidget.setTabOrder(self.selectRootDirectoryButton, self.rootDirectoryLabel)
-        QWidget.setTabOrder(self.rootDirectoryLabel, self.editSelectedFilesButton)
-        QWidget.setTabOrder(self.editSelectedFilesButton, self.minLengthSpinbox)
-        QWidget.setTabOrder(self.minLengthSpinbox, self.filesFoundSpinbox)
-        QWidget.setTabOrder(self.filesFoundSpinbox, self.filesToEditSpinbox)
-        QWidget.setTabOrder(self.filesToEditSpinbox, self.totalLengthFoundSpinbox)
-        QWidget.setTabOrder(self.totalLengthFoundSpinbox, self.totalLengthToEditSpinbox)
+        QWidget.setTabOrder(self.rootDirectoryLabel, self.totalLengthToEditSpinbox)
         QWidget.setTabOrder(self.totalLengthToEditSpinbox, self.exportSelector)
         QWidget.setTabOrder(self.exportSelector, self.audiothresholdSlider)
         QWidget.setTabOrder(self.audiothresholdSlider, self.audioThresholdSpinbox)
@@ -393,25 +394,27 @@ class Ui_BatchEditor(object):
     def retranslateUi(self, BatchEditor):
         BatchEditor.setWindowTitle(QCoreApplication.translate("BatchEditor", u"Batch Editor", None))
         self.actionasdasddas.setText(QCoreApplication.translate("BatchEditor", u"asdasddas", None))
-        self.progressBarLabel.setText(QCoreApplication.translate("BatchEditor", u"working...", None))
-        self.totalLengthFoundSpinbox.setPlaceholderText(QCoreApplication.translate("BatchEditor", u"0", None))
-        self.filesFoundSpinbox.setPlaceholderText(QCoreApplication.translate("BatchEditor", u"0", None))
-        self.videoFilesFoundLabel.setText(QCoreApplication.translate("BatchEditor", u"video files found:", None))
-        self.minLabel_2.setText(QCoreApplication.translate("BatchEditor", u"min", None))
         self.filesToEditSpinbox.setPlaceholderText(QCoreApplication.translate("BatchEditor", u"0", None))
-        self.foundFilesProgressBar.setFormat("")
-        self.filesLongerThanLabel.setText(QCoreApplication.translate("BatchEditor", u"Select files longer than: ", None))
-        self.editSelectedFilesButton.setText(QCoreApplication.translate("BatchEditor", u"edit selected files", None))
         self.totalLengthToEditLabel.setText(QCoreApplication.translate("BatchEditor", u"total length to edit: ", None))
-        self.totalLengthFoundLabel.setText(QCoreApplication.translate("BatchEditor", u"total length found: ", None))
+        self.minLabel_2.setText(QCoreApplication.translate("BatchEditor", u"min", None))
         self.selectRootDirectoryButton.setText(QCoreApplication.translate("BatchEditor", u"select root directory", None))
-        self.minLabel_3.setText(QCoreApplication.translate("BatchEditor", u"min", None))
+        self.filesLongerThanLabel.setText(QCoreApplication.translate("BatchEditor", u"Select files longer than: ", None))
         self.videoFilesToEditLabel.setText(QCoreApplication.translate("BatchEditor", u"video files to edit: ", None))
+        self.editSelectedFilesButton.setText(QCoreApplication.translate("BatchEditor", u"edit selected files", None))
+        self.filesFoundLabel.setText(QCoreApplication.translate("BatchEditor", u"video files found:", None))
         self.rootDirectoryLabel.setPlaceholderText(QCoreApplication.translate("BatchEditor", u"no directory selected", None))
-        self.minLabel.setText(QCoreApplication.translate("BatchEditor", u"min", None))
+        self.foundFilesProgressBar.setFormat("")
         self.totalLengthToEditSpinbox.setPlaceholderText(QCoreApplication.translate("BatchEditor", u"0", None))
+        self.progressBarLabel.setText(QCoreApplication.translate("BatchEditor", u"working...", None))
+        self.minLabel_3.setText(QCoreApplication.translate("BatchEditor", u"min", None))
+        self.filesFound.setText(QCoreApplication.translate("BatchEditor", u"0", None))
+        self.totalLength.setText(QCoreApplication.translate("BatchEditor", u"0.0 min", None))
+        self.totalLengthLabel.setText(QCoreApplication.translate("BatchEditor", u"total length: ", None))
         self.optionsLabel.setText(QCoreApplication.translate("BatchEditor", u"OPTIONS", None))
         self.startButton.setText(QCoreApplication.translate("BatchEditor", u"Start", None))
+        self.saveConfig.setText(QCoreApplication.translate("BatchEditor", u"Save config", None))
+        self.resetConfig.setText(QCoreApplication.translate("BatchEditor", u"reset config", None))
+        self.resetConfig_2.setText(QCoreApplication.translate("BatchEditor", u"show command", None))
         self.exportSelector.setItemText(0, QCoreApplication.translate("BatchEditor", u"Premiere Pro", None))
         self.exportSelector.setItemText(1, QCoreApplication.translate("BatchEditor", u"Da Vinci Resolve", None))
         self.exportSelector.setItemText(2, QCoreApplication.translate("BatchEditor", u"Final Cut Pro", None))
@@ -426,8 +429,5 @@ class Ui_BatchEditor(object):
         self.organizeIntoFolders.setText(QCoreApplication.translate("BatchEditor", u"Organize files into folders", None))
         self.preview.setText(QCoreApplication.translate("BatchEditor", u"preview before starting", None))
         self.splitOnly.setText(QCoreApplication.translate("BatchEditor", u"split clips only", None))
-        self.saveConfig.setText(QCoreApplication.translate("BatchEditor", u"Save config", None))
-        self.resetConfig.setText(QCoreApplication.translate("BatchEditor", u"reset config", None))
-        self.resetConfig_2.setText(QCoreApplication.translate("BatchEditor", u"show command", None))
     # retranslateUi
 
