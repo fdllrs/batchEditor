@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>634</width>
-    <height>576</height>
+    <width>461</width>
+    <height>466</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,7 +27,7 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="selectionTab">
        <attribute name="title">
@@ -419,7 +419,7 @@
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <layout class="QGridLayout" name="optionsGrid" rowstretch="0,0,0,0,0,0" columnstretch="1,0,0,0,0">
+         <layout class="QGridLayout" name="optionsGrid" rowstretch="0,0,0,0,0,0" columnstretch="1,0,0,0">
           <property name="sizeConstraint">
            <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
           </property>
@@ -441,7 +441,48 @@
           <property name="verticalSpacing">
            <number>2</number>
           </property>
-          <item row="1" column="1" colspan="2">
+          <item row="1" column="2">
+           <widget class="QDoubleSpinBox" name="audioThresholdSpinbox">
+            <property name="singleStep">
+             <double>0.500000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1" colspan="3">
+           <widget class="QComboBox" name="exportSelector">
+            <item>
+             <property name="text">
+              <string>Premiere Pro</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Da Vinci Resolve</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Final Cut Pro</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>ShotCut</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Kdenlive</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>clip seuqence</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="1" column="1">
            <widget class="QSlider" name="audiothresholdSlider">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -493,83 +534,6 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="audioThresholdLabel">
-            <property name="text">
-             <string>Audio threshold (%):</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-            </property>
-            <property name="margin">
-             <number>3</number>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="4">
-           <widget class="QPushButton" name="multitrackTuningButton">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>multitrack tuning</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1" colspan="4">
-           <widget class="QComboBox" name="exportSelector">
-            <item>
-             <property name="text">
-              <string>Premiere Pro</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Da Vinci Resolve</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Final Cut Pro</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>ShotCut</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Kdenlive</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>clip seuqence</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QDoubleSpinBox" name="marginSpinbox">
-            <property name="singleStep">
-             <double>0.500000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="3">
-           <widget class="QDoubleSpinBox" name="audioThresholdSpinbox">
-            <property name="singleStep">
-             <double>0.500000000000000</double>
-            </property>
-           </widget>
-          </item>
           <item row="2" column="0">
            <widget class="QLabel" name="marginLabel">
             <property name="text">
@@ -583,6 +547,42 @@
             </property>
            </widget>
           </item>
+          <item row="2" column="1">
+           <widget class="QDoubleSpinBox" name="marginSpinbox">
+            <property name="singleStep">
+             <double>0.500000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="audioThresholdLabel">
+            <property name="text">
+             <string>Audio threshold (%):</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+            </property>
+            <property name="margin">
+             <number>3</number>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QPushButton" name="multitrackTuningButton">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>multitrack tuning</string>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="0">
            <widget class="QLabel" name="exportOptionLabel">
             <property name="text">
@@ -593,6 +593,13 @@
             </property>
             <property name="margin">
              <number>3</number>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0" colspan="2">
+           <widget class="QCheckBox" name="splitOnly">
+            <property name="text">
+             <string>split clips only</string>
             </property>
            </widget>
           </item>
@@ -616,13 +623,6 @@
             </property>
             <property name="checked">
              <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0" colspan="2">
-           <widget class="QCheckBox" name="splitOnly">
-            <property name="text">
-             <string>split clips only</string>
             </property>
            </widget>
           </item>
@@ -741,11 +741,6 @@
    </layout>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionasdasddas">
-   <property name="text">
-    <string>asdasddas</string>
-   </property>
-  </action>
  </widget>
  <tabstops>
   <tabstop>selectRootDirectoryButton</tabstop>

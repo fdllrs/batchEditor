@@ -6,14 +6,13 @@ import cv2
 def videoToCv2(path: str):
     return cv2.VideoCapture(path)
 
-
-def audioChannels(video: cv2.VideoCapture):
-
-    return video.get(cv2.CAP_PROP_AUDIO_TOTAL_CHANNELS)
+def totalLengthMinutes(dict):
+    return str(round(sum(dict.values()) / 60, 2 ))
 
 
-def videoLength(video: cv2.VideoCapture):
 
+def videoLength(path: str):
+    video = videoToCv2(path)
     frameCount = video.get(cv2.CAP_PROP_FRAME_COUNT)
     fps = video.get(cv2.CAP_PROP_FPS)
 

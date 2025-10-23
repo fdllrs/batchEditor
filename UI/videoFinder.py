@@ -1,7 +1,6 @@
 from PySide6 import QtCore
 from pathlib import Path
-from utils import videoLength, videoToCv2, audioChannels
-
+from utils import videoLength
 
 
 VIDEOFORMATS= ("mp4", "mkv")
@@ -16,14 +15,13 @@ class videoFinder(QtCore.QRunnable):
         self.videoFilesFound = {}
         self._running = True
         self.signals = videoFinderSignals()
-        self.maxAudioChannels = 1
 
 
 
     def run(self):
 
         self.searchDirectory(self.directoryPath)
-        self.signals.finished.emit(self.maxAudioChannels)
+        self.signals.finished.emit()
 
 
     def searchDirectory(self, directoryPath: Path):
@@ -39,12 +37,7 @@ class videoFinder(QtCore.QRunnable):
 
 
     def addRecording(self, path):
-        video = videoToCv2(path)
-
-        length = videoLength(video)
-        self.maxAudioChannels = max(self.maxAudioChannels, audioChannels(video))
-
-        self.videoFilesFound[path] = length
+        self.videoFilesFound[path] = videoLength(path)
 
 
 
@@ -53,4 +46,4 @@ class videoFinder(QtCore.QRunnable):
 class videoFinderSignals(QtCore.QObject):
 
     partiallyFinished = QtCore.Signal(object)
-    finished = QtCore.Signal(int)
+    finished = QtCore.Signal()

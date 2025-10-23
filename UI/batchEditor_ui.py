@@ -11,11 +11,10 @@
 from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
-    QCursor, QFont, QFontDatabase, QGradient,
-    QIcon, QImage, QKeySequence, QLinearGradient,
-    QPainter, QPalette, QPixmap, QRadialGradient,
-    QTransform)
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+    QFont, QFontDatabase, QGradient, QIcon,
+    QImage, QKeySequence, QLinearGradient, QPainter,
+    QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDoubleSpinBox,
     QGridLayout, QHBoxLayout, QLabel, QLayout,
     QLineEdit, QMainWindow, QProgressBar, QPushButton,
@@ -26,10 +25,8 @@ class Ui_BatchEditor(object):
     def setupUi(self, BatchEditor):
         if not BatchEditor.objectName():
             BatchEditor.setObjectName(u"BatchEditor")
-        BatchEditor.resize(634, 576)
+        BatchEditor.resize(461, 466)
         BatchEditor.setDocumentMode(False)
-        self.actionasdasddas = QAction(BatchEditor)
-        self.actionasdasddas.setObjectName(u"actionasdasddas")
         self.centralwidget = QWidget(BatchEditor)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout_2 = QVBoxLayout(self.centralwidget)
@@ -231,6 +228,23 @@ class Ui_BatchEditor(object):
         self.optionsGrid.setHorizontalSpacing(6)
         self.optionsGrid.setVerticalSpacing(2)
         self.optionsGrid.setContentsMargins(5, 5, 5, 5)
+        self.audioThresholdSpinbox = QDoubleSpinBox(self.optionsTab)
+        self.audioThresholdSpinbox.setObjectName(u"audioThresholdSpinbox")
+        self.audioThresholdSpinbox.setSingleStep(0.500000000000000)
+
+        self.optionsGrid.addWidget(self.audioThresholdSpinbox, 1, 2, 1, 1)
+
+        self.exportSelector = QComboBox(self.optionsTab)
+        self.exportSelector.addItem("")
+        self.exportSelector.addItem("")
+        self.exportSelector.addItem("")
+        self.exportSelector.addItem("")
+        self.exportSelector.addItem("")
+        self.exportSelector.addItem("")
+        self.exportSelector.setObjectName(u"exportSelector")
+
+        self.optionsGrid.addWidget(self.exportSelector, 0, 1, 1, 3)
+
         self.audiothresholdSlider = QSlider(self.optionsTab)
         self.audiothresholdSlider.setObjectName(u"audiothresholdSlider")
         sizePolicy6 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
@@ -253,7 +267,20 @@ class Ui_BatchEditor(object):
         self.audiothresholdSlider.setTickPosition(QSlider.TickPosition.NoTicks)
         self.audiothresholdSlider.setTickInterval(1)
 
-        self.optionsGrid.addWidget(self.audiothresholdSlider, 1, 1, 1, 2)
+        self.optionsGrid.addWidget(self.audiothresholdSlider, 1, 1, 1, 1)
+
+        self.marginLabel = QLabel(self.optionsTab)
+        self.marginLabel.setObjectName(u"marginLabel")
+        self.marginLabel.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+        self.marginLabel.setMargin(3)
+
+        self.optionsGrid.addWidget(self.marginLabel, 2, 0, 1, 1)
+
+        self.marginSpinbox = QDoubleSpinBox(self.optionsTab)
+        self.marginSpinbox.setObjectName(u"marginSpinbox")
+        self.marginSpinbox.setSingleStep(0.500000000000000)
+
+        self.optionsGrid.addWidget(self.marginSpinbox, 2, 1, 1, 1)
 
         self.audioThresholdLabel = QLabel(self.optionsTab)
         self.audioThresholdLabel.setObjectName(u"audioThresholdLabel")
@@ -264,44 +291,14 @@ class Ui_BatchEditor(object):
 
         self.multitrackTuningButton = QPushButton(self.optionsTab)
         self.multitrackTuningButton.setObjectName(u"multitrackTuningButton")
-        self.multitrackTuningButton.setEnabled(False)
+        self.multitrackTuningButton.setEnabled(True)
         sizePolicy7 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Maximum)
         sizePolicy7.setHorizontalStretch(0)
         sizePolicy7.setVerticalStretch(0)
         sizePolicy7.setHeightForWidth(self.multitrackTuningButton.sizePolicy().hasHeightForWidth())
         self.multitrackTuningButton.setSizePolicy(sizePolicy7)
 
-        self.optionsGrid.addWidget(self.multitrackTuningButton, 1, 4, 1, 1)
-
-        self.exportSelector = QComboBox(self.optionsTab)
-        self.exportSelector.addItem("")
-        self.exportSelector.addItem("")
-        self.exportSelector.addItem("")
-        self.exportSelector.addItem("")
-        self.exportSelector.addItem("")
-        self.exportSelector.addItem("")
-        self.exportSelector.setObjectName(u"exportSelector")
-
-        self.optionsGrid.addWidget(self.exportSelector, 0, 1, 1, 4)
-
-        self.marginSpinbox = QDoubleSpinBox(self.optionsTab)
-        self.marginSpinbox.setObjectName(u"marginSpinbox")
-        self.marginSpinbox.setSingleStep(0.500000000000000)
-
-        self.optionsGrid.addWidget(self.marginSpinbox, 2, 1, 1, 1)
-
-        self.audioThresholdSpinbox = QDoubleSpinBox(self.optionsTab)
-        self.audioThresholdSpinbox.setObjectName(u"audioThresholdSpinbox")
-        self.audioThresholdSpinbox.setSingleStep(0.500000000000000)
-
-        self.optionsGrid.addWidget(self.audioThresholdSpinbox, 1, 3, 1, 1)
-
-        self.marginLabel = QLabel(self.optionsTab)
-        self.marginLabel.setObjectName(u"marginLabel")
-        self.marginLabel.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-        self.marginLabel.setMargin(3)
-
-        self.optionsGrid.addWidget(self.marginLabel, 2, 0, 1, 1)
+        self.optionsGrid.addWidget(self.multitrackTuningButton, 1, 3, 1, 1)
 
         self.exportOptionLabel = QLabel(self.optionsTab)
         self.exportOptionLabel.setObjectName(u"exportOptionLabel")
@@ -309,6 +306,11 @@ class Ui_BatchEditor(object):
         self.exportOptionLabel.setMargin(3)
 
         self.optionsGrid.addWidget(self.exportOptionLabel, 0, 0, 1, 1)
+
+        self.splitOnly = QCheckBox(self.optionsTab)
+        self.splitOnly.setObjectName(u"splitOnly")
+
+        self.optionsGrid.addWidget(self.splitOnly, 5, 0, 1, 2)
 
         self.organizeIntoFolders = QCheckBox(self.optionsTab)
         self.organizeIntoFolders.setObjectName(u"organizeIntoFolders")
@@ -322,11 +324,6 @@ class Ui_BatchEditor(object):
         self.separateTracks.setChecked(True)
 
         self.optionsGrid.addWidget(self.separateTracks, 4, 0, 1, 2)
-
-        self.splitOnly = QCheckBox(self.optionsTab)
-        self.splitOnly.setObjectName(u"splitOnly")
-
-        self.optionsGrid.addWidget(self.splitOnly, 5, 0, 1, 2)
 
         self.optionsGrid.setColumnStretch(0, 1)
 
@@ -409,7 +406,7 @@ class Ui_BatchEditor(object):
 
         self.retranslateUi(BatchEditor)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(BatchEditor)
@@ -417,7 +414,6 @@ class Ui_BatchEditor(object):
 
     def retranslateUi(self, BatchEditor):
         BatchEditor.setWindowTitle(QCoreApplication.translate("BatchEditor", u"Batch Editor", None))
-        self.actionasdasddas.setText(QCoreApplication.translate("BatchEditor", u"asdasddas", None))
         self.filesToEditSpinbox.setPlaceholderText(QCoreApplication.translate("BatchEditor", u"0", None))
         self.foundFilesProgressBar.setFormat("")
         self.totalLengthToEditSpinbox.setPlaceholderText(QCoreApplication.translate("BatchEditor", u"0", None))
@@ -435,8 +431,6 @@ class Ui_BatchEditor(object):
         self.progressBarLabel.setText(QCoreApplication.translate("BatchEditor", u"not processing", None))
         self.minLabel_2.setText(QCoreApplication.translate("BatchEditor", u"min", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.selectionTab), QCoreApplication.translate("BatchEditor", u"selection", None))
-        self.audioThresholdLabel.setText(QCoreApplication.translate("BatchEditor", u"Audio threshold (%):", None))
-        self.multitrackTuningButton.setText(QCoreApplication.translate("BatchEditor", u"multitrack tuning", None))
         self.exportSelector.setItemText(0, QCoreApplication.translate("BatchEditor", u"Premiere Pro", None))
         self.exportSelector.setItemText(1, QCoreApplication.translate("BatchEditor", u"Da Vinci Resolve", None))
         self.exportSelector.setItemText(2, QCoreApplication.translate("BatchEditor", u"Final Cut Pro", None))
@@ -445,10 +439,12 @@ class Ui_BatchEditor(object):
         self.exportSelector.setItemText(5, QCoreApplication.translate("BatchEditor", u"clip seuqence", None))
 
         self.marginLabel.setText(QCoreApplication.translate("BatchEditor", u"margin (seconds):", None))
+        self.audioThresholdLabel.setText(QCoreApplication.translate("BatchEditor", u"Audio threshold (%):", None))
+        self.multitrackTuningButton.setText(QCoreApplication.translate("BatchEditor", u"multitrack tuning", None))
         self.exportOptionLabel.setText(QCoreApplication.translate("BatchEditor", u"Export option:", None))
+        self.splitOnly.setText(QCoreApplication.translate("BatchEditor", u"split clips only", None))
         self.organizeIntoFolders.setText(QCoreApplication.translate("BatchEditor", u"Organize files into folders", None))
         self.separateTracks.setText(QCoreApplication.translate("BatchEditor", u"keep audio tracks separate", None))
-        self.splitOnly.setText(QCoreApplication.translate("BatchEditor", u"split clips only", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.optionsTab), QCoreApplication.translate("BatchEditor", u"options", None))
         self.resetConfigButton.setText(QCoreApplication.translate("BatchEditor", u"reset config", None))
         self.saveConfigButton.setText(QCoreApplication.translate("BatchEditor", u"Save config", None))

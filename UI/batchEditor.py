@@ -6,6 +6,8 @@ from pathlib import Path
 from utils import * 
 from videoFinder import videoFinder
 from videoProcessor import videoProcessor
+from batchEditor_audioThresholdTuner_ui import Ui_audioThresholdTunerDialog
+
 
 EXPORT_OPTIONS = {'Premiere Pro': 'premiere',
                   'Da Vinci Resolve': 'resolve',
@@ -33,6 +35,7 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
         # self.progressBarLabel.setVisible(False)
 
         self.startButton.clicked.connect(self.start)
+        self.multitrackTuningButton.clicked.connect(self.openAudioThresholdTunerDialog)
         self.selectRootDirectoryButton.clicked.connect(self.setRootDirectory)
         self.minLengthSpinbox.valueChanged.connect(self.updateToEditFiles)
 
@@ -65,10 +68,8 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
 
 
 
-    def onProcessingFinished(self, maxAudioChannels):
-        self.maxAudioChannels = maxAudioChannels
-
-        print(maxAudioChannels)
+    def onProcessingFinished(self):
+       print('done')
 
 
     def __updateSpinboxFromSlider(self, value):
@@ -121,13 +122,16 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
         self.filesFound.setText(str(len(self.videoFilesFound)))
 
         
-    def onSearchFinished(self):
+    def onSearchFinished(self, maxAudioChannels):
 
         self.foundFilesProgressBar.reset()
         self.progressBarDone()
 
         self.updateToEditFiles(self.minLengthSpinbox.value())
-        self.totalLength.setText(str(self.__totalLengthOf(self.videoFilesFound)) + ' min')
+        self.totalLength.setText(totalLengthMinutes(self.videoFilesFound) + ' min')
+
+
+
 
     def progressBarDone(self):
         self.progressBarLabel.setText('Done!')
@@ -152,11 +156,17 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
                 self.toEditLength += duration
 
         self.filesToEditSpinbox.setText(str(len(self.videoFilesToEdit)))
-        self.totalLengthToEditSpinbox.setText(str(self.__totalLengthOf(self.videoFilesToEdit)))
+        self.totalLengthToEditSpinbox.setText(totalLengthMinutes(self.videoFilesToEdit))
 
 
-    def __totalLengthOf(self, dict):
-        return round(sum(dict.values()) / 60, 2 )
+    def openAudioThresholdTunerDialog(self):
+        self.dialogWindow = QtWidgets.QDialog()
+        self.thresholdTuner = Ui_audioThresholdTunerDialog()
+        self.thresholdTuner.setupUi(self.dialogWindow)
+        self.dialogWindow.show()
+
+    
+
 
 
 
