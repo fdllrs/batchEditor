@@ -17,13 +17,16 @@ class videoProcessor(QtCore.QRunnable):
 
 
     def run(self):
-        for filePath in self.videoFilesToEdit.keys():
+        # for filePath in self.videoFilesToEdit.keys():
             
-            self.worker = videoProcessorWorker(options=self.options, path=filePath, signal=self.signals.partiallyFinished)
-            self.threadpool.start(self.worker)
+        #     self.worker = videoProcessorWorker(options=self.options, path=filePath, signal=self.signals.partiallyFinished)
+        #     self.threadpool.start(self.worker)
 
 
-        self.signals.finished.emit()
+        # self.signals.finished.emit()
+
+        autoEditorCommand = f'py -m auto_editor {'path'} --margin 0.03sec --edit  "(or audio:stream=0 audio:threshold=0.7%, audio:stream=1 audio:threshold=2%, audio:stream=2 audio:threshold=1%)" --export {self.options['exportOption']}'
+        print(autoEditorCommand)
 
 
 

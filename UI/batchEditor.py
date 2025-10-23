@@ -7,7 +7,12 @@ from utils import *
 from videoFinder import videoFinder
 from videoProcessor import videoProcessor
 
-
+EXPORT_OPTIONS = {'Premiere Pro': 'premiere',
+                  'Da Vinci Resolve': 'resolve',
+                  'Final Cut Pro': 'final-cut-pro',
+                  'ShotCut': 'shotcut',
+                  'Kdenlive': 'kdenlive',
+                  'clip sequence': 'clip-secuence'}
 class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
 
     options = {}
@@ -19,12 +24,13 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
         self.videoFilesFound = {}
         self.videoFilesToEdit = {}
         self.threadpool = QtCore.QThreadPool()
+        self.maxAudioChannels = 1
         print(f'multithreading with maximum {self.threadpool.maxThreadCount()} threads')
     
     
     
-        self.foundFilesProgressBar.setVisible(False)
-        self.progressBarLabel.setVisible(False)
+        # self.foundFilesProgressBar.setVisible(False)
+        # self.progressBarLabel.setVisible(False)
 
         self.startButton.clicked.connect(self.start)
         self.selectRootDirectoryButton.clicked.connect(self.setRootDirectory)
@@ -36,12 +42,11 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
 
 
     def start(self):
-        self.options['exportOption'] = self.exportSelector.currentText()
+        self.options['exportOption'] = EXPORT_OPTIONS[self.exportSelector.currentText()]
         self.options['directory'] = self.rootDirectoryLabel.text() 
         self.options['threshold'] = self.audioThresholdSpinbox.value()
         self.options['filesIntoFolders'] = self.organizeIntoFolders.isChecked()
         self.options['splitOnly'] = self.splitOnly.isChecked()
-        self.options['preview'] = self.preview.isChecked()
         self.options['separateTracks'] = self.separateTracks.isChecked()
         self.progressBar.reset()
         self.progressBar.setRange(0, len(self.videoFilesToEdit))
@@ -60,8 +65,10 @@ class batchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
 
 
 
-    def onProcessingFinished(self):
-        print('done')
+    def onProcessingFinished(self, maxAudioChannels):
+        self.maxAudioChannels = maxAudioChannels
+
+        print(maxAudioChannels)
 
 
     def __updateSpinboxFromSlider(self, value):
