@@ -1,14 +1,14 @@
 import sys
 from PySide6 import QtCore
 from PySide6 import QtWidgets
-from UI.mainWindowUI.batchEditor_ui import Ui_BatchEditor
 from pathlib import Path
-from utils import total_length_minutes
+from utils import total_duration
 from video_finder import VideoFinder
 from video_processor import VideoProcessor, build_command
 from processing_options import ProcessingOptions
 from audio_threshold_tuner import AudioThresholdTuner
 from batch_editor_window import BatchEditorWindow, EXPORT_OPTIONS
+from clip_selector_dialog import ClipSelectorDialog
 import config_manager
 
 class BatchEditorController:
@@ -16,17 +16,22 @@ class BatchEditorController:
     def __init__(self):
         self.view = BatchEditorWindow(self)
 
-        self.threadpool = QtCore.QThreadPool()
-        self.threadpool.setMaxThreadCount(1)
-        self.max_audio_channels = 1
+        self._setup_threadpool()
+        self._reset_editing_state()
 
+        self._apply_config(config_manager.default_config())
+
+    def _reset_editing_state(self):
+        self.max_audio_channels = 1
         self.video_files_found = {}
         self.video_files_to_edit = {}
         self.to_edit_length = 0
 
-        self._apply_config(config_manager.load_default_config())
+    def _setup_threadpool(self):
+        self.threadpool = QtCore.QThreadPool()
+        self.threadpool.setMaxThreadCount(1)
 
-    def start(self):
+    def startProcessing(self):
         options = ProcessingOptions(
             export_option=EXPORT_OPTIONS[self.view.exportSelector.currentText()],
             directory=self.view.rootDirectoryLabel.text(),
@@ -37,13 +42,17 @@ class BatchEditorController:
             separate_tracks=self.view.separateTracks.isChecked(),
         )
 
-        self._processing_done = 0
-        self._processing_total = len(self.video_files_to_edit)
+        self._processed_files_count = 0
+        self._total_files_to_process = len(self.video_files_to_edit)
 
         self.view.progressBar.setRange(0, 0)  # indeterminate / endless loop
-        self.view.startButton.setText('0/{} done'.format(self._processing_total))
+        self._update_progress_text()
         self.view.startButton.setEnabled(False)
         self._start_video_processor(options)
+
+    def _update_progress_text(self):
+        self.view.startButton.setText('{}/{} done'.format(self._processed_files_count, self._total_files_to_process))
+
 
 
     def _start_video_processor(self, options):
@@ -53,16 +62,14 @@ class BatchEditorController:
         self.threadpool.start(self.processor)
 
     def on_processing_partially_finished(self):
-        self._processing_done += 1
-        self.view.startButton.setText('{}/{} done'.format(self._processing_done, self._processing_total))
-
+        self._processed_files_count += 1
+        self._update_progress_text()
 
     def on_processing_finished(self):
         self.view.progressBar.setRange(0, 1)
         self.view.progressBar.setValue(1)
         self.view.startButton.setText('Start')
         self.view.startButton.setEnabled(True)
-        print('done')
 
 
     def set_root_directory(self):
@@ -74,20 +81,13 @@ class BatchEditorController:
         if folder_path:
             self.view.rootDirectoryLabel.setText(folder_path)
             self.view.startButton.setEnabled(True)
-            self.search_video_files(folder_path)
+            self.search_video_files_in_folder(folder_path)
         else:
             self.view.rootDirectoryLabel.setText(self.view.rootDirectoryLabel.placeholderText())
             self.view.startButton.setEnabled(False)
 
 
-    def search_video_files(self, folder_path):
-        self.view.foundFilesProgressBar.reset()
-
-        self.view.progressBarLabel.setVisible(True)
-        self.view.progressBarLabel.setText('Working...')
-        self.view.foundFilesProgressBar.setVisible(True)
-
-        self.view.foundFilesProgressBar.setRange(0, 0)
+    def search_video_files_in_folder(self, folder_path):
 
         self.video_finder = VideoFinder(path=Path(folder_path))
         self.video_finder.signals.partially_finished.connect(self.on_partially_finished)
@@ -101,31 +101,32 @@ class BatchEditorController:
 
         
     def on_search_finished(self):
-        self.view.foundFilesProgressBar.reset()
-        self.set_progress_bar_done()
 
-        self.update_to_edit_files(self.view.minLengthSpinbox.value())
-        self.view.totalLength.setText(total_length_minutes(self.video_files_found) + ' min')
+        self.update_to_edit_files()
+        self.view.totalLength.setText(total_duration(self.video_files_found) + ' min')
 
 
-    def set_progress_bar_done(self):
-        self.view.progressBarLabel.setText('Done!')
-        self.view.foundFilesProgressBar.setRange(0, 100)
-        self.view.foundFilesProgressBar.setValue(100)
 
 
-    def update_to_edit_files(self, min_length_minutes):
-        self.to_edit_length = 0
-        self.video_files_to_edit = {}
-        min_length_seconds = min_length_minutes * 60
+    def update_to_edit_files(self):
+        self.video_files_to_edit = dict(self.video_files_found)
+        self._refresh_to_edit_stats()
 
-        for file_path, duration in self.video_files_found.items():
-            if duration > min_length_seconds:
-                self.video_files_to_edit[file_path] = duration
-                self.to_edit_length += duration
 
-        self.view.filesToEditSpinbox.setText(str(len(self.video_files_to_edit)))
-        self.view.totalLengthToEditSpinbox.setText(total_length_minutes(self.video_files_to_edit))
+    def _refresh_to_edit_stats(self):
+        """Recompute to_edit_length and push updated counts to the UI."""
+        self.to_edit_length = sum(self.video_files_to_edit.values())
+        has_files = len(self.video_files_to_edit) > 0
+        self.view.totalLengthToEdit.setText(total_duration(self.video_files_to_edit) + " min")
+        self.view.editSelectedFilesButton.setEnabled(has_files)
+
+
+    def open_clip_selector_dialog(self):
+        root = Path(self.view.rootDirectoryLabel.text())
+        dialog = ClipSelectorDialog(self.video_files_to_edit, root=root, parent=self.view)
+        if dialog.exec() == QtWidgets.QDialog.DialogCode.Accepted:
+            self.video_files_to_edit = dialog.get_selected_files()
+            self._refresh_to_edit_stats()
 
 
     def open_audio_threshold_tuner_dialog(self):
@@ -177,7 +178,6 @@ class BatchEditorController:
             "export_option": export_value,
             "threshold": self.view.audioThresholdSpinbox.value(),
             "margin": self.view.marginSpinbox.value(),
-            "min_length": self.view.minLengthSpinbox.value(),
             "files_into_folders": self.view.organizeIntoFolders.isChecked(),
             "split_only": self.view.splitOnly.isChecked(),
             "separate_tracks": self.view.separateTracks.isChecked(),
@@ -210,9 +210,6 @@ class BatchEditorController:
 
         if "margin" in config:
             self.view.marginSpinbox.setValue(config["margin"])
-
-        if "min_length" in config:
-            self.view.minLengthSpinbox.setValue(config["min_length"])
 
         if "files_into_folders" in config:
             self.view.organizeIntoFolders.setChecked(config["files_into_folders"])

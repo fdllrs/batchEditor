@@ -8,7 +8,6 @@ CONFIG_KEYS = [
     "export_option",
     "threshold",
     "margin",
-    "min_length",
     "files_into_folders",
     "split_only",
     "separate_tracks",
@@ -25,7 +24,7 @@ def save_config(path: Path, config: dict) -> None:
             f.write(f"{key}={value}\n")
 
 
-def load_default_config() -> dict:
+def default_config() -> dict:
     """Load the default config if it exists, otherwise return an empty dict."""
     if DEFAULT_CONFIG_PATH.exists():
         return load_config(DEFAULT_CONFIG_PATH)
@@ -54,6 +53,4 @@ def _parse_value(key: str, raw: str):
         return raw.lower() == "true"
     if key == "threshold" or key == "margin":
         return float(raw)
-    if key == "min_length":
-        return int(raw)
     return raw

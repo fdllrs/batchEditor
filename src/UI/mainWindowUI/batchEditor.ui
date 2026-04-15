@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>461</width>
-    <height>466</height>
+    <width>455</width>
+    <height>467</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,9 +29,12 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
+      <property name="documentMode">
+       <bool>false</bool>
+      </property>
       <widget class="QWidget" name="selectionTab">
        <attribute name="title">
-        <string>selection</string>
+        <string>Select</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
@@ -52,137 +55,38 @@
            <number>25</number>
           </property>
           <property name="verticalSpacing">
-           <number>19</number>
+           <number>30</number>
           </property>
-          <item row="6" column="1">
-           <widget class="QLineEdit" name="filesToEditSpinbox">
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignCenter</set>
-            </property>
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-            <property name="placeholderText">
-             <string>0</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0" colspan="4">
-           <widget class="QProgressBar" name="foundFilesProgressBar">
+          <item row="1" column="1">
+           <widget class="QLabel" name="filesFound">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="palette">
-             <palette>
-              <active>
-               <colorrole role="BrightText">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>85</red>
-                  <green>255</green>
-                  <blue>255</blue>
-                 </color>
-                </brush>
-               </colorrole>
-               <colorrole role="Accent">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>85</red>
-                  <green>170</green>
-                  <blue>255</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </active>
-              <inactive>
-               <colorrole role="BrightText">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>85</red>
-                  <green>255</green>
-                  <blue>255</blue>
-                 </color>
-                </brush>
-               </colorrole>
-               <colorrole role="Accent">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>85</red>
-                  <green>170</green>
-                  <blue>255</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </inactive>
-              <disabled>
-               <colorrole role="BrightText">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>85</red>
-                  <green>255</green>
-                  <blue>255</blue>
-                 </color>
-                </brush>
-               </colorrole>
-               <colorrole role="Accent">
-                <brush brushstyle="SolidPattern">
-                 <color alpha="255">
-                  <red>85</red>
-                  <green>170</green>
-                  <blue>255</blue>
-                 </color>
-                </brush>
-               </colorrole>
-              </disabled>
-             </palette>
-            </property>
-            <property name="acceptDrops">
-             <bool>false</bool>
-            </property>
-            <property name="value">
-             <number>0</number>
-            </property>
-            <property name="textVisible">
-             <bool>false</bool>
-            </property>
-            <property name="format">
-             <string/>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="1">
-           <widget class="QLineEdit" name="totalLengthToEditSpinbox">
-            <property name="enabled">
-             <bool>true</bool>
+            <property name="text">
+             <string>0</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignmentFlag::AlignCenter</set>
             </property>
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-            <property name="placeholderText">
-             <string>0</string>
-            </property>
            </widget>
           </item>
           <item row="3" column="0">
-           <widget class="QLabel" name="filesFoundLabel">
+           <widget class="QLabel" name="totalLengthToEditLabel">
             <property name="text">
-             <string>video files found:</string>
+             <string>total length to edit: </string>
             </property>
-            <property name="indent">
-             <number>0</number>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
             </property>
            </widget>
           </item>
-          <item row="5" column="3" colspan="2">
+          <item row="1" column="2">
            <widget class="QPushButton" name="editSelectedFilesButton">
             <property name="enabled">
-             <bool>false</bool>
+             <bool>true</bool>
             </property>
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -204,33 +108,23 @@
             </property>
            </widget>
           </item>
-          <item row="5" column="0">
-           <widget class="QLabel" name="filesLongerThanLabel">
+          <item row="2" column="1">
+           <widget class="QLabel" name="totalLength">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-              <horstretch>0</horstretch>
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>2</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
             <property name="text">
-             <string>Select files longer than: </string>
+             <string>0 min</string>
             </property>
             <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+             <set>Qt::AlignmentFlag::AlignCenter</set>
             </property>
            </widget>
           </item>
-          <item row="7" column="0">
-           <widget class="QLabel" name="totalLengthToEditLabel">
-            <property name="text">
-             <string>total length to edit: </string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1" colspan="4">
+          <item row="0" column="1" colspan="2">
            <widget class="QLineEdit" name="rootDirectoryLabel">
             <property name="readOnly">
              <bool>true</bool>
@@ -243,42 +137,13 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="1">
-           <spacer name="verticalSpacer">
-            <property name="orientation">
-             <enum>Qt::Orientation::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>50</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="6" column="0">
-           <widget class="QLabel" name="videoFilesToEditLabel">
+          <item row="1" column="0">
+           <widget class="QLabel" name="filesFoundLabel">
             <property name="text">
-             <string>video files to edit: </string>
+             <string>video files found:</string>
             </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QLabel" name="filesFound">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>0</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignCenter</set>
+            <property name="indent">
+             <number>0</number>
             </property>
            </widget>
           </item>
@@ -289,38 +154,19 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
-           <widget class="QLabel" name="totalLength">
+          <item row="3" column="1">
+           <widget class="QLabel" name="totalLengthToEdit">
             <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
             <property name="text">
-             <string>0.0 min</string>
+             <string>0 min</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignmentFlag::AlignCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="2">
-           <widget class="QLabel" name="minLabel_3">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="lineWidth">
-             <number>0</number>
-            </property>
-            <property name="text">
-             <string>min</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
             </property>
            </widget>
           </item>
@@ -328,12 +174,6 @@
            <widget class="QLabel" name="totalLengthLabel">
             <property name="enabled">
              <bool>true</bool>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
             </property>
             <property name="text">
              <string>total length: </string>
@@ -343,61 +183,13 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="4">
-           <widget class="QLabel" name="progressBarLabel">
-            <property name="text">
-             <string>not processing</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="7" column="2">
-           <widget class="QLabel" name="minLabel_2">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="lineWidth">
-             <number>0</number>
-            </property>
-            <property name="text">
-             <string>min</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="1">
-           <widget class="QSpinBox" name="minLengthSpinbox">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="minimum">
-             <number>0</number>
-            </property>
-            <property name="maximum">
-             <number>9999</number>
-            </property>
-            <property name="value">
-             <number>3</number>
-            </property>
-           </widget>
-          </item>
          </layout>
         </item>
        </layout>
       </widget>
       <widget class="QWidget" name="optionsTab">
        <attribute name="title">
-        <string>options</string>
+        <string>Configure</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
@@ -423,6 +215,13 @@
           <property name="verticalSpacing">
            <number>2</number>
           </property>
+          <item row="2" column="1">
+           <widget class="QDoubleSpinBox" name="marginSpinbox">
+            <property name="singleStep">
+             <double>0.500000000000000</double>
+            </property>
+           </widget>
+          </item>
           <item row="1" column="2">
            <widget class="QDoubleSpinBox" name="audioThresholdSpinbox">
             <property name="singleStep">
@@ -430,38 +229,27 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1" colspan="3">
-           <widget class="QComboBox" name="exportSelector">
-            <item>
-             <property name="text">
-              <string>Premiere Pro</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Da Vinci Resolve</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Final Cut Pro</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>ShotCut</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Kdenlive</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>clip seuqence</string>
-             </property>
-            </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="audioThresholdLabel">
+            <property name="text">
+             <string>Audio threshold (%):</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+            </property>
+            <property name="margin">
+             <number>3</number>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0" colspan="2">
+           <widget class="QCheckBox" name="separateTracks">
+            <property name="text">
+             <string>keep audio tracks separate</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
            </widget>
           </item>
           <item row="1" column="1">
@@ -516,6 +304,32 @@
             </property>
            </widget>
           </item>
+          <item row="3" column="0" colspan="2">
+           <widget class="QCheckBox" name="organizeIntoFolders">
+            <property name="text">
+             <string>Organize files into folders</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+            <property name="tristate">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="exportOptionLabel">
+            <property name="text">
+             <string>Export option:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+            </property>
+            <property name="margin">
+             <number>3</number>
+            </property>
+           </widget>
+          </item>
           <item row="2" column="0">
            <widget class="QLabel" name="marginLabel">
             <property name="text">
@@ -529,24 +343,45 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
-           <widget class="QDoubleSpinBox" name="marginSpinbox">
-            <property name="singleStep">
-             <double>0.500000000000000</double>
+          <item row="5" column="0" colspan="2">
+           <widget class="QCheckBox" name="splitOnly">
+            <property name="text">
+             <string>split clips only</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="audioThresholdLabel">
-            <property name="text">
-             <string>Audio threshold (%):</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-            </property>
-            <property name="margin">
-             <number>3</number>
-            </property>
+          <item row="0" column="1" colspan="3">
+           <widget class="QComboBox" name="exportSelector">
+            <item>
+             <property name="text">
+              <string>Premiere Pro</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Da Vinci Resolve</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Final Cut Pro</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>ShotCut</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Kdenlive</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>clip seuqence</string>
+             </property>
+            </item>
            </widget>
           </item>
           <item row="1" column="3">
@@ -565,54 +400,27 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="exportOptionLabel">
-            <property name="text">
-             <string>Export option:</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
-            </property>
-            <property name="margin">
-             <number>3</number>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0" colspan="2">
-           <widget class="QCheckBox" name="splitOnly">
-            <property name="text">
-             <string>split clips only</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0" colspan="2">
-           <widget class="QCheckBox" name="organizeIntoFolders">
-            <property name="text">
-             <string>Organize files into folders</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-            <property name="tristate">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0" colspan="2">
-           <widget class="QCheckBox" name="separateTracks">
-            <property name="text">
-             <string>keep audio tracks separate</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
          </layout>
         </item>
        </layout>
       </widget>
      </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Orientation::Vertical</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Policy::Minimum</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>60</height>
+       </size>
+      </property>
+     </spacer>
     </item>
     <item>
      <layout class="QGridLayout" name="gridLayout_2">
@@ -625,7 +433,7 @@
       <property name="verticalSpacing">
        <number>5</number>
       </property>
-      <item row="2" column="0" colspan="5">
+      <item row="2" column="0" colspan="4">
        <widget class="QProgressBar" name="progressBar">
         <property name="acceptDrops">
          <bool>false</bool>
@@ -654,6 +462,22 @@
         </property>
        </widget>
       </item>
+      <item row="0" column="3">
+       <widget class="QPushButton" name="showCommandButton">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>show command</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="1">
        <widget class="QPushButton" name="saveConfigButton">
         <property name="enabled">
@@ -670,39 +494,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="4">
-       <widget class="QPushButton" name="showCommandButton">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>show command</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="QPushButton" name="previewButton">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>preview</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0" colspan="5">
+      <item row="1" column="0" colspan="4">
        <widget class="QPushButton" name="startButton">
         <property name="enabled">
          <bool>false</bool>
@@ -726,11 +518,24 @@
  </widget>
  <tabstops>
   <tabstop>selectRootDirectoryButton</tabstop>
-  <tabstop>minLengthSpinbox</tabstop>
-  <tabstop>editSelectedFilesButton</tabstop>
-  <tabstop>filesToEditSpinbox</tabstop>
-  <tabstop>totalLengthToEditSpinbox</tabstop>
  </tabstops>
  <resources/>
  <connections/>
+ <designerdata>
+  <property name="gridDeltaX">
+   <number>10</number>
+  </property>
+  <property name="gridDeltaY">
+   <number>10</number>
+  </property>
+  <property name="gridSnapX">
+   <bool>true</bool>
+  </property>
+  <property name="gridSnapY">
+   <bool>true</bool>
+  </property>
+  <property name="gridVisible">
+   <bool>true</bool>
+  </property>
+ </designerdata>
 </ui>
