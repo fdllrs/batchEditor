@@ -1,11 +1,11 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 @dataclass
 class ProcessingOptions:
     export_option: str = "premiere"
     directory: str = ""
-    threshold: float = 0.04
+    track_thresholds: list[float] = field(default_factory=lambda: [0.0])
     margin: float = 0.2
     files_into_folders: bool = False
     split_only: bool = False

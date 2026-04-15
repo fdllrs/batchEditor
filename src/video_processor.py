@@ -7,11 +7,16 @@ import subprocess
 
 def build_command(options: ProcessingOptions, path: Path) -> list[str]:
     """Return the auto-editor command list for a single file."""
+    track_clauses = " ".join(
+        f"audio:stream={i},threshold={t}%"
+        for i, t in enumerate(options.track_thresholds)
+    )
+    edit_expr = f"(or {track_clauses})"
     cmd = [
         sys.executable, "-m", "auto_editor",
         str(path),
         "--margin", f"{options.margin}sec",
-        "--edit", f"(or (audio {options.threshold} 1) (audio 0.01 2))",
+        "--edit", edit_expr,
         "--export", f'{options.export_option}:name="{path.stem}"',
     ]
     return cmd

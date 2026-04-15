@@ -6,7 +6,7 @@ DEFAULT_CONFIG_PATH: Path = Path(__file__).parent.parent / "default_config.txt"
 
 CONFIG_KEYS = [
     "export_option",
-    "threshold",
+    "track_thresholds",
     "margin",
     "files_into_folders",
     "split_only",
@@ -21,6 +21,8 @@ def save_config(path: Path, config: dict) -> None:
             value = config.get(key, "")
             if isinstance(value, bool):
                 value = "true" if value else "false"
+            elif isinstance(value, list):
+                value = ";".join(str(v) for v in value)
             f.write(f"{key}={value}\n")
 
 
@@ -51,6 +53,8 @@ def _parse_value(key: str, raw: str):
     bool_keys = {"files_into_folders", "split_only", "separate_tracks"}
     if key in bool_keys:
         return raw.lower() == "true"
-    if key == "threshold" or key == "margin":
+    if key == "track_thresholds":
+        return [float(x) for x in raw.split(";") if x.strip()]
+    if key == "margin":
         return float(raw)
     return raw

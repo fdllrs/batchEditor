@@ -18,8 +18,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDoubleSpinBox,
     QGridLayout, QHBoxLayout, QLabel, QLayout,
     QLineEdit, QMainWindow, QProgressBar, QPushButton,
-    QSizePolicy, QSlider, QSpacerItem, QStatusBar,
-    QTabWidget, QVBoxLayout, QWidget)
+    QSizePolicy, QSpacerItem, QStatusBar, QTabWidget,
+    QVBoxLayout, QWidget)
 
 class Ui_BatchEditor(object):
     def setupUi(self, BatchEditor):
@@ -123,6 +123,8 @@ class Ui_BatchEditor(object):
 
         self.SelectionGrid.addWidget(self.totalLengthLabel, 2, 0, 1, 1)
 
+        self.SelectionGrid.setColumnStretch(1, 1)
+        self.SelectionGrid.setColumnStretch(2, 2)
 
         self.verticalLayout.addLayout(self.SelectionGrid)
 
@@ -134,83 +136,30 @@ class Ui_BatchEditor(object):
         self.optionsGrid = QGridLayout()
         self.optionsGrid.setObjectName(u"optionsGrid")
         self.optionsGrid.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
-        self.optionsGrid.setHorizontalSpacing(6)
         self.optionsGrid.setVerticalSpacing(2)
-        self.optionsGrid.setContentsMargins(5, 5, 5, 5)
-        self.marginSpinbox = QDoubleSpinBox(self.optionsTab)
-        self.marginSpinbox.setObjectName(u"marginSpinbox")
-        self.marginSpinbox.setSingleStep(0.500000000000000)
-
-        self.optionsGrid.addWidget(self.marginSpinbox, 2, 1, 1, 1)
-
-        self.audioThresholdSpinbox = QDoubleSpinBox(self.optionsTab)
-        self.audioThresholdSpinbox.setObjectName(u"audioThresholdSpinbox")
-        self.audioThresholdSpinbox.setSingleStep(0.500000000000000)
-
-        self.optionsGrid.addWidget(self.audioThresholdSpinbox, 1, 2, 1, 1)
-
-        self.audioThresholdLabel = QLabel(self.optionsTab)
-        self.audioThresholdLabel.setObjectName(u"audioThresholdLabel")
-        self.audioThresholdLabel.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-        self.audioThresholdLabel.setMargin(3)
-
-        self.optionsGrid.addWidget(self.audioThresholdLabel, 1, 0, 1, 1)
-
         self.separateTracks = QCheckBox(self.optionsTab)
         self.separateTracks.setObjectName(u"separateTracks")
         self.separateTracks.setChecked(True)
 
-        self.optionsGrid.addWidget(self.separateTracks, 4, 0, 1, 2)
+        self.optionsGrid.addWidget(self.separateTracks, 3, 0, 1, 1)
 
-        self.audiothresholdSlider = QSlider(self.optionsTab)
-        self.audiothresholdSlider.setObjectName(u"audiothresholdSlider")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
-        sizePolicy4.setHorizontalStretch(9)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.audiothresholdSlider.sizePolicy().hasHeightForWidth())
-        self.audiothresholdSlider.setSizePolicy(sizePolicy4)
-        self.audiothresholdSlider.setMouseTracking(False)
-        self.audiothresholdSlider.setTabletTracking(False)
-        self.audiothresholdSlider.setContextMenuPolicy(Qt.ContextMenuPolicy.DefaultContextMenu)
-        self.audiothresholdSlider.setAcceptDrops(False)
-        self.audiothresholdSlider.setAutoFillBackground(True)
-        self.audiothresholdSlider.setMinimum(1)
-        self.audiothresholdSlider.setMaximum(10000)
-        self.audiothresholdSlider.setValue(1)
-        self.audiothresholdSlider.setSliderPosition(1)
-        self.audiothresholdSlider.setOrientation(Qt.Orientation.Horizontal)
-        self.audiothresholdSlider.setInvertedAppearance(False)
-        self.audiothresholdSlider.setInvertedControls(False)
-        self.audiothresholdSlider.setTickPosition(QSlider.TickPosition.NoTicks)
-        self.audiothresholdSlider.setTickInterval(1)
+        self.marginSpinbox = QDoubleSpinBox(self.optionsTab)
+        self.marginSpinbox.setObjectName(u"marginSpinbox")
+        self.marginSpinbox.setSingleStep(0.500000000000000)
 
-        self.optionsGrid.addWidget(self.audiothresholdSlider, 1, 1, 1, 1)
-
-        self.organizeIntoFolders = QCheckBox(self.optionsTab)
-        self.organizeIntoFolders.setObjectName(u"organizeIntoFolders")
-        self.organizeIntoFolders.setChecked(True)
-        self.organizeIntoFolders.setTristate(False)
-
-        self.optionsGrid.addWidget(self.organizeIntoFolders, 3, 0, 1, 2)
+        self.optionsGrid.addWidget(self.marginSpinbox, 1, 1, 1, 1)
 
         self.exportOptionLabel = QLabel(self.optionsTab)
         self.exportOptionLabel.setObjectName(u"exportOptionLabel")
-        self.exportOptionLabel.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+        self.exportOptionLabel.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
         self.exportOptionLabel.setMargin(3)
 
         self.optionsGrid.addWidget(self.exportOptionLabel, 0, 0, 1, 1)
 
-        self.marginLabel = QLabel(self.optionsTab)
-        self.marginLabel.setObjectName(u"marginLabel")
-        self.marginLabel.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-        self.marginLabel.setMargin(3)
-
-        self.optionsGrid.addWidget(self.marginLabel, 2, 0, 1, 1)
-
         self.splitOnly = QCheckBox(self.optionsTab)
         self.splitOnly.setObjectName(u"splitOnly")
 
-        self.optionsGrid.addWidget(self.splitOnly, 5, 0, 1, 2)
+        self.optionsGrid.addWidget(self.splitOnly, 4, 0, 1, 1)
 
         self.exportSelector = QComboBox(self.optionsTab)
         self.exportSelector.addItem("")
@@ -221,20 +170,33 @@ class Ui_BatchEditor(object):
         self.exportSelector.addItem("")
         self.exportSelector.setObjectName(u"exportSelector")
 
-        self.optionsGrid.addWidget(self.exportSelector, 0, 1, 1, 3)
+        self.optionsGrid.addWidget(self.exportSelector, 0, 1, 1, 1)
+
+        self.marginLabel = QLabel(self.optionsTab)
+        self.marginLabel.setObjectName(u"marginLabel")
+        self.marginLabel.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+        self.marginLabel.setMargin(3)
+
+        self.optionsGrid.addWidget(self.marginLabel, 1, 0, 1, 1)
+
+        self.organizeIntoFolders = QCheckBox(self.optionsTab)
+        self.organizeIntoFolders.setObjectName(u"organizeIntoFolders")
+        self.organizeIntoFolders.setChecked(True)
+        self.organizeIntoFolders.setTristate(False)
+
+        self.optionsGrid.addWidget(self.organizeIntoFolders, 2, 0, 1, 1)
 
         self.multitrackTuningButton = QPushButton(self.optionsTab)
         self.multitrackTuningButton.setObjectName(u"multitrackTuningButton")
         self.multitrackTuningButton.setEnabled(True)
-        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Maximum)
-        sizePolicy5.setHorizontalStretch(0)
-        sizePolicy5.setVerticalStretch(0)
-        sizePolicy5.setHeightForWidth(self.multitrackTuningButton.sizePolicy().hasHeightForWidth())
-        self.multitrackTuningButton.setSizePolicy(sizePolicy5)
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Maximum)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.multitrackTuningButton.sizePolicy().hasHeightForWidth())
+        self.multitrackTuningButton.setSizePolicy(sizePolicy4)
 
-        self.optionsGrid.addWidget(self.multitrackTuningButton, 1, 3, 1, 1)
+        self.optionsGrid.addWidget(self.multitrackTuningButton, 5, 0, 1, 2)
 
-        self.optionsGrid.setColumnStretch(0, 1)
 
         self.horizontalLayout.addLayout(self.optionsGrid)
 
@@ -262,38 +224,38 @@ class Ui_BatchEditor(object):
         self.loadConfigButton = QPushButton(self.centralwidget)
         self.loadConfigButton.setObjectName(u"loadConfigButton")
         self.loadConfigButton.setEnabled(True)
-        sizePolicy6 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
-        sizePolicy6.setHorizontalStretch(0)
-        sizePolicy6.setVerticalStretch(0)
-        sizePolicy6.setHeightForWidth(self.loadConfigButton.sizePolicy().hasHeightForWidth())
-        self.loadConfigButton.setSizePolicy(sizePolicy6)
+        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(0)
+        sizePolicy5.setHeightForWidth(self.loadConfigButton.sizePolicy().hasHeightForWidth())
+        self.loadConfigButton.setSizePolicy(sizePolicy5)
 
         self.gridLayout_2.addWidget(self.loadConfigButton, 0, 0, 1, 1)
 
         self.showCommandButton = QPushButton(self.centralwidget)
         self.showCommandButton.setObjectName(u"showCommandButton")
         self.showCommandButton.setEnabled(True)
-        sizePolicy6.setHeightForWidth(self.showCommandButton.sizePolicy().hasHeightForWidth())
-        self.showCommandButton.setSizePolicy(sizePolicy6)
+        sizePolicy5.setHeightForWidth(self.showCommandButton.sizePolicy().hasHeightForWidth())
+        self.showCommandButton.setSizePolicy(sizePolicy5)
 
         self.gridLayout_2.addWidget(self.showCommandButton, 0, 3, 1, 1)
 
         self.saveConfigButton = QPushButton(self.centralwidget)
         self.saveConfigButton.setObjectName(u"saveConfigButton")
         self.saveConfigButton.setEnabled(True)
-        sizePolicy6.setHeightForWidth(self.saveConfigButton.sizePolicy().hasHeightForWidth())
-        self.saveConfigButton.setSizePolicy(sizePolicy6)
+        sizePolicy5.setHeightForWidth(self.saveConfigButton.sizePolicy().hasHeightForWidth())
+        self.saveConfigButton.setSizePolicy(sizePolicy5)
 
         self.gridLayout_2.addWidget(self.saveConfigButton, 0, 1, 1, 1)
 
         self.startButton = QPushButton(self.centralwidget)
         self.startButton.setObjectName(u"startButton")
         self.startButton.setEnabled(False)
-        sizePolicy7 = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
-        sizePolicy7.setHorizontalStretch(0)
-        sizePolicy7.setVerticalStretch(0)
-        sizePolicy7.setHeightForWidth(self.startButton.sizePolicy().hasHeightForWidth())
-        self.startButton.setSizePolicy(sizePolicy7)
+        sizePolicy6 = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
+        sizePolicy6.setHorizontalStretch(0)
+        sizePolicy6.setVerticalStretch(0)
+        sizePolicy6.setHeightForWidth(self.startButton.sizePolicy().hasHeightForWidth())
+        self.startButton.setSizePolicy(sizePolicy6)
 
         self.gridLayout_2.addWidget(self.startButton, 1, 0, 1, 4)
 
@@ -325,11 +287,9 @@ class Ui_BatchEditor(object):
         self.totalLengthToEdit.setText(QCoreApplication.translate("BatchEditor", u"0 min", None))
         self.totalLengthLabel.setText(QCoreApplication.translate("BatchEditor", u"total length: ", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.selectionTab), QCoreApplication.translate("BatchEditor", u"Select", None))
-        self.audioThresholdLabel.setText(QCoreApplication.translate("BatchEditor", u"Audio threshold (%):", None))
         self.separateTracks.setText(QCoreApplication.translate("BatchEditor", u"keep audio tracks separate", None))
-        self.organizeIntoFolders.setText(QCoreApplication.translate("BatchEditor", u"Organize files into folders", None))
+        self.marginSpinbox.setSuffix(QCoreApplication.translate("BatchEditor", u" seconds", None))
         self.exportOptionLabel.setText(QCoreApplication.translate("BatchEditor", u"Export option:", None))
-        self.marginLabel.setText(QCoreApplication.translate("BatchEditor", u"margin (seconds):", None))
         self.splitOnly.setText(QCoreApplication.translate("BatchEditor", u"split clips only", None))
         self.exportSelector.setItemText(0, QCoreApplication.translate("BatchEditor", u"Premiere Pro", None))
         self.exportSelector.setItemText(1, QCoreApplication.translate("BatchEditor", u"Da Vinci Resolve", None))
@@ -338,7 +298,9 @@ class Ui_BatchEditor(object):
         self.exportSelector.setItemText(4, QCoreApplication.translate("BatchEditor", u"Kdenlive", None))
         self.exportSelector.setItemText(5, QCoreApplication.translate("BatchEditor", u"clip seuqence", None))
 
-        self.multitrackTuningButton.setText(QCoreApplication.translate("BatchEditor", u"multitrack tuning", None))
+        self.marginLabel.setText(QCoreApplication.translate("BatchEditor", u"margin:", None))
+        self.organizeIntoFolders.setText(QCoreApplication.translate("BatchEditor", u"Organize files into folders", None))
+        self.multitrackTuningButton.setText(QCoreApplication.translate("BatchEditor", u"configure silence thresholds", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.optionsTab), QCoreApplication.translate("BatchEditor", u"Configure", None))
         self.loadConfigButton.setText(QCoreApplication.translate("BatchEditor", u"Load config", None))
         self.showCommandButton.setText(QCoreApplication.translate("BatchEditor", u"show command", None))

@@ -1,6 +1,8 @@
 from bs4 import BeautifulSoup
 import os
+import subprocess
 import cv2
+from pathlib import Path
 
 
 def video_to_cv2(path: str):
@@ -19,6 +21,30 @@ def video_length(path: str):
     video.release()
 
     return frame_count / fps
+
+
+def audio_track_count(path) -> int:
+    """Return the number of audio streams in a video file via ffprobe.
+
+    Falls back to 1 if ffprobe is unavailable or the probe fails.
+    """
+    try:
+        result = subprocess.run(
+            [
+                "ffprobe", "-v", "error",
+                "-select_streams", "a",
+                "-show_entries", "stream=index",
+                "-of", "csv=p=0",
+                str(path),
+            ],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        lines = [ln for ln in result.stdout.splitlines() if ln.strip()]
+        return max(len(lines), 1)
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return 1
 
 
 def format_duration(duration_mins):

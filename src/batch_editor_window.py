@@ -28,19 +28,9 @@ class BatchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
         self.showCommandButton.clicked.connect(self.controller.show_command)
         self.editSelectedFilesButton.clicked.connect(self.controller.open_clip_selector_dialog)
         
-        self.audiothresholdSlider.valueChanged.connect(self.__update_spinbox_from_slider)
-        self.audioThresholdSpinbox.valueChanged.connect(self.__update_slider_from_spinbox)
 
 
-    def __update_spinbox_from_slider(self, value):
-        self.audioThresholdSpinbox.blockSignals(True)
-        self.audioThresholdSpinbox.setValue(value / 100)
-        self.audioThresholdSpinbox.blockSignals(False)
 
-    def __update_slider_from_spinbox(self, value):
-        self.audiothresholdSlider.blockSignals(True)
-        self.audiothresholdSlider.setValue(value * 100)
-        self.audiothresholdSlider.blockSignals(False)
 
 
 

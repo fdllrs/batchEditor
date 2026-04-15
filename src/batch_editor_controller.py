@@ -2,7 +2,7 @@ import sys
 from PySide6 import QtCore
 from PySide6 import QtWidgets
 from pathlib import Path
-from utils import total_duration
+from utils import total_duration, audio_track_count
 from video_finder import VideoFinder
 from video_processor import VideoProcessor, build_command
 from processing_options import ProcessingOptions
@@ -23,9 +23,11 @@ class BatchEditorController:
 
     def _reset_editing_state(self):
         self.max_audio_channels = 1
+        self.track_thresholds: list[float] = [0.0]
         self.video_files_found = {}
         self.video_files_to_edit = {}
         self.to_edit_length = 0
+        self.view.multitrackTuningButton.setEnabled(False)
 
     def _setup_threadpool(self):
         self.threadpool = QtCore.QThreadPool()
@@ -35,7 +37,7 @@ class BatchEditorController:
         options = ProcessingOptions(
             export_option=EXPORT_OPTIONS[self.view.exportSelector.currentText()],
             directory=self.view.rootDirectoryLabel.text(),
-            threshold=self.view.audioThresholdSpinbox.value(),
+            track_thresholds=self.track_thresholds,
             margin=self.view.marginSpinbox.value(),
             files_into_folders=self.view.organizeIntoFolders.isChecked(),
             split_only=self.view.splitOnly.isChecked(),
@@ -101,9 +103,24 @@ class BatchEditorController:
 
         
     def on_search_finished(self):
-
         self.update_to_edit_files()
         self.view.totalLength.setText(total_duration(self.video_files_found) + ' min')
+        self._probe_max_audio_tracks()
+
+
+    def _probe_max_audio_tracks(self):
+        """Probe all found files, store the highest audio stream count,
+        and resize track_thresholds to match (padding with 0.0)."""
+        max_tracks = max(
+            (audio_track_count(path) for path in self.video_files_found),
+            default=1,
+        )
+        self.max_audio_channels = max_tracks
+        current = self.track_thresholds
+        self.track_thresholds = [
+            current[i] if i < len(current) else 0.0
+            for i in range(max_tracks)
+        ]
 
 
 
@@ -119,6 +136,7 @@ class BatchEditorController:
         has_files = len(self.video_files_to_edit) > 0
         self.view.totalLengthToEdit.setText(total_duration(self.video_files_to_edit) + " min")
         self.view.editSelectedFilesButton.setEnabled(has_files)
+        self.view.multitrackTuningButton.setEnabled(has_files)
 
 
     def open_clip_selector_dialog(self):
@@ -130,15 +148,20 @@ class BatchEditorController:
 
 
     def open_audio_threshold_tuner_dialog(self):
-        self.threshold_dialog = AudioThresholdTuner(self.view)
-        self.threshold_dialog.exec()
+        dialog = AudioThresholdTuner(
+            num_tracks=self.max_audio_channels,
+            thresholds=self.track_thresholds,
+            parent=self.view,
+        )
+        if dialog.exec() == QtWidgets.QDialog.DialogCode.Accepted:
+            self.track_thresholds = dialog.get_thresholds()
 
 
     def show_command(self):
         options = ProcessingOptions(
             export_option=EXPORT_OPTIONS[self.view.exportSelector.currentText()],
             directory=self.view.rootDirectoryLabel.text(),
-            threshold=self.view.audioThresholdSpinbox.value(),
+            track_thresholds=self.track_thresholds,
             margin=self.view.marginSpinbox.value(),
             files_into_folders=self.view.organizeIntoFolders.isChecked(),
             split_only=self.view.splitOnly.isChecked(),
@@ -176,7 +199,7 @@ class BatchEditorController:
         export_value = EXPORT_OPTIONS[self.view.exportSelector.currentText()]
         config = {
             "export_option": export_value,
-            "threshold": self.view.audioThresholdSpinbox.value(),
+            "track_thresholds": self.track_thresholds,
             "margin": self.view.marginSpinbox.value(),
             "files_into_folders": self.view.organizeIntoFolders.isChecked(),
             "split_only": self.view.splitOnly.isChecked(),
@@ -197,7 +220,7 @@ class BatchEditorController:
 
 
     def _apply_config(self, config: dict):
-        """Push a loaded config dict into the UI widgets."""
+        """Push a loaded config dict into the UI widgets and controller state."""
         _export_reverse = {v: k for k, v in EXPORT_OPTIONS.items()}
 
         if "export_option" in config:
@@ -205,8 +228,14 @@ class BatchEditorController:
             if label:
                 self.view.exportSelector.setCurrentText(label)
 
-        if "threshold" in config:
-            self.view.audioThresholdSpinbox.setValue(config["threshold"])
+        if "track_thresholds" in config:
+            loaded = config["track_thresholds"]
+            # Resize to match the current known track count, padding with 0.0.
+            n = self.max_audio_channels
+            self.track_thresholds = [
+                loaded[i] if i < len(loaded) else 0.0
+                for i in range(n)
+            ]
 
         if "margin" in config:
             self.view.marginSpinbox.setValue(config["margin"])
