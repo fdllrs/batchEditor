@@ -28,42 +28,42 @@ class Ui_audioThresholdTunerDialog(object):
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.threshold1Layout = QHBoxLayout()
         self.threshold1Layout.setObjectName(u"threshold1Layout")
-        self.audioThresholdLabel = QLabel(audioThresholdTunerDialog)
-        self.audioThresholdLabel.setObjectName(u"audioThresholdLabel")
-        self.audioThresholdLabel.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-        self.audioThresholdLabel.setMargin(3)
+        self.audioThresholdLabel_1 = QLabel(audioThresholdTunerDialog)
+        self.audioThresholdLabel_1.setObjectName(u"audioThresholdLabel_1")
+        self.audioThresholdLabel_1.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+        self.audioThresholdLabel_1.setMargin(3)
 
-        self.threshold1Layout.addWidget(self.audioThresholdLabel)
+        self.threshold1Layout.addWidget(self.audioThresholdLabel_1)
 
-        self.audiothresholdSlider = QSlider(audioThresholdTunerDialog)
-        self.audiothresholdSlider.setObjectName(u"audiothresholdSlider")
+        self.audiothresholdSlider_1 = QSlider(audioThresholdTunerDialog)
+        self.audiothresholdSlider_1.setObjectName(u"audiothresholdSlider_1")
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(9)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.audiothresholdSlider.sizePolicy().hasHeightForWidth())
-        self.audiothresholdSlider.setSizePolicy(sizePolicy)
-        self.audiothresholdSlider.setMouseTracking(False)
-        self.audiothresholdSlider.setTabletTracking(False)
-        self.audiothresholdSlider.setContextMenuPolicy(Qt.ContextMenuPolicy.DefaultContextMenu)
-        self.audiothresholdSlider.setAcceptDrops(False)
-        self.audiothresholdSlider.setAutoFillBackground(True)
-        self.audiothresholdSlider.setMinimum(1)
-        self.audiothresholdSlider.setMaximum(10000)
-        self.audiothresholdSlider.setValue(1)
-        self.audiothresholdSlider.setSliderPosition(1)
-        self.audiothresholdSlider.setOrientation(Qt.Orientation.Horizontal)
-        self.audiothresholdSlider.setInvertedAppearance(False)
-        self.audiothresholdSlider.setInvertedControls(False)
-        self.audiothresholdSlider.setTickPosition(QSlider.TickPosition.NoTicks)
-        self.audiothresholdSlider.setTickInterval(1)
+        sizePolicy.setHeightForWidth(self.audiothresholdSlider_1.sizePolicy().hasHeightForWidth())
+        self.audiothresholdSlider_1.setSizePolicy(sizePolicy)
+        self.audiothresholdSlider_1.setMouseTracking(False)
+        self.audiothresholdSlider_1.setTabletTracking(False)
+        self.audiothresholdSlider_1.setContextMenuPolicy(Qt.ContextMenuPolicy.DefaultContextMenu)
+        self.audiothresholdSlider_1.setAcceptDrops(False)
+        self.audiothresholdSlider_1.setAutoFillBackground(True)
+        self.audiothresholdSlider_1.setMinimum(1)
+        self.audiothresholdSlider_1.setMaximum(10000)
+        self.audiothresholdSlider_1.setValue(1)
+        self.audiothresholdSlider_1.setSliderPosition(1)
+        self.audiothresholdSlider_1.setOrientation(Qt.Orientation.Horizontal)
+        self.audiothresholdSlider_1.setInvertedAppearance(False)
+        self.audiothresholdSlider_1.setInvertedControls(False)
+        self.audiothresholdSlider_1.setTickPosition(QSlider.TickPosition.NoTicks)
+        self.audiothresholdSlider_1.setTickInterval(1)
 
-        self.threshold1Layout.addWidget(self.audiothresholdSlider)
+        self.threshold1Layout.addWidget(self.audiothresholdSlider_1)
 
-        self.audioThresholdSpinbox = QDoubleSpinBox(audioThresholdTunerDialog)
-        self.audioThresholdSpinbox.setObjectName(u"audioThresholdSpinbox")
-        self.audioThresholdSpinbox.setSingleStep(0.500000000000000)
+        self.audioThresholdSpinbox_1 = QDoubleSpinBox(audioThresholdTunerDialog)
+        self.audioThresholdSpinbox_1.setObjectName(u"audioThresholdSpinbox_1")
+        self.audioThresholdSpinbox_1.setSingleStep(0.500000000000000)
 
-        self.threshold1Layout.addWidget(self.audioThresholdSpinbox)
+        self.threshold1Layout.addWidget(self.audioThresholdSpinbox_1)
 
 
         self.verticalLayout.addLayout(self.threshold1Layout)
@@ -146,14 +146,53 @@ class Ui_audioThresholdTunerDialog(object):
 
         self.verticalLayout.addLayout(self.threshold3Layout)
 
-        self.threshold4Layout_2 = QHBoxLayout()
-        self.threshold4Layout_2.setObjectName(u"threshold4Layout_2")
+        self.threshold4Layout = QHBoxLayout()
+        self.threshold4Layout.setObjectName(u"threshold4Layout")
+        self.audioThresholdLabel_4 = QLabel(audioThresholdTunerDialog)
+        self.audioThresholdLabel_4.setObjectName(u"audioThresholdLabel_4")
+        self.audioThresholdLabel_4.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+        self.audioThresholdLabel_4.setMargin(3)
+
+        self.threshold4Layout.addWidget(self.audioThresholdLabel_4)
+
+        self.audiothresholdSlider_4 = QSlider(audioThresholdTunerDialog)
+        self.audiothresholdSlider_4.setObjectName(u"audiothresholdSlider_4")
+        sizePolicy.setHeightForWidth(self.audiothresholdSlider_4.sizePolicy().hasHeightForWidth())
+        self.audiothresholdSlider_4.setSizePolicy(sizePolicy)
+        self.audiothresholdSlider_4.setMouseTracking(False)
+        self.audiothresholdSlider_4.setTabletTracking(False)
+        self.audiothresholdSlider_4.setContextMenuPolicy(Qt.ContextMenuPolicy.DefaultContextMenu)
+        self.audiothresholdSlider_4.setAcceptDrops(False)
+        self.audiothresholdSlider_4.setAutoFillBackground(True)
+        self.audiothresholdSlider_4.setMinimum(1)
+        self.audiothresholdSlider_4.setMaximum(10000)
+        self.audiothresholdSlider_4.setValue(1)
+        self.audiothresholdSlider_4.setSliderPosition(1)
+        self.audiothresholdSlider_4.setOrientation(Qt.Orientation.Horizontal)
+        self.audiothresholdSlider_4.setInvertedAppearance(False)
+        self.audiothresholdSlider_4.setInvertedControls(False)
+        self.audiothresholdSlider_4.setTickPosition(QSlider.TickPosition.NoTicks)
+        self.audiothresholdSlider_4.setTickInterval(1)
+
+        self.threshold4Layout.addWidget(self.audiothresholdSlider_4)
+
+        self.audioThresholdSpinbox_4 = QDoubleSpinBox(audioThresholdTunerDialog)
+        self.audioThresholdSpinbox_4.setObjectName(u"audioThresholdSpinbox_4")
+        self.audioThresholdSpinbox_4.setSingleStep(0.500000000000000)
+
+        self.threshold4Layout.addWidget(self.audioThresholdSpinbox_4)
+
+
+        self.verticalLayout.addLayout(self.threshold4Layout)
+
+        self.threshold5Layout = QHBoxLayout()
+        self.threshold5Layout.setObjectName(u"threshold5Layout")
         self.audioThresholdLabel_5 = QLabel(audioThresholdTunerDialog)
         self.audioThresholdLabel_5.setObjectName(u"audioThresholdLabel_5")
         self.audioThresholdLabel_5.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
         self.audioThresholdLabel_5.setMargin(3)
 
-        self.threshold4Layout_2.addWidget(self.audioThresholdLabel_5)
+        self.threshold5Layout.addWidget(self.audioThresholdLabel_5)
 
         self.audiothresholdSlider_5 = QSlider(audioThresholdTunerDialog)
         self.audiothresholdSlider_5.setObjectName(u"audiothresholdSlider_5")
@@ -174,25 +213,25 @@ class Ui_audioThresholdTunerDialog(object):
         self.audiothresholdSlider_5.setTickPosition(QSlider.TickPosition.NoTicks)
         self.audiothresholdSlider_5.setTickInterval(1)
 
-        self.threshold4Layout_2.addWidget(self.audiothresholdSlider_5)
+        self.threshold5Layout.addWidget(self.audiothresholdSlider_5)
 
         self.audioThresholdSpinbox_5 = QDoubleSpinBox(audioThresholdTunerDialog)
         self.audioThresholdSpinbox_5.setObjectName(u"audioThresholdSpinbox_5")
         self.audioThresholdSpinbox_5.setSingleStep(0.500000000000000)
 
-        self.threshold4Layout_2.addWidget(self.audioThresholdSpinbox_5)
+        self.threshold5Layout.addWidget(self.audioThresholdSpinbox_5)
 
 
-        self.verticalLayout.addLayout(self.threshold4Layout_2)
+        self.verticalLayout.addLayout(self.threshold5Layout)
 
-        self.threshold5Layout = QHBoxLayout()
-        self.threshold5Layout.setObjectName(u"threshold5Layout")
+        self.threshold6Layout = QHBoxLayout()
+        self.threshold6Layout.setObjectName(u"threshold6Layout")
         self.audioThresholdLabel_6 = QLabel(audioThresholdTunerDialog)
         self.audioThresholdLabel_6.setObjectName(u"audioThresholdLabel_6")
         self.audioThresholdLabel_6.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
         self.audioThresholdLabel_6.setMargin(3)
 
-        self.threshold5Layout.addWidget(self.audioThresholdLabel_6)
+        self.threshold6Layout.addWidget(self.audioThresholdLabel_6)
 
         self.audiothresholdSlider_6 = QSlider(audioThresholdTunerDialog)
         self.audiothresholdSlider_6.setObjectName(u"audiothresholdSlider_6")
@@ -213,25 +252,25 @@ class Ui_audioThresholdTunerDialog(object):
         self.audiothresholdSlider_6.setTickPosition(QSlider.TickPosition.NoTicks)
         self.audiothresholdSlider_6.setTickInterval(1)
 
-        self.threshold5Layout.addWidget(self.audiothresholdSlider_6)
+        self.threshold6Layout.addWidget(self.audiothresholdSlider_6)
 
         self.audioThresholdSpinbox_6 = QDoubleSpinBox(audioThresholdTunerDialog)
         self.audioThresholdSpinbox_6.setObjectName(u"audioThresholdSpinbox_6")
         self.audioThresholdSpinbox_6.setSingleStep(0.500000000000000)
 
-        self.threshold5Layout.addWidget(self.audioThresholdSpinbox_6)
+        self.threshold6Layout.addWidget(self.audioThresholdSpinbox_6)
 
 
-        self.verticalLayout.addLayout(self.threshold5Layout)
+        self.verticalLayout.addLayout(self.threshold6Layout)
 
-        self.threshold6Layout = QHBoxLayout()
-        self.threshold6Layout.setObjectName(u"threshold6Layout")
+        self.threshold7Layout = QHBoxLayout()
+        self.threshold7Layout.setObjectName(u"threshold7Layout")
         self.audioThresholdLabel_7 = QLabel(audioThresholdTunerDialog)
         self.audioThresholdLabel_7.setObjectName(u"audioThresholdLabel_7")
         self.audioThresholdLabel_7.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
         self.audioThresholdLabel_7.setMargin(3)
 
-        self.threshold6Layout.addWidget(self.audioThresholdLabel_7)
+        self.threshold7Layout.addWidget(self.audioThresholdLabel_7)
 
         self.audiothresholdSlider_7 = QSlider(audioThresholdTunerDialog)
         self.audiothresholdSlider_7.setObjectName(u"audiothresholdSlider_7")
@@ -252,52 +291,13 @@ class Ui_audioThresholdTunerDialog(object):
         self.audiothresholdSlider_7.setTickPosition(QSlider.TickPosition.NoTicks)
         self.audiothresholdSlider_7.setTickInterval(1)
 
-        self.threshold6Layout.addWidget(self.audiothresholdSlider_7)
+        self.threshold7Layout.addWidget(self.audiothresholdSlider_7)
 
         self.audioThresholdSpinbox_7 = QDoubleSpinBox(audioThresholdTunerDialog)
         self.audioThresholdSpinbox_7.setObjectName(u"audioThresholdSpinbox_7")
         self.audioThresholdSpinbox_7.setSingleStep(0.500000000000000)
 
-        self.threshold6Layout.addWidget(self.audioThresholdSpinbox_7)
-
-
-        self.verticalLayout.addLayout(self.threshold6Layout)
-
-        self.threshold7Layout = QHBoxLayout()
-        self.threshold7Layout.setObjectName(u"threshold7Layout")
-        self.audioThresholdLabel_8 = QLabel(audioThresholdTunerDialog)
-        self.audioThresholdLabel_8.setObjectName(u"audioThresholdLabel_8")
-        self.audioThresholdLabel_8.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
-        self.audioThresholdLabel_8.setMargin(3)
-
-        self.threshold7Layout.addWidget(self.audioThresholdLabel_8)
-
-        self.audiothresholdSlider_8 = QSlider(audioThresholdTunerDialog)
-        self.audiothresholdSlider_8.setObjectName(u"audiothresholdSlider_8")
-        sizePolicy.setHeightForWidth(self.audiothresholdSlider_8.sizePolicy().hasHeightForWidth())
-        self.audiothresholdSlider_8.setSizePolicy(sizePolicy)
-        self.audiothresholdSlider_8.setMouseTracking(False)
-        self.audiothresholdSlider_8.setTabletTracking(False)
-        self.audiothresholdSlider_8.setContextMenuPolicy(Qt.ContextMenuPolicy.DefaultContextMenu)
-        self.audiothresholdSlider_8.setAcceptDrops(False)
-        self.audiothresholdSlider_8.setAutoFillBackground(True)
-        self.audiothresholdSlider_8.setMinimum(1)
-        self.audiothresholdSlider_8.setMaximum(10000)
-        self.audiothresholdSlider_8.setValue(1)
-        self.audiothresholdSlider_8.setSliderPosition(1)
-        self.audiothresholdSlider_8.setOrientation(Qt.Orientation.Horizontal)
-        self.audiothresholdSlider_8.setInvertedAppearance(False)
-        self.audiothresholdSlider_8.setInvertedControls(False)
-        self.audiothresholdSlider_8.setTickPosition(QSlider.TickPosition.NoTicks)
-        self.audiothresholdSlider_8.setTickInterval(1)
-
-        self.threshold7Layout.addWidget(self.audiothresholdSlider_8)
-
-        self.audioThresholdSpinbox_8 = QDoubleSpinBox(audioThresholdTunerDialog)
-        self.audioThresholdSpinbox_8.setObjectName(u"audioThresholdSpinbox_8")
-        self.audioThresholdSpinbox_8.setSingleStep(0.500000000000000)
-
-        self.threshold7Layout.addWidget(self.audioThresholdSpinbox_8)
+        self.threshold7Layout.addWidget(self.audioThresholdSpinbox_7)
 
 
         self.verticalLayout.addLayout(self.threshold7Layout)
@@ -319,12 +319,12 @@ class Ui_audioThresholdTunerDialog(object):
 
     def retranslateUi(self, audioThresholdTunerDialog):
         audioThresholdTunerDialog.setWindowTitle(QCoreApplication.translate("audioThresholdTunerDialog", u"Dialog", None))
-        self.audioThresholdLabel.setText(QCoreApplication.translate("audioThresholdTunerDialog", u"Track 1 threshold (%):", None))
+        self.audioThresholdLabel_1.setText(QCoreApplication.translate("audioThresholdTunerDialog", u"Track 1 threshold (%):", None))
         self.audioThresholdLabel_2.setText(QCoreApplication.translate("audioThresholdTunerDialog", u"Track 2 threshold (%):", None))
         self.audioThresholdLabel_3.setText(QCoreApplication.translate("audioThresholdTunerDialog", u"Track 3 threshold (%):", None))
-        self.audioThresholdLabel_5.setText(QCoreApplication.translate("audioThresholdTunerDialog", u"Track 4 threshold (%):", None))
-        self.audioThresholdLabel_6.setText(QCoreApplication.translate("audioThresholdTunerDialog", u"Track 5 threshold (%):", None))
-        self.audioThresholdLabel_7.setText(QCoreApplication.translate("audioThresholdTunerDialog", u"Track 6 threshold (%):", None))
-        self.audioThresholdLabel_8.setText(QCoreApplication.translate("audioThresholdTunerDialog", u"Track 7 threshold (%):", None))
+        self.audioThresholdLabel_4.setText(QCoreApplication.translate("audioThresholdTunerDialog", u"Track 4 threshold (%):", None))
+        self.audioThresholdLabel_5.setText(QCoreApplication.translate("audioThresholdTunerDialog", u"Track 5 threshold (%):", None))
+        self.audioThresholdLabel_6.setText(QCoreApplication.translate("audioThresholdTunerDialog", u"Track 6 threshold (%):", None))
+        self.audioThresholdLabel_7.setText(QCoreApplication.translate("audioThresholdTunerDialog", u"Track 7 threshold (%):", None))
     # retranslateUi
 

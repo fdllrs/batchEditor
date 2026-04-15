@@ -1,2 +1,3 @@
 *.pyc
-utils.py
+__pycache__/
+/testfolder

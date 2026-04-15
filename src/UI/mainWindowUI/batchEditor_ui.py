@@ -49,7 +49,6 @@ class Ui_BatchEditor(object):
         self.SelectionGrid.setContentsMargins(5, 5, 5, 5)
         self.filesToEditSpinbox = QLineEdit(self.selectionTab)
         self.filesToEditSpinbox.setObjectName(u"filesToEditSpinbox")
-        self.filesToEditSpinbox.setMaximumSize(QSize(60, 16777215))
         self.filesToEditSpinbox.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.filesToEditSpinbox.setReadOnly(True)
 
@@ -83,7 +82,6 @@ class Ui_BatchEditor(object):
         self.totalLengthToEditSpinbox = QLineEdit(self.selectionTab)
         self.totalLengthToEditSpinbox.setObjectName(u"totalLengthToEditSpinbox")
         self.totalLengthToEditSpinbox.setEnabled(True)
-        self.totalLengthToEditSpinbox.setMaximumSize(QSize(60, 16777215))
         self.totalLengthToEditSpinbox.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.totalLengthToEditSpinbox.setReadOnly(True)
 
@@ -133,7 +131,7 @@ class Ui_BatchEditor(object):
 
         self.SelectionGrid.addWidget(self.rootDirectoryLabel, 0, 1, 1, 4)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.verticalSpacer = QSpacerItem(80, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.SelectionGrid.addItem(self.verticalSpacer, 4, 1, 1, 1)
 
@@ -142,17 +140,6 @@ class Ui_BatchEditor(object):
         self.videoFilesToEditLabel.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
 
         self.SelectionGrid.addWidget(self.videoFilesToEditLabel, 6, 0, 1, 1)
-
-        self.minLengthSpinbox = QSpinBox(self.selectionTab)
-        self.minLengthSpinbox.setObjectName(u"minLengthSpinbox")
-        sizePolicy2.setHeightForWidth(self.minLengthSpinbox.sizePolicy().hasHeightForWidth())
-        self.minLengthSpinbox.setSizePolicy(sizePolicy2)
-        self.minLengthSpinbox.setMaximumSize(QSize(60, 16777215))
-        self.minLengthSpinbox.setMinimum(0)
-        self.minLengthSpinbox.setMaximum(9999)
-        self.minLengthSpinbox.setValue(3)
-
-        self.SelectionGrid.addWidget(self.minLengthSpinbox, 5, 1, 1, 1)
 
         self.filesFound = QLabel(self.selectionTab)
         self.filesFound.setObjectName(u"filesFound")
@@ -213,6 +200,16 @@ class Ui_BatchEditor(object):
         self.minLabel_2.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
 
         self.SelectionGrid.addWidget(self.minLabel_2, 7, 2, 1, 1)
+
+        self.minLengthSpinbox = QSpinBox(self.selectionTab)
+        self.minLengthSpinbox.setObjectName(u"minLengthSpinbox")
+        sizePolicy2.setHeightForWidth(self.minLengthSpinbox.sizePolicy().hasHeightForWidth())
+        self.minLengthSpinbox.setSizePolicy(sizePolicy2)
+        self.minLengthSpinbox.setMinimum(0)
+        self.minLengthSpinbox.setMaximum(9999)
+        self.minLengthSpinbox.setValue(3)
+
+        self.SelectionGrid.addWidget(self.minLengthSpinbox, 5, 1, 1, 1)
 
 
         self.verticalLayout.addLayout(self.SelectionGrid)
@@ -346,20 +343,20 @@ class Ui_BatchEditor(object):
 
         self.gridLayout_2.addWidget(self.progressBar, 2, 0, 1, 5)
 
-        self.resetConfigButton = QPushButton(self.centralwidget)
-        self.resetConfigButton.setObjectName(u"resetConfigButton")
-        self.resetConfigButton.setEnabled(False)
+        self.loadConfigButton = QPushButton(self.centralwidget)
+        self.loadConfigButton.setObjectName(u"loadConfigButton")
+        self.loadConfigButton.setEnabled(True)
         sizePolicy8 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         sizePolicy8.setHorizontalStretch(0)
         sizePolicy8.setVerticalStretch(0)
-        sizePolicy8.setHeightForWidth(self.resetConfigButton.sizePolicy().hasHeightForWidth())
-        self.resetConfigButton.setSizePolicy(sizePolicy8)
+        sizePolicy8.setHeightForWidth(self.loadConfigButton.sizePolicy().hasHeightForWidth())
+        self.loadConfigButton.setSizePolicy(sizePolicy8)
 
-        self.gridLayout_2.addWidget(self.resetConfigButton, 0, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.loadConfigButton, 0, 0, 1, 1)
 
         self.saveConfigButton = QPushButton(self.centralwidget)
         self.saveConfigButton.setObjectName(u"saveConfigButton")
-        self.saveConfigButton.setEnabled(False)
+        self.saveConfigButton.setEnabled(True)
         sizePolicy8.setHeightForWidth(self.saveConfigButton.sizePolicy().hasHeightForWidth())
         self.saveConfigButton.setSizePolicy(sizePolicy8)
 
@@ -367,7 +364,7 @@ class Ui_BatchEditor(object):
 
         self.showCommandButton = QPushButton(self.centralwidget)
         self.showCommandButton.setObjectName(u"showCommandButton")
-        self.showCommandButton.setEnabled(False)
+        self.showCommandButton.setEnabled(True)
         sizePolicy8.setHeightForWidth(self.showCommandButton.sizePolicy().hasHeightForWidth())
         self.showCommandButton.setSizePolicy(sizePolicy8)
 
@@ -406,7 +403,7 @@ class Ui_BatchEditor(object):
 
         self.retranslateUi(BatchEditor)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(BatchEditor)
@@ -446,7 +443,7 @@ class Ui_BatchEditor(object):
         self.organizeIntoFolders.setText(QCoreApplication.translate("BatchEditor", u"Organize files into folders", None))
         self.separateTracks.setText(QCoreApplication.translate("BatchEditor", u"keep audio tracks separate", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.optionsTab), QCoreApplication.translate("BatchEditor", u"options", None))
-        self.resetConfigButton.setText(QCoreApplication.translate("BatchEditor", u"reset config", None))
+        self.loadConfigButton.setText(QCoreApplication.translate("BatchEditor", u"Load config", None))
         self.saveConfigButton.setText(QCoreApplication.translate("BatchEditor", u"Save config", None))
         self.showCommandButton.setText(QCoreApplication.translate("BatchEditor", u"show command", None))
         self.previewButton.setText(QCoreApplication.translate("BatchEditor", u"preview", None))

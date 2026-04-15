@@ -1,0 +1,7 @@
+export_option=premiere
+threshold=0.04
+margin=0.2
+min_length=2
+files_into_folders=false
+split_only=false
+separate_tracks=false

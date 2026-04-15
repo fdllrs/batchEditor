@@ -1,0 +1,49 @@
+from PySide6 import QtCore
+from pathlib import Path
+from utils import video_length
+
+
+VIDEO_FORMATS = ("mp4", "mkv")
+
+class VideoFinder(QtCore.QRunnable):
+
+    
+    def __init__(self, path):
+        super().__init__()
+
+        self.directory_path = path
+        self.video_files_found = {}
+        self._running = True
+        self.signals = VideoFinderSignals()
+
+
+
+    def run(self):
+
+        self.search_directory(self.directory_path)
+        self.signals.finished.emit()
+
+
+    def search_directory(self, directory_path: Path):
+        directory_elements = directory_path.iterdir()
+        for item in directory_elements:
+            if str(item).endswith(VIDEO_FORMATS):
+                self.add_recording(item)
+
+
+            elif item.is_dir():
+                self.search_directory(item)
+        self.signals.partially_finished.emit(self.video_files_found)
+
+
+    def add_recording(self, path):
+        self.video_files_found[path] = video_length(path)
+
+
+
+
+
+class VideoFinderSignals(QtCore.QObject):
+
+    partially_finished = QtCore.Signal(object)
+    finished = QtCore.Signal()
