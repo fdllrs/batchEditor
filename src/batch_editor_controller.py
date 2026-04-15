@@ -143,7 +143,12 @@ class BatchEditorController:
 
     def open_clip_selector_dialog(self):
         root = Path(self.view.rootDirectoryLabel.text())
-        dialog = ClipSelectorDialog(self.video_files_to_edit, root=root, parent=self.view)
+        dialog = ClipSelectorDialog(
+            self.video_files_found,
+            root=root,
+            selected=self.video_files_to_edit,
+            parent=self.view,
+        )
         if dialog.exec() == QtWidgets.QDialog.DialogCode.Accepted:
             self.video_files_to_edit = dialog.get_selected_files()
             self._refresh_to_edit_stats()

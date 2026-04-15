@@ -18,18 +18,22 @@ class ClipSelectorDialog(QtWidgets.QDialog):
     _COL_DURATION = 2
 
     def __init__(self, files: dict, root: Path | None = None, min_length: int = 0,
+                 selected: dict | None = None,
                  parent: QtWidgets.QWidget | None = None):
         """
         Args:
-            files: Mapping of ``Path -> duration_seconds`` to display.
+            files: Full mapping of ``Path -> duration_seconds`` to display.
             root: Root directory used to compute relative paths for the Path column.
             min_length: Initial minimum length filter in minutes.
+            selected: Subset of ``files`` that should start checked. If None, all rows
+                      are checked. Pass an empty dict to start with nothing checked.
             parent: Parent widget for the dialog.
         """
         super().__init__(parent)
         self._files = dict(files)
         self._root = Path(root) if root else None
         self._min_length = min_length
+        self._selected = set(selected.keys()) if selected is not None else None
         self._setup_ui()
         self._populate(files)
 
@@ -125,7 +129,13 @@ class ClipSelectorDialog(QtWidgets.QDialog):
             item.setText(self._COL_PATH, path_text)
             item.setToolTip(self._COL_PATH, str(path))
             item.setText(self._COL_DURATION, format_duration(duration))
-            item.setCheckState(self._COL_NAME, Qt.CheckState.Checked)
+            checked = (
+                self._selected is None or path in self._selected
+            )
+            item.setCheckState(
+                self._COL_NAME,
+                Qt.CheckState.Checked if checked else Qt.CheckState.Unchecked,
+            )
             # Right-align duration
             item.setTextAlignment(self._COL_DURATION, Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
             self._tree.addTopLevelItem(item)
