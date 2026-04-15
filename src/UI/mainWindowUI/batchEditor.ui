@@ -86,7 +86,7 @@
           <item row="1" column="2">
            <widget class="QPushButton" name="editSelectedFilesButton">
             <property name="enabled">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -193,14 +193,14 @@
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <layout class="QGridLayout" name="optionsGrid" rowstretch="0,0,0,0,0,0" columnstretch="0,0">
+         <layout class="QGridLayout" name="optionsGrid" rowstretch="0,0,0,0,0,0,0,0" columnstretch="0,0">
           <property name="sizeConstraint">
            <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
           </property>
           <property name="verticalSpacing">
            <number>2</number>
           </property>
-          <item row="3" column="0">
+          <item row="5" column="0">
            <widget class="QCheckBox" name="separateTracks">
             <property name="text">
              <string>keep audio tracks separate</string>
@@ -233,7 +233,7 @@
             </property>
            </widget>
           </item>
-          <item row="4" column="0">
+          <item row="6" column="0">
            <widget class="QCheckBox" name="splitOnly">
             <property name="text">
              <string>split clips only</string>
@@ -269,7 +269,7 @@
             </item>
             <item>
              <property name="text">
-              <string>clip seuqence</string>
+              <string>clip sequence</string>
              </property>
             </item>
            </widget>
@@ -287,7 +287,7 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
+          <item row="4" column="0">
            <widget class="QCheckBox" name="organizeIntoFolders">
             <property name="text">
              <string>Organize files into folders</string>
@@ -300,7 +300,7 @@
             </property>
            </widget>
           </item>
-          <item row="5" column="0" colspan="2">
+          <item row="2" column="0" colspan="2">
            <widget class="QPushButton" name="multitrackTuningButton">
             <property name="enabled">
              <bool>true</bool>
@@ -313,6 +313,13 @@
             </property>
             <property name="text">
              <string>configure silence thresholds</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0" colspan="2">
+           <widget class="Line" name="line">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
             </property>
            </widget>
           </item>

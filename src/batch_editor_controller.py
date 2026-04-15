@@ -97,12 +97,14 @@ class BatchEditorController:
         self.threadpool.start(self.video_finder)
 
 
-    def on_partially_finished(self, files_found):
-        self.video_files_found = files_found
-        self.view.filesFound.setText(str(len(self.video_files_found)))
+    def on_partially_finished(self, files_count, current_len_str):
+        self.view.filesFound.setText(str(files_count))
+        self.view.totalLength.setText(current_len_str + ' min')
+        self.view.totalLengthToEdit.setText(current_len_str + ' min')
 
         
-    def on_search_finished(self):
+    def on_search_finished(self, files_found):
+        self.video_files_found = files_found
         self.update_to_edit_files()
         self.view.totalLength.setText(total_duration(self.video_files_found) + ' min')
         self._probe_max_audio_tracks()
@@ -230,8 +232,9 @@ class BatchEditorController:
 
         if "track_thresholds" in config:
             loaded = config["track_thresholds"]
-            # Resize to match the current known track count, padding with 0.0.
-            n = self.max_audio_channels
+            # To ensure we don't truncate loaded settings on startup, we take the 
+            # loaded values. We ensure it's at least padded to the current max known tracks.
+            n = max(len(loaded), self.max_audio_channels)
             self.track_thresholds = [
                 loaded[i] if i < len(loaded) else 0.0
                 for i in range(n)

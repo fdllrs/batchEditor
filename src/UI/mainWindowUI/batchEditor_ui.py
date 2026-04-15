@@ -16,10 +16,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDoubleSpinBox,
-    QGridLayout, QHBoxLayout, QLabel, QLayout,
-    QLineEdit, QMainWindow, QProgressBar, QPushButton,
-    QSizePolicy, QSpacerItem, QStatusBar, QTabWidget,
-    QVBoxLayout, QWidget)
+    QFrame, QGridLayout, QHBoxLayout, QLabel,
+    QLayout, QLineEdit, QMainWindow, QProgressBar,
+    QPushButton, QSizePolicy, QSpacerItem, QStatusBar,
+    QTabWidget, QVBoxLayout, QWidget)
 
 class Ui_BatchEditor(object):
     def setupUi(self, BatchEditor):
@@ -67,7 +67,7 @@ class Ui_BatchEditor(object):
 
         self.editSelectedFilesButton = QPushButton(self.selectionTab)
         self.editSelectedFilesButton.setObjectName(u"editSelectedFilesButton")
-        self.editSelectedFilesButton.setEnabled(True)
+        self.editSelectedFilesButton.setEnabled(False)
         sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
         sizePolicy2.setHorizontalStretch(0)
         sizePolicy2.setVerticalStretch(0)
@@ -141,7 +141,7 @@ class Ui_BatchEditor(object):
         self.separateTracks.setObjectName(u"separateTracks")
         self.separateTracks.setChecked(True)
 
-        self.optionsGrid.addWidget(self.separateTracks, 3, 0, 1, 1)
+        self.optionsGrid.addWidget(self.separateTracks, 5, 0, 1, 1)
 
         self.marginSpinbox = QDoubleSpinBox(self.optionsTab)
         self.marginSpinbox.setObjectName(u"marginSpinbox")
@@ -159,7 +159,7 @@ class Ui_BatchEditor(object):
         self.splitOnly = QCheckBox(self.optionsTab)
         self.splitOnly.setObjectName(u"splitOnly")
 
-        self.optionsGrid.addWidget(self.splitOnly, 4, 0, 1, 1)
+        self.optionsGrid.addWidget(self.splitOnly, 6, 0, 1, 1)
 
         self.exportSelector = QComboBox(self.optionsTab)
         self.exportSelector.addItem("")
@@ -184,7 +184,7 @@ class Ui_BatchEditor(object):
         self.organizeIntoFolders.setChecked(True)
         self.organizeIntoFolders.setTristate(False)
 
-        self.optionsGrid.addWidget(self.organizeIntoFolders, 2, 0, 1, 1)
+        self.optionsGrid.addWidget(self.organizeIntoFolders, 4, 0, 1, 1)
 
         self.multitrackTuningButton = QPushButton(self.optionsTab)
         self.multitrackTuningButton.setObjectName(u"multitrackTuningButton")
@@ -195,7 +195,14 @@ class Ui_BatchEditor(object):
         sizePolicy4.setHeightForWidth(self.multitrackTuningButton.sizePolicy().hasHeightForWidth())
         self.multitrackTuningButton.setSizePolicy(sizePolicy4)
 
-        self.optionsGrid.addWidget(self.multitrackTuningButton, 5, 0, 1, 2)
+        self.optionsGrid.addWidget(self.multitrackTuningButton, 2, 0, 1, 2)
+
+        self.line = QFrame(self.optionsTab)
+        self.line.setObjectName(u"line")
+        self.line.setFrameShape(QFrame.Shape.HLine)
+        self.line.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.optionsGrid.addWidget(self.line, 3, 0, 1, 2)
 
 
         self.horizontalLayout.addLayout(self.optionsGrid)
@@ -296,7 +303,7 @@ class Ui_BatchEditor(object):
         self.exportSelector.setItemText(2, QCoreApplication.translate("BatchEditor", u"Final Cut Pro", None))
         self.exportSelector.setItemText(3, QCoreApplication.translate("BatchEditor", u"ShotCut", None))
         self.exportSelector.setItemText(4, QCoreApplication.translate("BatchEditor", u"Kdenlive", None))
-        self.exportSelector.setItemText(5, QCoreApplication.translate("BatchEditor", u"clip seuqence", None))
+        self.exportSelector.setItemText(5, QCoreApplication.translate("BatchEditor", u"clip sequence", None))
 
         self.marginLabel.setText(QCoreApplication.translate("BatchEditor", u"margin:", None))
         self.organizeIntoFolders.setText(QCoreApplication.translate("BatchEditor", u"Organize files into folders", None))
