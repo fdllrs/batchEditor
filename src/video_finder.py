@@ -26,6 +26,7 @@ class VideoFinder(QtCore.QRunnable):
 
     def search_directory(self, directory_path: Path):
         directory_elements = directory_path.iterdir()
+        
         for item in directory_elements:
             if str(item).endswith(VIDEO_FORMATS):
                 self.add_recording(item)
@@ -38,10 +39,6 @@ class VideoFinder(QtCore.QRunnable):
     def add_recording(self, path):
         self.video_files_found[path] = video_length(path)
         self.signals.partially_finished.emit(len(self.video_files_found), total_duration(self.video_files_found))
-
-
-
-
 
 class VideoFinderSignals(QtCore.QObject):
 

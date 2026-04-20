@@ -9,6 +9,7 @@ from processing_options import ProcessingOptions
 from audio_threshold_tuner import AudioThresholdTuner
 from batch_editor_window import BatchEditorWindow, EXPORT_OPTIONS
 from clip_selector_dialog import ClipSelectorDialog
+from processing_dialog import ProcessingDialog
 import config_manager
 
 class BatchEditorController:
@@ -23,15 +24,14 @@ class BatchEditorController:
 
     def _reset_editing_state(self):
         self.max_audio_channels = 1
-        self.track_thresholds: list[float] = [0.0]
+        self.track_thresholds: list[float] = [-1.0]
         self.video_files_found = {}
         self.video_files_to_edit = {}
         self.to_edit_length = 0
-        self.view.multitrackTuningButton.setEnabled(False)
 
     def _setup_threadpool(self):
         self.threadpool = QtCore.QThreadPool()
-        self.threadpool.setMaxThreadCount(1)
+        self.threadpool.setMaxThreadCount(2)
 
     def startProcessing(self):
         options = ProcessingOptions(
@@ -44,34 +44,24 @@ class BatchEditorController:
             separate_tracks=self.view.separateTracks.isChecked(),
         )
 
-        self._processed_files_count = 0
-        self._total_files_to_process = len(self.video_files_to_edit)
+        self.processor = VideoProcessor(
+            options=options,
+            video_files_to_edit=self.video_files_to_edit,
+        )
 
-        self.view.progressBar.setRange(0, 0)  # indeterminate / endless loop
-        self._update_progress_text()
-        self.view.startButton.setEnabled(False)
-        self._start_video_processor(options)
+        dialog = ProcessingDialog(
+            files=self.video_files_to_edit,
+            cancel_callback=self.processor.cancel,
+            parent=self.view,
+        )
+        self.processor.signals.file_started.connect(dialog.on_file_started)
+        self.processor.signals.file_progress.connect(dialog.on_file_progress)
+        self.processor.signals.file_finished.connect(dialog.on_file_finished)
+        self.processor.signals.finished.connect(dialog.on_all_finished)
+        self.processor.signals.cancelled.connect(dialog.on_cancelled)
 
-    def _update_progress_text(self):
-        self.view.startButton.setText('{}/{} done'.format(self._processed_files_count, self._total_files_to_process))
-
-
-
-    def _start_video_processor(self, options):
-        self.processor = VideoProcessor(options=options, to_edit=self.video_files_to_edit)
-        self.processor.signals.finished.connect(self.on_processing_finished)
-        self.processor.signals.partially_finished.connect(self.on_processing_partially_finished)
         self.threadpool.start(self.processor)
-
-    def on_processing_partially_finished(self):
-        self._processed_files_count += 1
-        self._update_progress_text()
-
-    def on_processing_finished(self):
-        self.view.progressBar.setRange(0, 1)
-        self.view.progressBar.setValue(1)
-        self.view.startButton.setText('Start')
-        self.view.startButton.setEnabled(True)
+        dialog.exec()
 
 
     def set_root_directory(self):
@@ -112,7 +102,7 @@ class BatchEditorController:
 
     def _probe_max_audio_tracks(self):
         """Probe all found files, store the highest audio stream count,
-        and resize track_thresholds to match (padding with 0.0)."""
+        and resize track_thresholds to match (padding with -1.0)."""
         max_tracks = max(
             (audio_track_count(path) for path in self.video_files_found),
             default=1,
@@ -120,7 +110,7 @@ class BatchEditorController:
         self.max_audio_channels = max_tracks
         current = self.track_thresholds
         self.track_thresholds = [
-            current[i] if i < len(current) else 0.0
+            current[i] if i < len(current) else -1.0
             for i in range(max_tracks)
         ]
 
@@ -138,7 +128,6 @@ class BatchEditorController:
         has_files = len(self.video_files_to_edit) > 0
         self.view.totalLengthToEdit.setText(total_duration(self.video_files_to_edit) + " min")
         self.view.editSelectedFilesButton.setEnabled(has_files)
-        self.view.multitrackTuningButton.setEnabled(has_files)
 
 
     def open_clip_selector_dialog(self):
@@ -239,9 +228,11 @@ class BatchEditorController:
             loaded = config["track_thresholds"]
             # To ensure we don't truncate loaded settings on startup, we take the 
             # loaded values. We ensure it's at least padded to the current max known tracks.
+            # Fix for backwards compatibility: old configs saved 0.0 as the disabled state.
+            # Convert any existing 0.0 to -1.0 (explicit disabled) to prevent 0-threshold from blocking all cuts.
             n = max(len(loaded), self.max_audio_channels)
             self.track_thresholds = [
-                loaded[i] if i < len(loaded) else 0.0
+                loaded[i] if i < len(loaded) else -1.0
                 for i in range(n)
             ]
 

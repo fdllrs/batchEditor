@@ -1,5 +1,5 @@
 export_option=premiere
-track_thresholds=0.0;0.04
+track_thresholds=-1.0;4.0;4.0;-1.0
 margin=0.2
 files_into_folders=false
 split_only=false

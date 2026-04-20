@@ -27,6 +27,7 @@ class AudioThresholdTuner(QtWidgets.QDialog):
         super().__init__(parent)
         self._num_tracks = num_tracks
         self._initial_thresholds = list(thresholds)
+        self._checkboxes: list[QtWidgets.QCheckBox] = []
         self._sliders: list[QtWidgets.QSlider] = []
         self._spinboxes: list[QtWidgets.QDoubleSpinBox] = []
         self._setup_ui()
@@ -36,8 +37,11 @@ class AudioThresholdTuner(QtWidgets.QDialog):
     # ------------------------------------------------------------------
 
     def get_thresholds(self) -> list[float]:
-        """Return current threshold values (%) from each spin-box."""
-        return [sb.value() for sb in self._spinboxes]
+        """Return current threshold values (%) from spin-boxes (or -1.0 if excluded)."""
+        return [
+            sb.value() if cb.isChecked() else -1.0
+            for cb, sb in zip(self._checkboxes, self._spinboxes)
+        ]
 
     # ------------------------------------------------------------------
     # Private helpers
@@ -61,9 +65,10 @@ class AudioThresholdTuner(QtWidgets.QDialog):
         grid.setContentsMargins(10, 10, 10, 10)
 
         for i in range(self._num_tracks):
-            label = QtWidgets.QLabel(f"Track {i + 1} silence threshold:")
-            label.setAlignment(
-                Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
+            checkbox = QtWidgets.QCheckBox(f"Include Track {i + 1}")
+            checkbox.setSizePolicy(
+                QtWidgets.QSizePolicy.Policy.Fixed,
+                QtWidgets.QSizePolicy.Policy.Fixed,
             )
 
             slider = QtWidgets.QSlider(Qt.Orientation.Horizontal)
@@ -80,14 +85,29 @@ class AudioThresholdTuner(QtWidgets.QDialog):
             spinbox.setSuffix(" %")
             spinbox.setFixedWidth(120)
 
-            initial = (
+            initial_raw = (
                 self._initial_thresholds[i]
                 if i < len(self._initial_thresholds)
-                else 0.0
+                else -1.0
             )
+            # Support backwards compatibility: 0.0 meant disabled previously
+            # But wait, we want users to be able to set 0.0 for threshold, 
+            # so we use -1.0 as the definitive "excluded" marker.
+            # If the config loaded 0.0, we treat it as disabled to match old behavior.
+            is_enabled = (initial_raw > 0.0)
+            if initial_raw == 0.0 and i == 0 and len(self._initial_thresholds) == 1:
+                # Except if it's the single default track, let's keep it disabled so it falls back to "audio"
+                pass 
+                
+            display_val = initial_raw if is_enabled else 4.0 # default visual to 4.0
+
             # Set spinbox first (no signal yet), then sync slider silently.
-            spinbox.setValue(initial)
-            slider.setValue(int(initial * self._SLIDER_SCALE))
+            spinbox.setValue(display_val)
+            slider.setValue(int(display_val * self._SLIDER_SCALE))
+
+            checkbox.setChecked(is_enabled)
+            slider.setEnabled(is_enabled)
+            spinbox.setEnabled(is_enabled)
 
             # Two-way sync — use default-argument capture to avoid late-binding.
             slider.valueChanged.connect(
@@ -96,15 +116,18 @@ class AudioThresholdTuner(QtWidgets.QDialog):
             spinbox.valueChanged.connect(
                 lambda val, sl=slider: self._on_spinbox_changed(val, sl)
             )
+            checkbox.toggled.connect(slider.setEnabled)
+            checkbox.toggled.connect(spinbox.setEnabled)
 
+            self._checkboxes.append(checkbox)
             self._sliders.append(slider)
             self._spinboxes.append(spinbox)
 
-            grid.addWidget(label, i, 0)
+            grid.addWidget(checkbox, i, 0)
             grid.addWidget(slider, i, 1)
             grid.addWidget(spinbox, i, 2)
 
-        # Label col fixed; slider col stretches; spinbox col fixed.
+        # check col fixed; slider col stretches; spinbox col fixed.
         grid.setColumnStretch(0, 0)
         grid.setColumnStretch(1, 1)
         grid.setColumnStretch(2, 0)

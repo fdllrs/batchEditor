@@ -47,8 +47,13 @@ def audio_track_count(path) -> int:
         return 1
 
 
-def format_duration(duration_mins):
-    return "{:02d}:{:02d}".format(*divmod(int(duration_mins), 60))
+def format_duration(duration_secs):
+    total_secs = int(duration_secs)
+    hours, remainder = divmod(total_secs, 3600)
+    mins, secs = divmod(remainder, 60)
+    if hours > 0:
+        return "{:d}:{:02d}:{:02d}".format(hours, mins, secs)
+    return "{:02d}:{:02d}".format(mins, secs)
 
 
 def check_edited_length(path, i):

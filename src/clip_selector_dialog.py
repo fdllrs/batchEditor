@@ -84,6 +84,7 @@ class ClipSelectorDialog(QtWidgets.QDialog):
         self._min_length_spinbox.setSuffix(" min")
         self._min_length_spinbox.setValue(self._min_length)
         self._min_length_spinbox.valueChanged.connect(self._apply_length_filter)
+        self._min_length_spinbox.setToolTip("Automatically check all videos strictly longer than this value in minutes")
         filter_layout.addWidget(self._min_length_spinbox)
         filter_layout.addStretch()
         layout.addLayout(filter_layout)
@@ -94,8 +95,16 @@ class ClipSelectorDialog(QtWidgets.QDialog):
         deselect_all_btn = QtWidgets.QPushButton("Deselect All")
         select_all_btn.clicked.connect(self._select_all)
         deselect_all_btn.clicked.connect(self._deselect_all)
+        select_all_btn.setToolTip("Mark all discovered videos to be processed")
+        deselect_all_btn.setToolTip("Unmark all videos. Useful for picking only a few specific files out of a large list")
         bulk_layout.addWidget(select_all_btn)
         bulk_layout.addWidget(deselect_all_btn)
+
+        self._show_selected_btn = QtWidgets.QPushButton("Show Selected Only")
+        self._show_selected_btn.setCheckable(True)
+        self._show_selected_btn.toggled.connect(self._toggle_show_selected)
+        self._show_selected_btn.setToolTip("Toggle to hide files that are unchecked, keeping only the included ones on screen")
+        bulk_layout.addWidget(self._show_selected_btn)
         bulk_layout.addStretch()
 
         self._selection_label = QtWidgets.QLabel()
@@ -176,6 +185,8 @@ class ClipSelectorDialog(QtWidgets.QDialog):
 
     def _on_item_changed(self, item, column):
         if column == self._COL_NAME:
+            if self._show_selected_btn.isChecked():
+                item.setHidden(item.checkState(self._COL_NAME) != Qt.CheckState.Checked)
             self._update_selection_label()
 
     def _update_selection_label(self):
@@ -186,3 +197,15 @@ class ClipSelectorDialog(QtWidgets.QDialog):
             if self._tree.topLevelItem(i).checkState(self._COL_NAME) == Qt.CheckState.Checked
         )
         self._selection_label.setText(f"{checked} / {total} selected")
+
+    def _toggle_show_selected(self, show_only_selected: bool):
+        self._show_selected_btn.setText(
+            "Show All" if show_only_selected else "Show Selected Only"
+        )
+        root = self._tree.invisibleRootItem()
+        for i in range(root.childCount()):
+            item = root.child(i)
+            if show_only_selected:
+                item.setHidden(item.checkState(self._COL_NAME) != Qt.CheckState.Checked)
+            else:
+                item.setHidden(False)
