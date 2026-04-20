@@ -39,9 +39,9 @@ def build_command(options: ProcessingOptions, path: Path) -> list[str]:
 class VideoProcessorSignals(QtCore.QObject):
     finished = QtCore.Signal()
     cancelled = QtCore.Signal()
-    file_started = QtCore.Signal(str)          # str(path)
-    file_progress = QtCore.Signal(str, float)  # str(path), percentage 0–100
-    file_finished = QtCore.Signal(str, bool)   # str(path), success
+    file_started = QtCore.Signal(str)                  # str(path)
+    file_progress = QtCore.Signal(str, float)          # str(path), percentage 0–100
+    file_finished = QtCore.Signal(str, bool, str)      # str(path), success, error_hint
 
 
 class VideoProcessor(QtCore.QRunnable):
@@ -101,6 +101,8 @@ class VideoProcessorWorker:
         cmd = build_command(self.options, self.path)
         print(f"Running command: {' '.join(cmd)}")
         success = False
+        error_hint = ""
+        error_lines: list[str] = []
         try:
             self._process = subprocess.Popen(
                 cmd, cwd=self.path.parent,
@@ -119,6 +121,8 @@ class VideoProcessorWorker:
                         m = re.search(r'(\d+(?:\.\d+)?)\s*%', buf)
                         if m:
                             self._signals.file_progress.emit(path_key, float(m.group(1)))
+                        if "Error" in buf or "error" in buf:
+                            error_lines.append(buf.strip())
                     buf = ""
                 else:
                     buf += char
@@ -128,12 +132,16 @@ class VideoProcessorWorker:
                        and not self._cancel_event.is_set())
             if success:
                 self._fix_xml_pathurls()
+            elif error_lines:
+                combined = " ".join(error_lines)
+                if re.search(r"audio stream .+ does not exist", combined, re.IGNORECASE):
+                    error_hint = "missing_track"
         except Exception as e:
             print(f"Error in {self.path}: {e}")
         finally:
             self._process = None
 
-        self._signals.file_finished.emit(path_key, success)
+        self._signals.file_finished.emit(path_key, success, error_hint)
 
     def _fix_xml_pathurls(self):
         """Rewrite bare Windows paths in the generated XML to file:/// URIs.

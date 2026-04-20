@@ -20,6 +20,7 @@ class ProcessingDialog(QtWidgets.QDialog):
     _STATUS_PROCESSING = "⏳ Processing"
     _STATUS_DONE = "✓ Done"
     _STATUS_FAILED = "✗ Failed"
+    _STATUS_SKIPPED = "⚠ Skipped"
     _STATUS_CANCELLED = "⊘ Cancelled"
 
     def __init__(self, files: dict, cancel_callback, parent=None):
@@ -30,6 +31,7 @@ class ProcessingDialog(QtWidgets.QDialog):
         self._is_running = True
         self._success_count = 0
         self._fail_count = 0
+        self._skip_count = 0
 
         self._setup_ui()
         self._populate(files)
@@ -155,11 +157,13 @@ class ProcessingDialog(QtWidgets.QDialog):
                 f"⊘ Cancelled after {self._elapsed_str()}  |  {self._success_count} done"
             )
         else:
-            total = self._success_count + self._fail_count
-            fail_part = f"  |  {self._fail_count} failed" if self._fail_count else ""
-            self._result_label.setText(
-                f"✓ {self._success_count}/{total} completed in {self._elapsed_str()}{fail_part}"
-            )
+            total = self._success_count + self._fail_count + self._skip_count
+            parts = [f"✓ {self._success_count}/{total} completed in {self._elapsed_str()}"]
+            if self._skip_count:
+                parts.append(f"{self._skip_count} skipped (missing track)")
+            if self._fail_count:
+                parts.append(f"{self._fail_count} failed")
+            self._result_label.setText("  |  ".join(parts))
 
         self._cancel_btn.setVisible(False)
         self._close_btn.setVisible(True)
@@ -195,7 +199,7 @@ class ProcessingDialog(QtWidgets.QDialog):
             return
         self._set_progress(row, f"{pct:.0f}%")
 
-    def on_file_finished(self, path_key: str, success: bool):
+    def on_file_finished(self, path_key: str, success: bool, error_hint: str = ""):
         row = self._row_map.get(path_key)
         if row is None:
             return
@@ -203,6 +207,13 @@ class ProcessingDialog(QtWidgets.QDialog):
             self._success_count += 1
             self._set_status(row, self._STATUS_DONE, "#2ea043")
             self._set_progress(row, "100%")
+        elif error_hint == "missing_track":
+            self._skip_count += 1
+            self._set_status(row, self._STATUS_SKIPPED, "#cc7700")
+            self._set_progress(row, "—")
+            item = self._table.item(row, self._COL_STATUS)
+            if item:
+                item.setToolTip("Audio stream not found — check threshold settings")
         else:
             self._fail_count += 1
             self._set_status(row, self._STATUS_FAILED, "#d9534f")
