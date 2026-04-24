@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>354</width>
-    <height>451</height>
+    <width>400</width>
+    <height>500</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>400</width>
+    <height>500</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Batch Editor</string>
@@ -18,7 +24,7 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
-    <item alignment="Qt::AlignmentFlag::AlignHCenter">
+    <item>
      <widget class="QToolButton" name="helpButton">
       <property name="enabled">
        <bool>true</bool>
@@ -38,6 +44,12 @@
       <property name="icon">
        <iconset theme="QIcon::ThemeIcon::HelpAbout"/>
       </property>
+      <property name="iconSize">
+       <size>
+        <width>17</width>
+        <height>17</height>
+       </size>
+      </property>
       <property name="autoRepeat">
        <bool>false</bool>
       </property>
@@ -55,7 +67,7 @@
        </sizepolicy>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="documentMode">
        <bool>false</bool>
@@ -66,61 +78,112 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <layout class="QGridLayout" name="SelectionGrid" columnstretch="0,1,2">
-          <property name="leftMargin">
-           <number>5</number>
-          </property>
-          <property name="topMargin">
-           <number>5</number>
-          </property>
-          <property name="rightMargin">
-           <number>5</number>
-          </property>
-          <property name="bottomMargin">
-           <number>5</number>
-          </property>
-          <property name="horizontalSpacing">
-           <number>25</number>
-          </property>
+         <layout class="QGridLayout" name="gridLayout_3">
           <property name="verticalSpacing">
-           <number>30</number>
+           <number>46</number>
           </property>
-          <item row="1" column="1">
-           <widget class="QLabel" name="filesFound">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
+          <item row="3" column="1">
+           <widget class="QLabel" name="totalLength">
             <property name="text">
-             <string>0</string>
+             <string>0 min total</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignmentFlag::AlignCenter</set>
             </property>
            </widget>
           </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="totalLengthToEditLabel">
-            <property name="text">
-             <string>total length to edit: </string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+          <item row="1" column="0" colspan="3">
+           <widget class="Line" name="line_2">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
+          <item row="3" column="0">
+           <widget class="QLabel" name="totalLengthToEdit">
+            <property name="text">
+             <string>0 min to edit</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="filesToEdit">
+            <property name="text">
+             <string>0 files to edit</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLabel" name="filesFound">
+            <property name="sizeIncrement">
+             <size>
+              <width>107</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="baseSize">
+             <size>
+              <width>38</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>0 files found</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0" colspan="3">
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <property name="spacing">
+             <number>11</number>
+            </property>
+            <property name="leftMargin">
+             <number>7</number>
+            </property>
+            <property name="rightMargin">
+             <number>3</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QPushButton" name="selectRootDirectoryButton">
+              <property name="toolTip">
+               <string>Browse and select the base folder containing the videos you want to process</string>
+              </property>
+              <property name="text">
+               <string>select root directory</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="rootDirectoryLabel">
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+              <property name="placeholderText">
+               <string>no directory selected</string>
+              </property>
+              <property name="cursorMoveStyle">
+               <enum>Qt::CursorMoveStyle::LogicalMoveStyle</enum>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="2" column="2">
            <widget class="QPushButton" name="editSelectedFilesButton">
             <property name="enabled">
              <bool>false</bool>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
             </property>
             <property name="toolTip">
              <string>Open the file list to manually enable/disable certain videos from the batch</string>
@@ -139,84 +202,6 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
-           <widget class="QLabel" name="totalLength">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>2</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>0 min</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1" colspan="2">
-           <widget class="QLineEdit" name="rootDirectoryLabel">
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-            <property name="placeholderText">
-             <string>no directory selected</string>
-            </property>
-            <property name="cursorMoveStyle">
-             <enum>Qt::CursorMoveStyle::LogicalMoveStyle</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="filesFoundLabel">
-            <property name="text">
-             <string>video files found:</string>
-            </property>
-            <property name="indent">
-             <number>0</number>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QPushButton" name="selectRootDirectoryButton">
-            <property name="toolTip">
-             <string>Browse and select the base folder containing the videos you want to process</string>
-            </property>
-            <property name="text">
-             <string>select root directory</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QLabel" name="totalLengthToEdit">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>0 min</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="totalLengthLabel">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>total length: </string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
          </layout>
         </item>
        </layout>
@@ -227,23 +212,13 @@
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <layout class="QGridLayout" name="optionsGrid" rowstretch="0,0,0,0,0,0,0" columnstretch="0,0">
+         <layout class="QGridLayout" name="optionsGrid" rowstretch="0,0,0,0,0,0" columnstretch="0,0">
           <property name="sizeConstraint">
            <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
           </property>
           <property name="verticalSpacing">
            <number>2</number>
           </property>
-          <item row="5" column="0">
-           <widget class="QCheckBox" name="separateTracks">
-            <property name="text">
-             <string>keep audio tracks separate</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
           <item row="1" column="1">
            <widget class="QDoubleSpinBox" name="marginSpinbox">
             <property name="suffix">
@@ -251,6 +226,19 @@
             </property>
             <property name="singleStep">
              <double>0.500000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="marginLabel">
+            <property name="text">
+             <string>margin:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+            </property>
+            <property name="margin">
+             <number>3</number>
             </property>
            </widget>
           </item>
@@ -267,8 +255,62 @@
             </property>
            </widget>
           </item>
-          <item row="6" column="0">
+          <item row="2" column="0" colspan="2">
+           <widget class="QPushButton" name="multitrackTuningButton">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Configure silence detection thresholds for individual audio tracks. The threshold determines the percentage of volume from which auto-editor considers loudness. A 0% threshold means the entire video is loud and no cuts will be made. On the other hand, a 100% threshold means the entire video is considered silent and results in an empty timeline&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>configure silence thresholds</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0" colspan="2">
+           <widget class="Line" name="line">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QCheckBox" name="separateTracks">
+            <property name="toolTip">
+             <string>Don't merge the audio tracks</string>
+            </property>
+            <property name="text">
+             <string>keep audio tracks separate</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
            <widget class="QCheckBox" name="splitOnly">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="sizeIncrement">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>create a sequence with cuts but don't delete the silent clips</string>
+            </property>
             <property name="text">
              <string>split clips only</string>
             </property>
@@ -306,58 +348,6 @@
               <string>clip sequence</string>
              </property>
             </item>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="marginLabel">
-            <property name="text">
-             <string>margin:</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-            </property>
-            <property name="margin">
-             <number>3</number>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QCheckBox" name="organizeIntoFolders">
-            <property name="text">
-             <string>Organize files into folders</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-            <property name="tristate">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0" colspan="2">
-           <widget class="QPushButton" name="multitrackTuningButton">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Configure silence detection thresholds for individual audio tracks. The threshold determines the percentage of volume from which auto-editor considers loudness. A 0% threshold means the entire video is loud and no cuts will be made. On the other hand, a 100% threshold means the entire video is considered silent and results in an empty timeline&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="text">
-             <string>configure silence thresholds</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0" colspan="2">
-           <widget class="Line" name="line">
-            <property name="orientation">
-             <enum>Qt::Orientation::Horizontal</enum>
-            </property>
            </widget>
           </item>
          </layout>
@@ -488,9 +478,6 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <tabstops>
-  <tabstop>selectRootDirectoryButton</tabstop>
- </tabstops>
  <resources/>
  <connections/>
  <designerdata>

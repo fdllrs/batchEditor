@@ -2,19 +2,20 @@ import time
 from pathlib import Path
 from PySide6 import QtWidgets, QtCore, QtGui
 from PySide6.QtCore import Qt
+from utils import format_duration
 
 
 class ProcessingDialog(QtWidgets.QDialog):
-    """Modal dialog showing real-time per-file progress during batch editing.
+    """Modal dialog showing per-file status during batch editing.
 
-    While running, displays a table with the status and progress of each file
-    and a Cancel button. On completion, this button becomes Close and a stats
-    summary is shown.
+    While running an indeterminate progress bar pulses at the bottom.
+    On completion it stops and a stats summary is shown.
     """
 
     _COL_FILE = 0
     _COL_STATUS = 1
-    _COL_PROGRESS = 2
+    _COL_ORIG_LEN = 2
+    _COL_EDIT_LEN = 3
 
     _STATUS_QUEUED = "Queued"
     _STATUS_PROCESSING = "⏳ Processing"
@@ -26,12 +27,15 @@ class ProcessingDialog(QtWidgets.QDialog):
     def __init__(self, files: dict, cancel_callback, parent=None):
         super().__init__(parent)
         self._cancel_callback = cancel_callback
-        self._row_map: dict[str, int] = {}  # str(path) -> table row
+        self._orig_secs_map: dict[str, float] = {}  # path_key -> original seconds
+        self._row_map: dict[str, int] = {}          # path_key -> table row
         self._start_time = time.monotonic()
         self._is_running = True
         self._success_count = 0
         self._fail_count = 0
         self._skip_count = 0
+        self._total_orig_secs = 0.0
+        self._total_edit_secs = 0.0
 
         self._setup_ui()
         self._populate(files)
@@ -46,15 +50,15 @@ class ProcessingDialog(QtWidgets.QDialog):
 
     def _setup_ui(self):
         self.setWindowTitle("Processing Files")
-        self.setMinimumSize(600, 400)
-        self.resize(680, 460)
+        self.setMinimumSize(700, 420)
+        self.resize(760, 480)
 
         layout = QtWidgets.QVBoxLayout(self)
         layout.setSpacing(10)
 
         # Table -------------------------------------------------------
-        self._table = QtWidgets.QTableWidget(0, 3)
-        self._table.setHorizontalHeaderLabels(["File", "Status", "Progress"])
+        self._table = QtWidgets.QTableWidget(0, 4)
+        self._table.setHorizontalHeaderLabels(["File", "Status", "Length", "Edited"])
         self._table.setEditTriggers(
             QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers
         )
@@ -65,11 +69,19 @@ class ProcessingDialog(QtWidgets.QDialog):
         self._table.verticalHeader().setVisible(False)
         header = self._table.horizontalHeader()
         header.setSectionResizeMode(self._COL_FILE, QtWidgets.QHeaderView.ResizeMode.Stretch)
-        header.setSectionResizeMode(self._COL_STATUS, QtWidgets.QHeaderView.ResizeMode.Fixed)
-        header.setSectionResizeMode(self._COL_PROGRESS, QtWidgets.QHeaderView.ResizeMode.Fixed)
+        for col in (self._COL_STATUS, self._COL_ORIG_LEN, self._COL_EDIT_LEN):
+            header.setSectionResizeMode(col, QtWidgets.QHeaderView.ResizeMode.Fixed)
         self._table.setColumnWidth(self._COL_STATUS, 140)
-        self._table.setColumnWidth(self._COL_PROGRESS, 80)
+        self._table.setColumnWidth(self._COL_ORIG_LEN, 80)
+        self._table.setColumnWidth(self._COL_EDIT_LEN, 80)
         layout.addWidget(self._table)
+
+        # Indeterminate progress bar (visible while running) ----------
+        self._progress_bar = QtWidgets.QProgressBar()
+        self._progress_bar.setRange(0, 0)   # indeterminate / pulse
+        self._progress_bar.setTextVisible(False)
+        self._progress_bar.setFixedHeight(6)
+        layout.addWidget(self._progress_bar)
 
         # Stats row ---------------------------------------------------
         stats_layout = QtWidgets.QHBoxLayout()
@@ -97,21 +109,28 @@ class ProcessingDialog(QtWidgets.QDialog):
         layout.addLayout(btn_layout)
 
     def _populate(self, files: dict):
-        for path in files:
+        for path, orig_secs in files.items():
             path_key = str(path)
             row = self._table.rowCount()
             self._table.insertRow(row)
             self._row_map[path_key] = row
+            self._orig_secs_map[path_key] = orig_secs
 
             name_item = QtWidgets.QTableWidgetItem(Path(path).name)
+
             status_item = QtWidgets.QTableWidgetItem(self._STATUS_QUEUED)
             status_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-            progress_item = QtWidgets.QTableWidgetItem("—")
-            progress_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+
+            orig_item = QtWidgets.QTableWidgetItem(format_duration(orig_secs))
+            orig_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+
+            edit_item = QtWidgets.QTableWidgetItem("—")
+            edit_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
 
             self._table.setItem(row, self._COL_FILE, name_item)
             self._table.setItem(row, self._COL_STATUS, status_item)
-            self._table.setItem(row, self._COL_PROGRESS, progress_item)
+            self._table.setItem(row, self._COL_ORIG_LEN, orig_item)
+            self._table.setItem(row, self._COL_EDIT_LEN, edit_item)
 
     # ------------------------------------------------------------------
     # Private helpers
@@ -125,20 +144,20 @@ class ProcessingDialog(QtWidgets.QDialog):
     def _update_elapsed(self):
         self._elapsed_label.setText(f"⏱ Elapsed: {self._elapsed_str()}")
 
-    def _set_status(self, row: int, text: str, color: str):
-        item = self._table.item(row, self._COL_STATUS)
+    def _set_cell(self, row: int, col: int, text: str,
+                  color: str | None = None, tooltip: str = ""):
+        item = self._table.item(row, col)
         if item is None:
             item = QtWidgets.QTableWidgetItem()
-            self._table.setItem(row, self._COL_STATUS, item)
+            self._table.setItem(row, col, item)
         item.setText(text)
-        item.setForeground(QtGui.QColor(color))
+        if color:
+            item.setForeground(QtGui.QColor(color))
+        if tooltip:
+            item.setToolTip(tooltip)
 
-    def _set_progress(self, row: int, text: str):
-        item = self._table.item(row, self._COL_PROGRESS)
-        if item is None:
-            item = QtWidgets.QTableWidgetItem()
-            self._table.setItem(row, self._COL_PROGRESS, item)
-        item.setText(text)
+    def _set_status(self, row: int, text: str, color: str, tooltip: str = ""):
+        self._set_cell(row, self._COL_STATUS, text, color, tooltip)
 
     def _mark_remaining_queued_as_cancelled(self):
         for row in range(self._table.rowCount()):
@@ -151,20 +170,33 @@ class ProcessingDialog(QtWidgets.QDialog):
         self._timer.stop()
         self._update_elapsed()
 
+        # Stop the progress bar pulse.
+        self._progress_bar.setRange(0, 1)
+        self._progress_bar.setValue(1)
+
+        parts: list[str] = []
+
         if cancelled:
             self._mark_remaining_queued_as_cancelled()
-            self._result_label.setText(
-                f"⊘ Cancelled after {self._elapsed_str()}  |  {self._success_count} done"
-            )
+            parts.append(f"⊘ Cancelled after {self._elapsed_str()}  |  {self._success_count} done")
         else:
-            total = self._success_count + self._fail_count + self._skip_count
-            parts = [f"✓ {self._success_count}/{total} completed in {self._elapsed_str()}"]
+            total_files = self._success_count + self._fail_count + self._skip_count
+            parts.append(f"✓ {self._success_count}/{total_files} completed in {self._elapsed_str()}")
             if self._skip_count:
                 parts.append(f"{self._skip_count} skipped (missing track)")
             if self._fail_count:
                 parts.append(f"{self._fail_count} failed")
-            self._result_label.setText("  |  ".join(parts))
 
+        # Length / reduction summary (only if we have completed files with XML data).
+        if self._total_edit_secs > 0:
+            pct_saved = (1 - self._total_edit_secs / self._total_orig_secs) * 100
+            parts.append(
+                f"Total: {format_duration(self._total_orig_secs)} → "
+                f"{format_duration(self._total_edit_secs)} "
+                f"(−{pct_saved:.1f}%)"
+            )
+
+        self._result_label.setText("  |  ".join(parts))
         self._cancel_btn.setVisible(False)
         self._close_btn.setVisible(True)
 
@@ -175,7 +207,6 @@ class ProcessingDialog(QtWidgets.QDialog):
 
     def closeEvent(self, event: QtCore.QEvent):
         if self._is_running:
-            # Don't let the user close mid-run; request cancel and wait.
             self._on_cancel_clicked()
             event.ignore()
         else:
@@ -190,34 +221,31 @@ class ProcessingDialog(QtWidgets.QDialog):
         if row is None:
             return
         self._set_status(row, self._STATUS_PROCESSING, "#0078d7")
-        self._set_progress(row, "0%")
         self._table.scrollToItem(self._table.item(row, self._COL_FILE))
 
-    def on_file_progress(self, path_key: str, pct: float):
+    def on_file_finished(self, path_key: str, success: bool,
+                         error_hint: str = "", edited_seconds: float = -1.0):
         row = self._row_map.get(path_key)
         if row is None:
             return
-        self._set_progress(row, f"{pct:.0f}%")
 
-    def on_file_finished(self, path_key: str, success: bool, error_hint: str = ""):
-        row = self._row_map.get(path_key)
-        if row is None:
-            return
         if success:
             self._success_count += 1
             self._set_status(row, self._STATUS_DONE, "#2ea043")
-            self._set_progress(row, "100%")
+            if edited_seconds >= 0:
+                orig = self._orig_secs_map.get(path_key, 0.0)
+                self._total_orig_secs += orig
+                self._total_edit_secs += edited_seconds
+                self._set_cell(row, self._COL_EDIT_LEN, format_duration(edited_seconds))
         elif error_hint == "missing_track":
             self._skip_count += 1
-            self._set_status(row, self._STATUS_SKIPPED, "#cc7700")
-            self._set_progress(row, "—")
-            item = self._table.item(row, self._COL_STATUS)
-            if item:
-                item.setToolTip("Audio stream not found — check threshold settings")
+            self._set_status(
+                row, self._STATUS_SKIPPED, "#cc7700",
+                tooltip="Audio stream not found — check threshold settings",
+            )
         else:
             self._fail_count += 1
             self._set_status(row, self._STATUS_FAILED, "#d9534f")
-            self._set_progress(row, "—")
 
     def on_all_finished(self):
         self._finish(cancelled=False)

@@ -45,8 +45,7 @@ _STEPS = [
         "7 — Start processing",
         "Click <b>Start</b> to open the processing window. "
         "A table shows every file with its current status (<i>Queued</i>, "
-        "<i>Processing</i>, <i>Done</i>, or <i>Failed</i>) and a live progress "
-        "percentage updated in real time. "
+        "<i>Processing</i>, <i>Done</i>, or <i>Failed</i>). "
         "Hit <b>Cancel</b> at any time to stop after the current file finishes. "
         "When the batch completes, the window shows a summary with the total "
         "number of files processed and the elapsed time.",

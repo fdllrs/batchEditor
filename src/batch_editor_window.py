@@ -9,7 +9,7 @@ EXPORT_OPTIONS = {
     'Final Cut Pro': 'final-cut-pro',
     'ShotCut': 'shotcut',
     'Kdenlive': 'kdenlive',
-    'clip sequence': 'clip-secuence',
+    'clip sequence': 'clip-sequence',
 }
 
 

@@ -17,16 +17,19 @@ class ClipSelectorDialog(QtWidgets.QDialog):
     _COL_PATH = 1
     _COL_DURATION = 2
 
-    def __init__(self, files: dict, root: Path | None = None, min_length: int = 0,
+    def __init__(self, files: dict, root: Path | None = None, min_length: int = 1,
                  selected: dict | None = None,
+                 on_selection_changed=None,
                  parent: QtWidgets.QWidget | None = None):
         """
         Args:
             files: Full mapping of ``Path -> duration_seconds`` to display.
             root: Root directory used to compute relative paths for the Path column.
-            min_length: Initial minimum length filter in minutes.
+            min_length: Initial minimum length filter in minutes (default: 1).
             selected: Subset of ``files`` that should start checked. If None, all rows
                       are checked. Pass an empty dict to start with nothing checked.
+            on_selection_changed: Optional callable(checked_files: dict) invoked on
+                                  every selection change for live external feedback.
             parent: Parent widget for the dialog.
         """
         super().__init__(parent)
@@ -34,8 +37,11 @@ class ClipSelectorDialog(QtWidgets.QDialog):
         self._root = Path(root) if root else None
         self._min_length = min_length
         self._selected = set(selected.keys()) if selected is not None else None
+        self._on_selection_changed = on_selection_changed
         self._setup_ui()
         self._populate(files)
+        # Apply the default length filter right away so the initial view is consistent.
+        self._apply_length_filter(self._min_length)
 
     # ------------------------------------------------------------------
     # Public API
@@ -121,6 +127,7 @@ class ClipSelectorDialog(QtWidgets.QDialog):
         button_box.rejected.connect(self.reject)
         layout.addWidget(button_box)
 
+
     def _populate(self, files: dict):
         self._tree.setUpdatesEnabled(False)
         for path, duration in files.items():
@@ -197,6 +204,8 @@ class ClipSelectorDialog(QtWidgets.QDialog):
             if self._tree.topLevelItem(i).checkState(self._COL_NAME) == Qt.CheckState.Checked
         )
         self._selection_label.setText(f"{checked} / {total} selected")
+        if self._on_selection_changed is not None:
+            self._on_selection_changed(self.get_selected_files())
 
     def _toggle_show_selected(self, show_only_selected: bool):
         self._show_selected_btn.setText(
