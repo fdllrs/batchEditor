@@ -4,12 +4,26 @@ from PySide6 import QtWidgets
 from batch_editor_controller import BatchEditorController
 
 
+def _get_auto_editor_base_cmd() -> list[str]:
+    """Return the base command to invoke auto-editor."""
+    import sys
+    if getattr(sys, 'frozen', False):
+        return ["auto-editor"]
+    return [sys.executable, "-m", "auto_editor"]
+
+
 def _check_auto_editor() -> bool:
-    """Return True if auto-editor is importable from the current Python."""
+    """Return True if auto-editor is importable or in PATH."""
     try:
+        cmd = _get_auto_editor_base_cmd() + ["--version"]
+        kwargs = {}
+        if hasattr(subprocess, 'CREATE_NO_WINDOW'):
+            kwargs['creationflags'] = subprocess.CREATE_NO_WINDOW
+
         result = subprocess.run(
-            [sys.executable, "-m", "auto_editor", "--version"],
+            cmd,
             capture_output=True, timeout=10,
+            **kwargs
         )
         return result.returncode == 0
     except Exception:

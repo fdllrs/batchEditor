@@ -24,3 +24,18 @@ Click **Show command** to see the exact `auto-editor` command that will be run. 
 
 ### 7. Start processing
 Click **Start** to open the processing window. A table shows every file with its current status (*Queued*, *Processing*, *Done*, or *Failed*). Hit **Cancel** at any time to stop after the current file finishes. When the batch completes, the window shows a summary with the total number of files processed and the elapsed time.
+
+## Compilation
+
+To compile the application into a standalone executable (`.exe`) on Windows, you can use PyInstaller.
+
+1. Ensure PyInstaller is installed:
+   ```bash
+   pip install pyinstaller
+   ```
+2. Run the following command from the root of the repository:
+   ```bash
+   pyinstaller --noconsole --name "BatchEditor" --paths src src\__main__.py
+   ```
+
+The compiled executable will be available in the `dist/BatchEditor/` directory. You can distribute this folder to use the app without running it through Python. Note: The application will still require `auto-editor` to be accessible on the system PATH or via a local Python environment.

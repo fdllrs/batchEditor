@@ -1,3 +1,8 @@
 *.pyc
 __pycache__/
 /testfolder
+
+# PyInstaller
+build/
+dist/
+*.spec

@@ -29,6 +29,10 @@ def audio_track_count(path) -> int:
     Falls back to 1 if ffprobe is unavailable or the probe fails.
     """
     try:
+        kwargs = {}
+        if hasattr(subprocess, 'CREATE_NO_WINDOW'):
+            kwargs['creationflags'] = subprocess.CREATE_NO_WINDOW
+
         result = subprocess.run(
             [
                 "ffprobe", "-v", "error",
@@ -40,6 +44,7 @@ def audio_track_count(path) -> int:
             capture_output=True,
             text=True,
             check=True,
+            **kwargs
         )
         lines = [ln for ln in result.stdout.splitlines() if ln.strip()]
         return max(len(lines), 1)

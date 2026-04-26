@@ -5,6 +5,7 @@ from PySide6 import QtCore
 from processing_options import ProcessingOptions
 from pathlib import Path
 import subprocess
+import os
 
 
 def build_command(options: ProcessingOptions, path: Path) -> list[str]:
@@ -15,14 +16,19 @@ def build_command(options: ProcessingOptions, path: Path) -> list[str]:
     The -u flag forces Python to run unbuffered so progress output is
     emitted in real time even when stdout is piped.
     """
-    base_command = [
-        sys.executable, "-m", "auto_editor",
-        str(path),
-    ]
+    if getattr(sys, 'frozen', False):
+        base_command = ["auto-editor", str(path)]
+    else:
+        base_command = [
+            sys.executable, "-m", "auto_editor",
+            str(path),
+        ]
+    export_arg = f'{options.export_option}:name="{path.stem}"'
+
     if options.split_only:
         return base_command + [
             "--when-silent nil --when-normal nil",
-            "--export", f"{options.export_option}:name={path.stem}",
+            "--export", export_arg,
         ]
 
 
@@ -43,7 +49,7 @@ def build_command(options: ProcessingOptions, path: Path) -> list[str]:
     return base_command + [
         "--margin", f"{options.margin}sec",
         "--edit", edit_expr,
-        "--export", f"{options.export_option}:name={path.stem}",
+        "--export", export_arg,
     ]
 
 
@@ -156,11 +162,16 @@ class VideoProcessorWorker:
         error_hint = ""
         edited_seconds = -1.0
         error_lines: list[str] = []
+        kwargs = {}
+        if hasattr(subprocess, 'CREATE_NO_WINDOW'):
+            kwargs['creationflags'] = subprocess.CREATE_NO_WINDOW
+
         try:
             self._process = subprocess.Popen(
                 cmd, cwd=self.path.parent,
                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                 text=True, encoding="utf-8",
+                **kwargs
             )
             # Read stdout char-by-char to handle both \r (progress bars) and \n.
             buf = ""

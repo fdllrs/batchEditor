@@ -194,7 +194,23 @@ class BatchEditorController:
             split_only=self.view.splitOnly.isChecked(),
         )
         placeholder = Path("<file>")
-        command_str = " ".join(build_command(options, placeholder))
+        cmd_list = build_command(options, placeholder)
+
+        import os
+        if os.name == 'nt':
+            # Format specifically for PowerShell: native EXEs require "" for literal quotes.
+            formatted_cmd = []
+            for arg in cmd_list:
+                if 'name="' in arg:
+                    # Convert premiere:name="file" to 'premiere:name=""file""'
+                    arg = f"'{arg.replace('\"', '\"\"')}'"
+                elif " " in arg:
+                    arg = f'"{arg}"'
+                formatted_cmd.append(arg)
+            command_str = " ".join(formatted_cmd)
+        else:
+            import shlex
+            command_str = shlex.join(cmd_list)
 
         dialog = QtWidgets.QDialog(self.view)
         dialog.setWindowTitle("Command Preview")
