@@ -17,7 +17,7 @@ _STEPS = [
     (
         "3 — Configure export options",
         "Switch to the <b>Configure</b> tab and choose the NLE you want to export "
-        "for (Premiere Pro, DaVinci Resolve, etc.). "
+        "for (Premiere Pro, DaVinci Resolve, etc.) or clip-sequence to export a video file. "
         "Set the <b>margin</b> to control how many seconds of padding are kept "
         "around each loud segment.",
     ),
