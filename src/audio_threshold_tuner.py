@@ -17,6 +17,7 @@ class AudioThresholdTuner(QtWidgets.QDialog):
 
     # Each integer unit on the slider represents 0.01 %.
     _SLIDER_SCALE = 100
+    _DEFAULT_THRESHOLD = 4.0
 
     def __init__(
         self,
@@ -65,67 +66,7 @@ class AudioThresholdTuner(QtWidgets.QDialog):
         grid.setContentsMargins(10, 10, 10, 10)
 
         for i in range(self._num_tracks):
-            checkbox = QtWidgets.QCheckBox(f"Include Track {i + 1}")
-            checkbox.setSizePolicy(
-                QtWidgets.QSizePolicy.Policy.Fixed,
-                QtWidgets.QSizePolicy.Policy.Fixed,
-            )
-
-            slider = QtWidgets.QSlider(Qt.Orientation.Horizontal)
-            slider.setRange(0, 10000)
-            slider.setSizePolicy(
-                QtWidgets.QSizePolicy.Policy.Expanding,
-                QtWidgets.QSizePolicy.Policy.Fixed,
-            )
-
-            spinbox = QtWidgets.QDoubleSpinBox()
-            spinbox.setRange(0.00, 100.00)
-            spinbox.setDecimals(2)
-            spinbox.setSingleStep(0.01)
-            spinbox.setSuffix(" %")
-            spinbox.setFixedWidth(120)
-
-            initial_raw = (
-                self._initial_thresholds[i]
-                if i < len(self._initial_thresholds)
-                else -1.0
-            )
-            # Support backwards compatibility: 0.0 meant disabled previously
-            # But wait, we want users to be able to set 0.0 for threshold, 
-            # so we use -1.0 as the definitive "excluded" marker.
-            # If the config loaded 0.0, we treat it as disabled to match old behavior.
-            is_enabled = (initial_raw > 0.0)
-            if initial_raw == 0.0 and i == 0 and len(self._initial_thresholds) == 1:
-                # Except if it's the single default track, let's keep it disabled so it falls back to "audio"
-                pass 
-                
-            display_val = initial_raw if is_enabled else 4.0 # default visual to 4.0
-
-            # Set spinbox first (no signal yet), then sync slider silently.
-            spinbox.setValue(display_val)
-            slider.setValue(int(display_val * self._SLIDER_SCALE))
-
-            checkbox.setChecked(is_enabled)
-            slider.setEnabled(is_enabled)
-            spinbox.setEnabled(is_enabled)
-
-            # Two-way sync — use default-argument capture to avoid late-binding.
-            slider.valueChanged.connect(
-                lambda val, sb=spinbox: self._on_slider_changed(val, sb)
-            )
-            spinbox.valueChanged.connect(
-                lambda val, sl=slider: self._on_spinbox_changed(val, sl)
-            )
-            checkbox.toggled.connect(slider.setEnabled)
-            checkbox.toggled.connect(spinbox.setEnabled)
-
-            self._checkboxes.append(checkbox)
-            self._sliders.append(slider)
-            self._spinboxes.append(spinbox)
-
-            grid.addWidget(checkbox, i, 0)
-            grid.addWidget(slider, i, 1)
-            grid.addWidget(spinbox, i, 2)
+            self._add_track_row(grid, i)
 
         # check col fixed; slider col stretches; spinbox col fixed.
         grid.setColumnStretch(0, 0)
@@ -142,6 +83,61 @@ class AudioThresholdTuner(QtWidgets.QDialog):
         button_box.accepted.connect(self.accept)
         button_box.rejected.connect(self.reject)
         outer_layout.addWidget(button_box)
+
+    def _add_track_row(self, grid: QtWidgets.QGridLayout, index: int):
+        checkbox = QtWidgets.QCheckBox(f"Include Track {index + 1}")
+        checkbox.setSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Fixed,
+            QtWidgets.QSizePolicy.Policy.Fixed,
+        )
+
+        slider = QtWidgets.QSlider(Qt.Orientation.Horizontal)
+        slider.setRange(0, 10000)
+        slider.setSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Expanding,
+            QtWidgets.QSizePolicy.Policy.Fixed,
+        )
+
+        spinbox = QtWidgets.QDoubleSpinBox()
+        spinbox.setRange(0.00, 100.00)
+        spinbox.setDecimals(2)
+        spinbox.setSingleStep(0.01)
+        spinbox.setSuffix(" %")
+        spinbox.setFixedWidth(120)
+
+        initial_raw = (
+            self._initial_thresholds[index]
+            if index < len(self._initial_thresholds)
+            else -1.0
+        )
+        
+        # -1.0 is the definitive "excluded" marker.
+        is_enabled = (initial_raw >= 0.0)
+        display_val = initial_raw if is_enabled else self._DEFAULT_THRESHOLD
+
+        spinbox.setValue(display_val)
+        slider.setValue(int(display_val * self._SLIDER_SCALE))
+
+        checkbox.setChecked(is_enabled)
+        slider.setEnabled(is_enabled)
+        spinbox.setEnabled(is_enabled)
+
+        slider.valueChanged.connect(
+            lambda val, sb=spinbox: self._on_slider_changed(val, sb)
+        )
+        spinbox.valueChanged.connect(
+            lambda val, sl=slider: self._on_spinbox_changed(val, sl)
+        )
+        checkbox.toggled.connect(slider.setEnabled)
+        checkbox.toggled.connect(spinbox.setEnabled)
+
+        self._checkboxes.append(checkbox)
+        self._sliders.append(slider)
+        self._spinboxes.append(spinbox)
+
+        grid.addWidget(checkbox, index, 0)
+        grid.addWidget(slider, index, 1)
+        grid.addWidget(spinbox, index, 2)
 
     def _on_slider_changed(self, value: int, spinbox: QtWidgets.QDoubleSpinBox):
         spinbox.blockSignals(True)

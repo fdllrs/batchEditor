@@ -27,6 +27,16 @@ class ProcessingDialog(QtWidgets.QDialog):
     def __init__(self, files: dict, cancel_callback, parent=None):
         super().__init__(parent)
         self._cancel_callback = cancel_callback
+        self._reset_status()
+
+        self._setup_ui()
+        self._populate_table(files)
+
+        self._timer = QtCore.QTimer(self)
+        self._timer.timeout.connect(self._update_elapsed)
+        self._timer.start(1000)
+
+    def _reset_status(self):
         self._orig_secs_map: dict[str, float] = {}  # path_key -> original seconds
         self._row_map: dict[str, int] = {}          # path_key -> table row
         self._start_time = time.monotonic()
@@ -37,16 +47,6 @@ class ProcessingDialog(QtWidgets.QDialog):
         self._total_orig_secs = 0.0
         self._total_edit_secs = 0.0
 
-        self._setup_ui()
-        self._populate(files)
-
-        self._timer = QtCore.QTimer(self)
-        self._timer.timeout.connect(self._update_elapsed)
-        self._timer.start(1000)
-
-    # ------------------------------------------------------------------
-    # UI Setup
-    # ------------------------------------------------------------------
 
     def _setup_ui(self):
         self.setWindowTitle("Processing Files")
@@ -56,7 +56,45 @@ class ProcessingDialog(QtWidgets.QDialog):
         layout = QtWidgets.QVBoxLayout(self)
         layout.setSpacing(10)
 
-        # Table -------------------------------------------------------
+        self._setup_table_widget(layout)
+        self._setup_progress_bar(layout)
+        self._setup_stats_layout(layout)
+        self._setup_buttons(layout)
+
+
+    def _setup_buttons(self, layout):
+        btn_layout = QtWidgets.QHBoxLayout()
+        btn_layout.addStretch()
+
+        self._cancel_btn = QtWidgets.QPushButton("Cancel")
+        self._cancel_btn.setToolTip("Stop processing after the current file finishes")
+        self._cancel_btn.clicked.connect(self._on_cancel_clicked)
+
+        self._close_btn = QtWidgets.QPushButton("Close")
+        self._close_btn.setVisible(False)
+        self._close_btn.clicked.connect(self.accept)
+
+        btn_layout.addWidget(self._cancel_btn)
+        btn_layout.addWidget(self._close_btn)
+        layout.addLayout(btn_layout)
+
+    def _setup_stats_layout(self, layout):
+        stats_layout = QtWidgets.QHBoxLayout()
+        self._elapsed_label = QtWidgets.QLabel("⏱ Elapsed: 0:00")
+        self._result_label = QtWidgets.QLabel()
+        stats_layout.addWidget(self._elapsed_label)
+        stats_layout.addStretch()
+        stats_layout.addWidget(self._result_label)
+        layout.addLayout(stats_layout)
+
+    def _setup_progress_bar(self, layout):
+        self._progress_bar = QtWidgets.QProgressBar()
+        self._progress_bar.setRange(0, 0)   # indeterminate / pulse
+        self._progress_bar.setTextVisible(False)
+        self._progress_bar.setFixedHeight(6)
+        layout.addWidget(self._progress_bar)
+
+    def _setup_table_widget(self, layout):
         self._table = QtWidgets.QTableWidget(0, 4)
         self._table.setHorizontalHeaderLabels(["File", "Status", "Length", "Edited"])
         self._table.setEditTriggers(
@@ -76,39 +114,7 @@ class ProcessingDialog(QtWidgets.QDialog):
         self._table.setColumnWidth(self._COL_EDIT_LEN, 80)
         layout.addWidget(self._table)
 
-        # Indeterminate progress bar (visible while running) ----------
-        self._progress_bar = QtWidgets.QProgressBar()
-        self._progress_bar.setRange(0, 0)   # indeterminate / pulse
-        self._progress_bar.setTextVisible(False)
-        self._progress_bar.setFixedHeight(6)
-        layout.addWidget(self._progress_bar)
-
-        # Stats row ---------------------------------------------------
-        stats_layout = QtWidgets.QHBoxLayout()
-        self._elapsed_label = QtWidgets.QLabel("⏱ Elapsed: 0:00")
-        self._result_label = QtWidgets.QLabel()
-        stats_layout.addWidget(self._elapsed_label)
-        stats_layout.addStretch()
-        stats_layout.addWidget(self._result_label)
-        layout.addLayout(stats_layout)
-
-        # Buttons -----------------------------------------------------
-        btn_layout = QtWidgets.QHBoxLayout()
-        btn_layout.addStretch()
-
-        self._cancel_btn = QtWidgets.QPushButton("Cancel")
-        self._cancel_btn.setToolTip("Stop processing after the current file finishes")
-        self._cancel_btn.clicked.connect(self._on_cancel_clicked)
-
-        self._close_btn = QtWidgets.QPushButton("Close")
-        self._close_btn.setVisible(False)
-        self._close_btn.clicked.connect(self.accept)
-
-        btn_layout.addWidget(self._cancel_btn)
-        btn_layout.addWidget(self._close_btn)
-        layout.addLayout(btn_layout)
-
-    def _populate(self, files: dict):
+    def _populate_table(self, files: dict):
         for path, orig_secs in files.items():
             path_key = str(path)
             row = self._table.rowCount()
@@ -243,6 +249,8 @@ class ProcessingDialog(QtWidgets.QDialog):
                 row, self._STATUS_SKIPPED, "#cc7700",
                 tooltip="Audio stream not found — check threshold settings",
             )
+        elif error_hint == "cancelled":
+            self._set_status(row, self._STATUS_CANCELLED, "#cc7700")
         else:
             self._fail_count += 1
             self._set_status(row, self._STATUS_FAILED, "#d9534f")

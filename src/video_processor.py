@@ -151,9 +151,20 @@ class VideoProcessorWorker:
     def terminate(self):
         """Terminate the running subprocess if any."""
         if self._process is not None:
-            self._process.terminate()
+            import os
+            import signal
+            if hasattr(signal, 'CTRL_BREAK_EVENT'):
+                try:
+                    os.kill(self._process.pid, signal.CTRL_BREAK_EVENT)
+                except Exception:
+                    self._process.terminate()
+            else:
+                self._process.terminate()
 
     def run(self):
+        if self._cancel_event.is_set():
+            return
+
         path_key = str(self.path)
         self._signals.file_started.emit(path_key)
         cmd = build_command(self.options, self.path)
@@ -163,8 +174,13 @@ class VideoProcessorWorker:
         edited_seconds = -1.0
         error_lines: list[str] = []
         kwargs = {}
+        flags = 0
         if hasattr(subprocess, 'CREATE_NO_WINDOW'):
-            kwargs['creationflags'] = subprocess.CREATE_NO_WINDOW
+            flags |= subprocess.CREATE_NO_WINDOW
+        if hasattr(subprocess, 'CREATE_NEW_PROCESS_GROUP'):
+            flags |= subprocess.CREATE_NEW_PROCESS_GROUP
+        if flags:
+            kwargs['creationflags'] = flags
 
         try:
             self._process = subprocess.Popen(
@@ -189,10 +205,12 @@ class VideoProcessorWorker:
                     buf += char
 
             self._process.wait()
-            success = (self._process.returncode == 0
-                       and not self._cancel_event.is_set())
+            is_cancelled = self._cancel_event.is_set()
+            success = (self._process.returncode == 0 and not is_cancelled)
             if success:
                 edited_seconds = self._post_process_xml()
+            elif is_cancelled:
+                error_hint = "cancelled"
             elif error_lines:
                 combined = " ".join(error_lines)
                 if re.search(r"audio stream .+ does not exist", combined, re.IGNORECASE):

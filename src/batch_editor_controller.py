@@ -272,8 +272,6 @@ class BatchEditorController:
             loaded = config["track_thresholds"]
             # To ensure we don't truncate loaded settings on startup, we take the 
             # loaded values. We ensure it's at least padded to the current max known tracks.
-            # Fix for backwards compatibility: old configs saved 0.0 as the disabled state.
-            # Convert any existing 0.0 to -1.0 (explicit disabled) to prevent 0-threshold from blocking all cuts.
             n = max(len(loaded), self.max_audio_channels)
             self.track_thresholds = [
                 loaded[i] if i < len(loaded) else -1.0
