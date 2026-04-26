@@ -5,50 +5,50 @@ from PySide6 import QtCore
 from processing_options import ProcessingOptions
 from pathlib import Path
 import subprocess
-import os
+
+
+def _auto_editor_base_cmd(path: Path) -> list[str]:
+    """Return the base auto-editor invocation for *path*.
+
+    When frozen (PyInstaller .exe), auto-editor is expected on the system PATH.
+    When running from source, the current interpreter's installed package is used.
+    """
+    if getattr(sys, 'frozen', False):
+        return ["auto-editor", str(path)]
+    return [sys.executable, "-m", "auto_editor", str(path)]
+
+
+def _build_edit_expr(track_thresholds: list[float]) -> str:
+    """Build the --edit expression from a list of per-track thresholds.
+
+    Tracks with threshold < 0.0 are disabled (internal sentinel).
+    Falls back to auto-editor's default 'audio' when no tracks are active.
+    """
+    active = [
+        f"audio:stream={i},threshold={t / 100}"
+        for i, t in enumerate(track_thresholds)
+        if t >= 0.0
+    ]
+    if len(active) > 1:
+        return f"(or {' '.join(active)})"
+    return active[0] if active else "audio"
 
 
 def build_command(options: ProcessingOptions, path: Path) -> list[str]:
-    """Return the auto-editor command list for a single file.
-
-    Tracks with threshold < 0.0 are excluded — negative values are the
-    internal sentinel for "this track is disabled".
-    The -u flag forces Python to run unbuffered so progress output is
-    emitted in real time even when stdout is piped.
-    """
-    if getattr(sys, 'frozen', False):
-        base_command = ["auto-editor", str(path)]
-    else:
-        base_command = [
-            sys.executable, "-m", "auto_editor",
-            str(path),
-        ]
+    """Return the full auto-editor command list for a single file."""
+    base = _auto_editor_base_cmd(path)
     export_arg = f'{options.export_option}:name="{path.stem}"'
 
     if options.split_only:
-        return base_command + [
-            "--when-silent nil --when-normal nil",
+        return base + [
+            "--when-silent", "nil",
+            "--when-normal", "nil",
             "--export", export_arg,
         ]
 
-
-    active_clauses = [
-        f"audio:stream={i},threshold={t / 100}"
-        for i, t in enumerate(options.track_thresholds)
-        if t >= 0.0
-    ]
-
-    if len(active_clauses) == 1:
-        edit_expr = active_clauses[0]
-    elif len(active_clauses) > 1:
-        edit_expr = f"(or {' '.join(active_clauses)})"
-    else:
-        # No active streams — fall back to auto-editor's default audio edit.
-        edit_expr = "audio"
-
-    return base_command + [
+    return base + [
         "--margin", f"{options.margin}sec",
-        "--edit", edit_expr,
+        "--edit", _build_edit_expr(options.track_thresholds),
         "--export", export_arg,
     ]
 
