@@ -137,12 +137,6 @@ class Ui_BatchEditor(object):
         self.optionsGrid.setObjectName(u"optionsGrid")
         self.optionsGrid.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
         self.optionsGrid.setVerticalSpacing(2)
-        self.marginSpinbox = QDoubleSpinBox(self.optionsTab)
-        self.marginSpinbox.setObjectName(u"marginSpinbox")
-        self.marginSpinbox.setSingleStep(0.500000000000000)
-
-        self.optionsGrid.addWidget(self.marginSpinbox, 1, 1, 1, 1)
-
         self.marginLabel = QLabel(self.optionsTab)
         self.marginLabel.setObjectName(u"marginLabel")
         self.marginLabel.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
@@ -157,37 +151,12 @@ class Ui_BatchEditor(object):
 
         self.optionsGrid.addWidget(self.exportOptionLabel, 0, 0, 1, 1)
 
-        self.multitrackTuningButton = QPushButton(self.optionsTab)
-        self.multitrackTuningButton.setObjectName(u"multitrackTuningButton")
-        self.multitrackTuningButton.setEnabled(True)
-        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Maximum)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.multitrackTuningButton.sizePolicy().hasHeightForWidth())
-        self.multitrackTuningButton.setSizePolicy(sizePolicy2)
-
-        self.optionsGrid.addWidget(self.multitrackTuningButton, 2, 0, 1, 2)
-
         self.line = QFrame(self.optionsTab)
         self.line.setObjectName(u"line")
         self.line.setFrameShape(QFrame.Shape.HLine)
         self.line.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.optionsGrid.addWidget(self.line, 3, 0, 1, 2)
-
-        self.separateTracks = QCheckBox(self.optionsTab)
-        self.separateTracks.setObjectName(u"separateTracks")
-        self.separateTracks.setChecked(True)
-
-        self.optionsGrid.addWidget(self.separateTracks, 4, 0, 1, 1)
-
-        self.splitOnly = QCheckBox(self.optionsTab)
-        self.splitOnly.setObjectName(u"splitOnly")
-        sizePolicy.setHeightForWidth(self.splitOnly.sizePolicy().hasHeightForWidth())
-        self.splitOnly.setSizePolicy(sizePolicy)
-        self.splitOnly.setSizeIncrement(QSize(0, 0))
-
-        self.optionsGrid.addWidget(self.splitOnly, 5, 0, 1, 1)
 
         self.exportSelector = QComboBox(self.optionsTab)
         self.exportSelector.addItem("")
@@ -199,6 +168,31 @@ class Ui_BatchEditor(object):
         self.exportSelector.setObjectName(u"exportSelector")
 
         self.optionsGrid.addWidget(self.exportSelector, 0, 1, 1, 1)
+
+        self.marginSpinbox = QDoubleSpinBox(self.optionsTab)
+        self.marginSpinbox.setObjectName(u"marginSpinbox")
+        self.marginSpinbox.setSingleStep(0.500000000000000)
+
+        self.optionsGrid.addWidget(self.marginSpinbox, 1, 1, 1, 1)
+
+        self.multitrackTuningButton = QPushButton(self.optionsTab)
+        self.multitrackTuningButton.setObjectName(u"multitrackTuningButton")
+        self.multitrackTuningButton.setEnabled(True)
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Maximum)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.multitrackTuningButton.sizePolicy().hasHeightForWidth())
+        self.multitrackTuningButton.setSizePolicy(sizePolicy2)
+
+        self.optionsGrid.addWidget(self.multitrackTuningButton, 2, 0, 1, 2)
+
+        self.splitOnly = QCheckBox(self.optionsTab)
+        self.splitOnly.setObjectName(u"splitOnly")
+        sizePolicy.setHeightForWidth(self.splitOnly.sizePolicy().hasHeightForWidth())
+        self.splitOnly.setSizePolicy(sizePolicy)
+        self.splitOnly.setSizeIncrement(QSize(0, 0))
+
+        self.optionsGrid.addWidget(self.splitOnly, 4, 0, 1, 2)
 
 
         self.horizontalLayout.addLayout(self.optionsGrid)
@@ -288,21 +282,14 @@ class Ui_BatchEditor(object):
 #endif // QT_CONFIG(tooltip)
         self.editSelectedFilesButton.setText(QCoreApplication.translate("BatchEditor", u"edit selected files", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.selectionTab), QCoreApplication.translate("BatchEditor", u"Select", None))
-        self.marginSpinbox.setSuffix(QCoreApplication.translate("BatchEditor", u" seconds", None))
+#if QT_CONFIG(tooltip)
+        self.marginLabel.setToolTip(QCoreApplication.translate("BatchEditor", u"control how many seconds of padding are kept around each loud segment. ", None))
+#endif // QT_CONFIG(tooltip)
         self.marginLabel.setText(QCoreApplication.translate("BatchEditor", u"margin:", None))
+#if QT_CONFIG(tooltip)
+        self.exportOptionLabel.setToolTip(QCoreApplication.translate("BatchEditor", u"choose the NLE you want to export for.", None))
+#endif // QT_CONFIG(tooltip)
         self.exportOptionLabel.setText(QCoreApplication.translate("BatchEditor", u"Export option:", None))
-#if QT_CONFIG(tooltip)
-        self.multitrackTuningButton.setToolTip(QCoreApplication.translate("BatchEditor", u"<html><head/><body><p>Configure silence detection thresholds for individual audio tracks. The threshold determines the percentage of volume from which auto-editor considers loudness. A 0% threshold means the entire video is loud and no cuts will be made. On the other hand, a 100% threshold means the entire video is considered silent and results in an empty timeline</p></body></html>", None))
-#endif // QT_CONFIG(tooltip)
-        self.multitrackTuningButton.setText(QCoreApplication.translate("BatchEditor", u"configure silence thresholds", None))
-#if QT_CONFIG(tooltip)
-        self.separateTracks.setToolTip(QCoreApplication.translate("BatchEditor", u"Don't merge the audio tracks", None))
-#endif // QT_CONFIG(tooltip)
-        self.separateTracks.setText(QCoreApplication.translate("BatchEditor", u"keep audio tracks separate", None))
-#if QT_CONFIG(tooltip)
-        self.splitOnly.setToolTip(QCoreApplication.translate("BatchEditor", u"create a sequence with cuts but don't delete the silent clips", None))
-#endif // QT_CONFIG(tooltip)
-        self.splitOnly.setText(QCoreApplication.translate("BatchEditor", u"split clips only", None))
         self.exportSelector.setItemText(0, QCoreApplication.translate("BatchEditor", u"Premiere Pro", None))
         self.exportSelector.setItemText(1, QCoreApplication.translate("BatchEditor", u"Da Vinci Resolve", None))
         self.exportSelector.setItemText(2, QCoreApplication.translate("BatchEditor", u"Final Cut Pro", None))
@@ -310,6 +297,21 @@ class Ui_BatchEditor(object):
         self.exportSelector.setItemText(4, QCoreApplication.translate("BatchEditor", u"Kdenlive", None))
         self.exportSelector.setItemText(5, QCoreApplication.translate("BatchEditor", u"clip sequence", None))
 
+#if QT_CONFIG(tooltip)
+        self.exportSelector.setToolTip(QCoreApplication.translate("BatchEditor", u"choose the NLE you want to export for.", None))
+#endif // QT_CONFIG(tooltip)
+#if QT_CONFIG(tooltip)
+        self.marginSpinbox.setToolTip(QCoreApplication.translate("BatchEditor", u"control how many seconds of padding are kept around each loud segment. ", None))
+#endif // QT_CONFIG(tooltip)
+        self.marginSpinbox.setSuffix(QCoreApplication.translate("BatchEditor", u" seconds", None))
+#if QT_CONFIG(tooltip)
+        self.multitrackTuningButton.setToolTip(QCoreApplication.translate("BatchEditor", u"<html><head/><body><p>Configure silence detection thresholds for individual audio tracks. The threshold determines the percentage of volume from which auto-editor considers loudness. A 0% threshold means the entire video is loud and no cuts will be made. On the other hand, a 100% threshold means the entire video is considered silent and results in an empty timeline</p></body></html>", None))
+#endif // QT_CONFIG(tooltip)
+        self.multitrackTuningButton.setText(QCoreApplication.translate("BatchEditor", u"configure silence thresholds", None))
+#if QT_CONFIG(tooltip)
+        self.splitOnly.setToolTip(QCoreApplication.translate("BatchEditor", u"create a sequence with cuts but don't delete the silent clips", None))
+#endif // QT_CONFIG(tooltip)
+        self.splitOnly.setText(QCoreApplication.translate("BatchEditor", u"split clips only", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.optionsTab), QCoreApplication.translate("BatchEditor", u"Configure", None))
 #if QT_CONFIG(tooltip)
         self.showCommandButton.setToolTip(QCoreApplication.translate("BatchEditor", u"Preview and copy the underlying auto-editor terminal command", None))

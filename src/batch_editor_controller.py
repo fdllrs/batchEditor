@@ -49,7 +49,6 @@ class BatchEditorController:
             track_thresholds=self.track_thresholds,
             margin=self.view.marginSpinbox.value(),
             split_only=self.view.splitOnly.isChecked(),
-            separate_tracks=self.view.separateTracks.isChecked(),
         )
 
         self.processor = VideoProcessor(
@@ -193,7 +192,6 @@ class BatchEditorController:
             track_thresholds=self.track_thresholds,
             margin=self.view.marginSpinbox.value(),
             split_only=self.view.splitOnly.isChecked(),
-            separate_tracks=self.view.separateTracks.isChecked(),
         )
         placeholder = Path("<file>")
         command_str = " ".join(build_command(options, placeholder))
@@ -230,7 +228,6 @@ class BatchEditorController:
             "track_thresholds": self.track_thresholds,
             "margin": self.view.marginSpinbox.value(),
             "split_only": self.view.splitOnly.isChecked(),
-            "separate_tracks": self.view.separateTracks.isChecked(),
         }
         config_manager.save_config(Path(path), config)
 
@@ -273,5 +270,3 @@ class BatchEditorController:
         if "split_only" in config:
             self.view.splitOnly.setChecked(config["split_only"])
 
-        if "separate_tracks" in config:
-            self.view.separateTracks.setChecked(config["separate_tracks"])
