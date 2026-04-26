@@ -2,7 +2,7 @@ import sys
 from PySide6 import QtCore
 from PySide6 import QtWidgets
 from pathlib import Path
-from utils import total_duration, audio_track_count
+from utils import total_duration
 from video_finder import VideoFinder
 from video_processor import VideoProcessor, build_command
 from processing_options import ProcessingOptions
@@ -113,30 +113,24 @@ class BatchEditorController:
         self.view.filesToEdit.setText(str(files_to_edit) + ' files to edit')
 
         
-    def on_search_finished(self, files_found):
+    def on_search_finished(self, files_found, max_audio_tracks):
         self.video_files_found = files_found
+        self._apply_max_audio_tracks(max_audio_tracks)
         self.update_to_edit_files()
         self._update_totalLength_text(total_duration(self.video_files_found))
-        self._probe_max_audio_tracks()
 
         self.view.editSelectedFilesButton.setEnabled(bool(self.video_files_found))
 
 
-    def _probe_max_audio_tracks(self):
-        """Probe all found files, store the highest audio stream count,
-        and resize track_thresholds to match (padding with -1.0)."""
-        max_tracks = max(
-            (audio_track_count(path) for path in self.video_files_found),
-            default=1,
-        )
+    def _apply_max_audio_tracks(self, max_tracks: int):
+        """Resize track_thresholds to match the highest audio stream count found,
+        padding with -1.0 for any newly discovered tracks."""
         self.max_audio_channels = max_tracks
         current = self.track_thresholds
         self.track_thresholds = [
             current[i] if i < len(current) else -1.0
             for i in range(max_tracks)
         ]
-
-
 
 
     def update_to_edit_files(self):

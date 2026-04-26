@@ -17,9 +17,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QDoubleSpinBox,
     QFrame, QGridLayout, QHBoxLayout, QLabel,
-    QLayout, QLineEdit, QMainWindow, QProgressBar,
-    QPushButton, QSizePolicy, QSpacerItem, QStatusBar,
-    QTabWidget, QToolButton, QVBoxLayout, QWidget)
+    QLayout, QLineEdit, QMainWindow, QPushButton,
+    QSizePolicy, QSpacerItem, QStatusBar, QTabWidget,
+    QToolButton, QVBoxLayout, QWidget)
 
 class Ui_BatchEditor(object):
     def setupUi(self, BatchEditor):
@@ -98,7 +98,9 @@ class Ui_BatchEditor(object):
         self.gridLayout_3.addWidget(self.filesFound, 2, 1, 1, 1)
 
         self.horizontalLayout_4 = QHBoxLayout()
+        self.horizontalLayout_4.setSpacing(11)
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.horizontalLayout_4.setContentsMargins(7, -1, 3, 0)
         self.selectRootDirectoryButton = QPushButton(self.selectionTab)
         self.selectRootDirectoryButton.setObjectName(u"selectRootDirectoryButton")
 
@@ -213,23 +215,7 @@ class Ui_BatchEditor(object):
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.gridLayout_2.setHorizontalSpacing(0)
         self.gridLayout_2.setVerticalSpacing(5)
-        self.gridLayout_2.setContentsMargins(-1, -1, -1, 0)
-        self.saveConfigButton = QPushButton(self.centralwidget)
-        self.saveConfigButton.setObjectName(u"saveConfigButton")
-        self.saveConfigButton.setEnabled(True)
-        sizePolicy.setHeightForWidth(self.saveConfigButton.sizePolicy().hasHeightForWidth())
-        self.saveConfigButton.setSizePolicy(sizePolicy)
-
-        self.gridLayout_2.addWidget(self.saveConfigButton, 0, 1, 1, 1)
-
-        self.loadConfigButton = QPushButton(self.centralwidget)
-        self.loadConfigButton.setObjectName(u"loadConfigButton")
-        self.loadConfigButton.setEnabled(True)
-        sizePolicy.setHeightForWidth(self.loadConfigButton.sizePolicy().hasHeightForWidth())
-        self.loadConfigButton.setSizePolicy(sizePolicy)
-
-        self.gridLayout_2.addWidget(self.loadConfigButton, 0, 0, 1, 1)
-
+        self.gridLayout_2.setContentsMargins(-1, -1, -1, 27)
         self.showCommandButton = QPushButton(self.centralwidget)
         self.showCommandButton.setObjectName(u"showCommandButton")
         self.showCommandButton.setEnabled(True)
@@ -249,13 +235,25 @@ class Ui_BatchEditor(object):
 
         self.gridLayout_2.addWidget(self.startButton, 1, 0, 1, 4)
 
-        self.progressBar = QProgressBar(self.centralwidget)
-        self.progressBar.setObjectName(u"progressBar")
-        self.progressBar.setAcceptDrops(False)
-        self.progressBar.setValue(0)
-        self.progressBar.setTextVisible(False)
+        self.saveConfigButton = QPushButton(self.centralwidget)
+        self.saveConfigButton.setObjectName(u"saveConfigButton")
+        self.saveConfigButton.setEnabled(True)
+        sizePolicy.setHeightForWidth(self.saveConfigButton.sizePolicy().hasHeightForWidth())
+        self.saveConfigButton.setSizePolicy(sizePolicy)
 
-        self.gridLayout_2.addWidget(self.progressBar, 2, 0, 1, 4)
+        self.gridLayout_2.addWidget(self.saveConfigButton, 0, 1, 1, 1)
+
+        self.loadConfigButton = QPushButton(self.centralwidget)
+        self.loadConfigButton.setObjectName(u"loadConfigButton")
+        self.loadConfigButton.setEnabled(True)
+        sizePolicy.setHeightForWidth(self.loadConfigButton.sizePolicy().hasHeightForWidth())
+        self.loadConfigButton.setSizePolicy(sizePolicy)
+
+        self.gridLayout_2.addWidget(self.loadConfigButton, 0, 0, 1, 1)
+
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_2.addItem(self.horizontalSpacer, 0, 2, 1, 1)
 
 
         self.verticalLayout_2.addLayout(self.gridLayout_2)
@@ -314,14 +312,6 @@ class Ui_BatchEditor(object):
 
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.optionsTab), QCoreApplication.translate("BatchEditor", u"Configure", None))
 #if QT_CONFIG(tooltip)
-        self.saveConfigButton.setToolTip(QCoreApplication.translate("BatchEditor", u"Save your current configuration layout and choices to a text file", None))
-#endif // QT_CONFIG(tooltip)
-        self.saveConfigButton.setText(QCoreApplication.translate("BatchEditor", u"Save config", None))
-#if QT_CONFIG(tooltip)
-        self.loadConfigButton.setToolTip(QCoreApplication.translate("BatchEditor", u"Restore your previously saved configurations from a text file", None))
-#endif // QT_CONFIG(tooltip)
-        self.loadConfigButton.setText(QCoreApplication.translate("BatchEditor", u"Load config", None))
-#if QT_CONFIG(tooltip)
         self.showCommandButton.setToolTip(QCoreApplication.translate("BatchEditor", u"Preview and copy the underlying auto-editor terminal command", None))
 #endif // QT_CONFIG(tooltip)
         self.showCommandButton.setText(QCoreApplication.translate("BatchEditor", u"show command", None))
@@ -329,5 +319,13 @@ class Ui_BatchEditor(object):
         self.startButton.setToolTip(QCoreApplication.translate("BatchEditor", u"Start batch processing over all selected videos using the current configuration", None))
 #endif // QT_CONFIG(tooltip)
         self.startButton.setText(QCoreApplication.translate("BatchEditor", u"Start", None))
+#if QT_CONFIG(tooltip)
+        self.saveConfigButton.setToolTip(QCoreApplication.translate("BatchEditor", u"Save your current configuration layout and choices to a text file", None))
+#endif // QT_CONFIG(tooltip)
+        self.saveConfigButton.setText(QCoreApplication.translate("BatchEditor", u"Save config", None))
+#if QT_CONFIG(tooltip)
+        self.loadConfigButton.setToolTip(QCoreApplication.translate("BatchEditor", u"Restore your previously saved configurations from a text file", None))
+#endif // QT_CONFIG(tooltip)
+        self.loadConfigButton.setText(QCoreApplication.translate("BatchEditor", u"Load config", None))
     # retranslateUi
 
