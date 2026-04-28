@@ -60,24 +60,6 @@ class VideoProcessorSignals(QtCore.QObject):
     file_finished = QtCore.Signal(str, bool, str, float)   # str(path), success, error_hint, edited_seconds
 
 
-class _WorkerRunnable(QtCore.QRunnable):
-    """Thin QRunnable wrapper so a VideoProcessorWorker can run in a QThreadPool."""
-
-    def __init__(self, worker: "VideoProcessorWorker",
-                 on_start, on_done):
-        super().__init__()
-        self._worker = worker
-        self._on_start = on_start
-        self._on_done = on_done
-
-    def run(self):
-        self._on_start(self._worker)
-        try:
-            self._worker.run()
-        finally:
-            self._on_done(self._worker)
-
-
 class VideoProcessor(QtCore.QRunnable):
     """Queues every file as an individual worker inside an inner thread pool,
     allowing up to *max_parallel* files to be processed at the same time."""
@@ -115,22 +97,33 @@ class VideoProcessor(QtCore.QRunnable):
     # ------------------------------------------------------------------
 
     def run(self):
-        inner_pool = QtCore.QThreadPool()
-        inner_pool.setMaxThreadCount(self._max_parallel)
+        import concurrent.futures
 
-        for file_path in self.video_files_to_edit:
-            if self._cancel_event.is_set():
-                break
-            worker = VideoProcessorWorker(
-                options=self.options,
-                path=file_path,
-                cancel_event=self._cancel_event,
-                signals=self.signals,
-            )
-            runnable = _WorkerRunnable(worker, self._register, self._unregister)
-            inner_pool.start(runnable)
+        with concurrent.futures.ThreadPoolExecutor(max_workers=self._max_parallel) as executor:
+            futures = []
+            for file_path in self.video_files_to_edit:
+                if self._cancel_event.is_set():
+                    break
+                worker = VideoProcessorWorker(
+                    options=self.options,
+                    path=file_path,
+                    cancel_event=self._cancel_event,
+                    signals=self.signals,
+                )
+                
+                # Wrap worker run with registration/unregistration
+                def run_worker(w=worker):
+                    self._register(w)
+                    try:
+                        w.run()
+                    finally:
+                        self._unregister(w)
 
-        inner_pool.waitForDone()
+                futures.append(executor.submit(run_worker))
+            
+            # Wait for all submitted futures to complete
+            for future in futures:
+                future.result()
 
         if self._cancel_event.is_set():
             self.signals.cancelled.emit()

@@ -2,6 +2,18 @@
 
 A batch processing UI for `auto-editor` to automate silence removal from video files.
 
+## Prerequisites
+
+Before using the application, you must install Python and `auto-editor`.
+
+1. **Install Python**:
+   - **Windows**: Download and install Python from [python.org](https://www.python.org/downloads/). During installation, make sure to check the box that says **"Add Python to PATH"**.
+   - **Linux**: Most distributions come with Python pre-installed. If not, install `python3` and `pip` via your package manager (e.g., `sudo apt install python3 python3-pip`).
+2. **Install auto-editor**: Open your terminal or command prompt and run:
+   ```bash
+   pip install auto-editor
+   ```
+
 ## How to Use
 
 ### 1. Select a root directory
@@ -27,15 +39,20 @@ Click **Start** to open the processing window. A table shows every file with its
 
 ## Compilation
 
-To compile the application into a standalone executable (`.exe`) on Windows, you can use PyInstaller.
+To compile the application into a standalone executable (an `.exe` on Windows or a binary on Linux), you can use PyInstaller.
 
 1. Ensure PyInstaller is installed:
    ```bash
    pip install pyinstaller
    ```
 2. Run the following command from the root of the repository:
-   ```bash
-   pyinstaller --noconsole --name "BatchEditor" --paths src src\__main__.py
-   ```
+   - **Windows**:
+     ```bash
+     pyinstaller --noconsole --name "BatchEditor" --paths src src\__main__.py
+     ```
+   - **Linux**:
+     ```bash
+     pyinstaller --noconsole --name "BatchEditor" --paths src src/__main__.py
+     ```
 
-The compiled executable will be available in the `dist/BatchEditor/` directory. You can distribute this folder to use the app without running it through Python. Note: The application will still require `auto-editor` to be accessible on the system PATH or via a local Python environment.
+Note: The application will still require `python` and `auto-editor` to run.

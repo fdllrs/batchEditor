@@ -30,19 +30,43 @@ def _check_auto_editor() -> bool:
         return False
 
 
+def _check_python() -> bool:
+    """Return True if python or py is available on the system."""
+    import shutil
+    return bool(shutil.which("python") or shutil.which("python3") or shutil.which("py"))
+
+
 def main():
     app = QtWidgets.QApplication(sys.argv)
+    
+    is_frozen = getattr(sys, 'frozen', False)
+
+    if is_frozen and not _check_python():
+        QtWidgets.QMessageBox.critical(
+            None,
+            "Missing dependency — Python",
+            "<b>Python</b> was not found on this system."
+            "<br><br>"
+            "This application requires Python to run <b>auto-editor</b>.<br>"
+            "Please install Python from <a href='https://www.python.org/downloads/'>python.org</a> "
+            "and ensure it is added to your system PATH."
+            "<br><br>"
+            "The application will now exit.",
+        )
+        sys.exit(1)
 
     if not _check_auto_editor():
+        msg = (
+            "<b>auto-editor</b> was not found on this system.<br><br>"
+            "Please install auto-editor from <a href='https://github.com/WyattBlue/auto-editor/releases/'>github.com</a> "
+            "<br><br>"
+            "The application will now exit."
+        )
+
         QtWidgets.QMessageBox.critical(
             None,
             "Missing dependency — auto-editor",
-            "<b>auto-editor</b> was not found for the current Python interpreter."
-            "<br><br>"
-            "Install it by running:<br>"
-            f"<code>&nbsp;&nbsp;{sys.executable} -m pip install auto-editor</code>"
-            "<br><br>"
-            "The application will now exit.",
+            msg,
         )
         sys.exit(1)
 

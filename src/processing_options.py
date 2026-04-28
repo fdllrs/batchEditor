@@ -10,4 +10,4 @@ class ProcessingOptions:
     files_into_folders: bool = False
     split_only: bool = False
     separate_tracks: bool = False
-    max_parallel: int = 1
+    max_parallel: int = 2
