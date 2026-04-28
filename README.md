@@ -2,6 +2,8 @@
 
 A batch processing UI for `auto-editor` to automate silence removal from video files.
 
+[Watch demo](https://youtu.be/LApa1rvg9jI).
+ 
 ## Prerequisites
 
 Before using the application, you must install Python and `auto-editor`.
@@ -29,7 +31,7 @@ Switch to the **Configure** tab and choose the NLE you want to export for (Premi
 Click **Configure silence thresholds** to open the multitrack tuner. Each audio stream gets its own slider. Higher values mark more of the audio as silence; lower values are more permissive. Disable a track entirely to exclude it from the silence detection logic.
 
 ### 5. (Optional) Save / Load config
-Use **Save config** to persist the current settings to a `.txt` file. Use **Load config** later to restore them. This is useful when switching between different recording setups.
+Use **Save config** to persist the current settings to a `.txt` file and set them as the **startup configuration**. The next time you open the app, your last saved settings will be restored automatically. Use **Load config** to restore settings from any previously saved file. If no saved configuration is found at startup, the app will notify you and fall back to default settings.
 
 ### 6. Preview the command
 Click **Show command** to see the exact `auto-editor` command that will be run. You can copy it to the clipboard and run it manually if needed.
