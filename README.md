@@ -34,7 +34,7 @@ Use **Save config** to persist the current settings to a `.txt` file and set the
 Click **Show command** to see the exact `auto-editor` command that will be run. You can copy it to the clipboard and run it manually if needed.
 
 ### 7. Start processing
-Click **Start** to open the processing window. A table shows every file with its current status (*Queued*, *Processing*, *Done*, or *Failed*). Hit **Cancel** at any time to stop after the current file finishes. When the batch completes, the window shows a summary with the total number of files processed and the elapsed time.
+Click **Start** to open the processing window. A table shows every file with its current status (*Queued*, *Processing*, *Done*, or *Failed*). When the batch completes, the window shows a summary with the total number of files processed and the elapsed time. You can always cancel the batch processing by clicking **Cancel**.
 
 ## Compilation
 
