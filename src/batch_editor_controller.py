@@ -24,6 +24,20 @@ class BatchEditorController:
         self._reset_labels()
 
         self._apply_config(config_manager.default_config())
+        self._load_last_saved_config_on_startup()
+
+    def _load_last_saved_config_on_startup(self):
+        """Load the last auto-saved config. Show a warning dialog if not found."""
+        last_saved = config_manager.last_saved_config()
+        if last_saved is not None:
+            self._apply_config(last_saved)
+        else:
+            QtWidgets.QMessageBox.information(
+                self.view,
+                "No saved configuration found",
+                "Couldn't find a saved configuration.\n"
+                "Default settings will be used.",
+            )
 
 
     def _reset_labels(self):
@@ -246,6 +260,11 @@ class BatchEditorController:
             "split_only": self.view.splitOnly.isChecked(),
         }
         config_manager.save_config(Path(path), config)
+
+        # Mirror to the auto-save location so next startup picks it up.
+        auto_save_path = config_manager.last_saved_config_path()
+        auto_save_path.parent.mkdir(parents=True, exist_ok=True)
+        config_manager.save_config(auto_save_path, config)
 
 
     def load_config(self):

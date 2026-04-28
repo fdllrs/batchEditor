@@ -1,16 +1,35 @@
 from pathlib import Path
+from PySide6 import QtCore
 
-# Resolved relative to this file: src/ -> project root -> default_config.txt
-DEFAULT_CONFIG_PATH: Path = Path(__file__).parent.parent / "default_config.txt"
+# Built-in defaults — used when no saved config exists.
+_DEFAULT_CONFIG: dict = {
+    "export_option": "premiere",
+    "track_thresholds": [-1.0, 4.0, 2.0, -1.0],
+    "margin": 0.2,
+    "split_only": False,
+}
+
+_APP_NAME = "batchEditor"
+_LAST_SAVED_FILENAME = "last_saved_config.txt"
+
+
+def last_saved_config_path() -> Path:
+    """Return the OS-appropriate path for the auto-saved config file.
+
+    Uses QStandardPaths so the location is always inside the user's
+    application-data directory (e.g. %APPDATA%\\batchEditor on Windows).
+    """
+    data_dir = QtCore.QStandardPaths.writableLocation(
+        QtCore.QStandardPaths.StandardLocation.AppDataLocation
+    )
+    return Path(data_dir) / _APP_NAME / _LAST_SAVED_FILENAME
 
 
 CONFIG_KEYS = [
     "export_option",
     "track_thresholds",
     "margin",
-    "files_into_folders",
     "split_only",
-    "separate_tracks",
 ]
 
 
@@ -26,11 +45,17 @@ def save_config(path: Path, config: dict) -> None:
             f.write(f"{key}={value}\n")
 
 
+def last_saved_config() -> dict | None:
+    """Load the last auto-saved config, or return None if it doesn't exist."""
+    path = last_saved_config_path()
+    if path.exists():
+        return load_config(path)
+    return None
+
+
 def default_config() -> dict:
-    """Load the default config if it exists, otherwise return an empty dict."""
-    if DEFAULT_CONFIG_PATH.exists():
-        return load_config(DEFAULT_CONFIG_PATH)
-    return {}
+    """Return a copy of the built-in default configuration."""
+    return dict(_DEFAULT_CONFIG)
 
 
 def load_config(path: Path) -> dict:
@@ -50,7 +75,7 @@ def load_config(path: Path) -> dict:
 
 
 def _parse_value(key: str, raw: str):
-    bool_keys = {"files_into_folders", "split_only", "separate_tracks"}
+    bool_keys = {"split_only"}
     if key in bool_keys:
         return raw.lower() == "true"
     if key == "track_thresholds":

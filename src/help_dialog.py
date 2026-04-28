@@ -32,8 +32,12 @@ _STEPS = [
     (
         "5 — (Optional) Save / Load config",
         "Use <b>Save config</b> to persist the current settings to a <code>.txt</code> "
-        "file. Use <b>Load config</b> later to restore them. "
-        "This is useful when switching between different recording setups.",
+        "file and set them as the <b>startup configuration</b>. "
+        "The next time you open the app, your last saved settings will be "
+        "restored automatically. "
+        "Use <b>Load config</b> to restore settings from any previously saved file. "
+        "If no saved configuration is found at startup, the app will notify you "
+        "and fall back to default settings.",
     ),
     (
         "6 — Preview the command",
