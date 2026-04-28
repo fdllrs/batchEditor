@@ -1,6 +1,6 @@
 # batchEditor
 
-A batch processing UI for `auto-editor` to automate silence removal from video files.
+A batch processing UI for [auto-editor](https://github.com/WyattBlue/auto-editor) to automate silence removal from video files.
 
 [Watch demo](https://youtu.be/LApa1rvg9jI).
  
@@ -11,10 +11,7 @@ Before using the application, you must install Python and `auto-editor`.
 1. **Install Python**:
    - **Windows**: Download and install Python from [python.org](https://www.python.org/downloads/). During installation, make sure to check the box that says **"Add Python to PATH"**.
    - **Linux**: Most distributions come with Python pre-installed. If not, install `python3` and `pip` via your package manager (e.g., `sudo apt install python3 python3-pip`).
-2. **Install auto-editor**: Open your terminal or command prompt and run:
-   ```bash
-   pip install auto-editor
-   ```
+2. **Install auto-editor**: go to the official [auto-editor releases](https://github.com/WyattBlue/auto-editor/releases) page and download the appropriate version for your system.
 
 ## How to Use
 
