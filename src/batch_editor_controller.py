@@ -223,7 +223,8 @@ class BatchEditorController:
             for arg in cmd_list:
                 if 'name="' in arg:
                     # Convert premiere:name="file" to 'premiere:name=""file""'
-                    arg = f"'{arg.replace('\"', '\"\"')}'"
+                    escaped_arg = arg.replace('\"', '\"\"')
+                    arg = f"'{escaped_arg}'"
                 elif " " in arg:
                     arg = f'"{arg}"'
                 formatted_cmd.append(arg)
