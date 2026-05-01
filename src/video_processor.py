@@ -7,15 +7,15 @@ from pathlib import Path
 import subprocess
 
 
-def _auto_editor_base_cmd(path: Path) -> list[str]:
-    """Return the base auto-editor invocation for *path*.
+def _auto_editor_base_cmd(options: ProcessingOptions, path: Path) -> list[str]:
+    """Return the base auto-editor invocation for *path*."""
+    export_arg = f'{options.export_option}:name="{path.stem}"'
 
-    When frozen (PyInstaller .exe), auto-editor is expected on the system PATH.
-    When running from source, the current interpreter's installed package is used.
-    """
-    if getattr(sys, 'frozen', False):
-        return ["auto-editor", str(path)]
-    return [sys.executable, "-m", "auto_editor", str(path)]
+    return ["auto-editor", str(path), 
+            "--margin", f"{options.margin}sec",
+            "--edit", _build_edit_expr(options.track_thresholds),
+            "--export", export_arg,
+            ]
 
 
 def _build_edit_expr(track_thresholds: list[float]) -> str:
@@ -36,21 +36,15 @@ def _build_edit_expr(track_thresholds: list[float]) -> str:
 
 def build_command(options: ProcessingOptions, path: Path) -> list[str]:
     """Return the full auto-editor command list for a single file."""
-    base = _auto_editor_base_cmd(path)
-    export_arg = f'{options.export_option}:name="{path.stem}"'
+    command = _auto_editor_base_cmd(options, path)
 
     if options.split_only:
-        return base + [
+        return command + [
             "--when-silent", "nil",
             "--when-normal", "nil",
-            "--export", export_arg,
         ]
 
-    return base + [
-        "--margin", f"{options.margin}sec",
-        "--edit", _build_edit_expr(options.track_thresholds),
-        "--export", export_arg,
-    ]
+    return command 
 
 
 class VideoProcessorSignals(QtCore.QObject):
