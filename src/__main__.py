@@ -1,27 +1,35 @@
 import sys
 import subprocess
-from PySide6 import QtWidgets
+from PySide6 import QtWidgets, QtCore
 from batch_editor_controller import BatchEditorController
 
+def get_auto_editor_path() -> str:
+    settings = QtCore.QSettings("fdllrs", "BatchEditor")
+    return settings.value("auto_editor_path", "auto-editor")
 
 
 
-def _check_auto_editor() -> bool:
-    """Return True if auto-editor is importable or in PATH."""
+def _is_valid_auto_editor(exe_path: str) -> bool:
+    """Check if the given path points to a valid auto-editor executable."""
     try:
-        cmd = ["auto-editor", "--version"]
+        cmd = [exe_path, "--version"]
         kwargs = {}
         if hasattr(subprocess, 'CREATE_NO_WINDOW'):
             kwargs['creationflags'] = subprocess.CREATE_NO_WINDOW
 
         result = subprocess.run(
             cmd,
-            capture_output=True, timeout=10,
+            capture_output=True, timeout=10, text=True,
             **kwargs
         )
+
         return result.returncode == 0
     except Exception:
         return False
+
+def _check_auto_editor() -> bool:
+    """Return True if the configured auto-editor is valid."""
+    return _is_valid_auto_editor(get_auto_editor_path())
 
 
 def _check_python() -> bool:
@@ -51,20 +59,42 @@ def main():
         )
         sys.exit(1)
 
-    if not _check_auto_editor():
+    while not _check_auto_editor():
         msg = (
             "<b>auto-editor</b> was not found on this system.<br><br>"
-            "Please install auto-editor from <a href='https://github.com/WyattBlue/auto-editor/releases/'>github.com</a> "
-            "<br><br>"
-            "The application will now exit."
+            "Please install auto-editor from <a href='https://github.com/WyattBlue/auto-editor/releases/'>github.com</a> and add it to your system PATH.<br><br>"
+            "or manually locate the executable."
         )
 
-        QtWidgets.QMessageBox.critical(
-            None,
-            "Missing dependency — auto-editor",
-            msg,
-        )
-        sys.exit(1)
+        msg_box = QtWidgets.QMessageBox()
+        msg_box.setWindowTitle("Missing dependency — auto-editor")
+        msg_box.setText(msg)
+        msg_box.setIcon(QtWidgets.QMessageBox.Icon.Critical)
+        
+        locate_btn = msg_box.addButton("Locate Executable", QtWidgets.QMessageBox.ButtonRole.ActionRole)
+        exit_btn = msg_box.addButton("Exit", QtWidgets.QMessageBox.ButtonRole.RejectRole)
+        
+        msg_box.exec()
+        
+        if msg_box.clickedButton() == locate_btn:
+            exe_path, _ = QtWidgets.QFileDialog.getOpenFileName(
+                None, "Locate auto-editor Executable", "", "Executables (*.exe);;All Files (*)"
+            )
+            if exe_path:
+                if _is_valid_auto_editor(exe_path):
+                    settings = QtCore.QSettings("fdllrs", "BatchEditor")
+                    settings.setValue("auto_editor_path", exe_path)
+                else:
+                    QtWidgets.QMessageBox.warning(
+                        None,
+                        "Invalid Executable",
+                        f"The file you selected does not appear to be a valid auto-editor executable.<br><br>"
+                        f"Please ensure it is the correct file and try again."
+                    )
+            else:
+                sys.exit(1)
+        else:
+            sys.exit(1)
 
     controller = BatchEditorController()
     controller.view.show()
