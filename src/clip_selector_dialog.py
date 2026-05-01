@@ -41,9 +41,6 @@ class ClipSelectorDialog(QtWidgets.QDialog):
         self._on_selection_changed = on_selection_changed
         self._setup_ui()
         self._populate(files)
-        # Apply the default length filter right away so the initial view is
-        # consistent.
-        self._apply_length_filter(self._min_length)
 
     # ------------------------------------------------------------------
     # Public API

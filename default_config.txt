@@ -1,4 +1,0 @@
-export_option=premiere
-track_thresholds=-1.0;4.0;2.0;-1.0
-margin=0.2
-split_only=false
