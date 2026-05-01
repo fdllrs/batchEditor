@@ -63,7 +63,7 @@ class HelpDialog(QtWidgets.QDialog):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("How to use Batch Editor")
+        self.setWindowTitle("Help")
         self.setMinimumWidth(480)
         self.setMinimumHeight(340)
         self.setSizeGripEnabled(True)
@@ -83,6 +83,48 @@ class HelpDialog(QtWidgets.QDialog):
         steps_layout = QtWidgets.QVBoxLayout(content)
         steps_layout.setSpacing(10)
         steps_layout.setContentsMargins(0, 0, 8, 0)
+
+        # Contact Panel
+        contact_frame = QtWidgets.QFrame()
+        contact_frame.setObjectName("ContactFrame")
+        contact_frame.setStyleSheet("""
+            QFrame#ContactFrame {
+                background-color: rgba(128, 128, 128, 0.1);
+                border: 1px solid rgba(128, 128, 128, 0.3);
+                border-radius: 6px;
+            }
+        """)
+        contact_layout = QtWidgets.QVBoxLayout(contact_frame)
+        contact_layout.setContentsMargins(12, 12, 12, 12)
+        
+        contact_title = QtWidgets.QLabel("Contact & Support")
+        contact_title_font = contact_title.font()
+        contact_title_font.setBold(True)
+        contact_title.setFont(contact_title_font)
+        
+        contact_body = QtWidgets.QLabel(
+            "If you encounter issues or have feature requests, please report them on "
+            "<a href='https://github.com/fdllrs/batchEditor/issues'>GitHub Issues</a>.<br>"
+            "You can also reach out on Discord: <b>fdllrs</b>."
+        )
+        contact_body.setWordWrap(True)
+        contact_body.setTextFormat(QtCore.Qt.TextFormat.RichText)
+        contact_body.setOpenExternalLinks(True)
+        
+        contact_layout.addWidget(contact_title)
+        contact_layout.addWidget(contact_body)
+        
+        steps_layout.addWidget(contact_frame)
+        
+        # Tutorial Title
+        tutorial_title = QtWidgets.QLabel("How to use Batch Editor")
+        tutorial_title_font = tutorial_title.font()
+        tutorial_title_font.setBold(True)
+        tutorial_title_font.setPointSize(tutorial_title_font.pointSize() + 2)
+        tutorial_title.setFont(tutorial_title_font)
+        tutorial_title.setContentsMargins(0, 8, 0, 4)
+        
+        steps_layout.addWidget(tutorial_title)
 
         for title, body in _STEPS:
             steps_layout.addWidget(self._make_step_widget(title, body))
@@ -123,6 +165,7 @@ class HelpDialog(QtWidgets.QDialog):
         body_label = QtWidgets.QLabel(body)
         body_label.setWordWrap(True)
         body_label.setTextFormat(QtCore.Qt.TextFormat.RichText)
+        body_label.setOpenExternalLinks(True)
 
         layout.addWidget(title_label)
         layout.addWidget(body_label)
