@@ -11,11 +11,11 @@ import subprocess
 def _auto_editor_base_cmd(options: ProcessingOptions, path: Path) -> list[str]:
     """Return the base auto-editor invocation for *path*."""
     export_arg = f'{options.export_option}:name="{path.stem}"'
-    
+
     settings = QtCore.QSettings("fdllrs", "BatchEditor")
     ae_path = settings.value("auto_editor_path", "auto-editor")
 
-    return [ae_path, str(path), 
+    return [ae_path, str(path),
             "--margin", f"{options.margin}sec",
             "--edit", _build_edit_expr(options.track_thresholds),
             "--export", export_arg,
@@ -48,14 +48,15 @@ def build_command(options: ProcessingOptions, path: Path) -> list[str]:
             "--when-normal", "nil",
         ]
 
-    return command 
+    return command
 
 
 class VideoProcessorSignals(QtCore.QObject):
     finished = QtCore.Signal()
     cancelled = QtCore.Signal()
     file_started = QtCore.Signal(str)                      # str(path)
-    file_finished = QtCore.Signal(str, bool, str, float)   # str(path), success, error_hint, edited_seconds
+    # str(path), success, error_hint, edited_seconds
+    file_finished = QtCore.Signal(str, bool, str, float)
 
 
 class VideoProcessor(QtCore.QRunnable):
@@ -108,7 +109,7 @@ class VideoProcessor(QtCore.QRunnable):
                     cancel_event=self._cancel_event,
                     signals=self.signals,
                 )
-                
+
                 # Wrap worker run with registration/unregistration
                 def run_worker(w=worker):
                     self._register(w)
@@ -118,7 +119,7 @@ class VideoProcessor(QtCore.QRunnable):
                         self._unregister(w)
 
                 futures.append(executor.submit(run_worker))
-            
+
             # Wait for all submitted futures to complete
             for future in futures:
                 future.result()
@@ -180,7 +181,8 @@ class VideoProcessorWorker:
                 text=True, encoding="utf-8",
                 **kwargs
             )
-            # Read stdout char-by-char to handle both \r (progress bars) and \n.
+            # Read stdout char-by-char to handle both \r (progress bars) and
+            # \n.
             buf = ""
             while True:
                 char = self._process.stdout.read(1)
@@ -204,14 +206,16 @@ class VideoProcessorWorker:
                 error_hint = "cancelled"
             elif error_lines:
                 combined = " ".join(error_lines)
-                if re.search(r"audio stream .+ does not exist", combined, re.IGNORECASE):
+                if re.search(r"audio stream .+ does not exist",
+                             combined, re.IGNORECASE):
                     error_hint = "missing_track"
         except Exception as e:
             print(f"Error in {self.path}: {e}")
         finally:
             self._process = None
 
-        self._signals.file_finished.emit(path_key, success, error_hint, edited_seconds)
+        self._signals.file_finished.emit(
+            path_key, success, error_hint, edited_seconds)
 
     def _post_process_xml(self) -> float:
         """Fix file:/// URIs and return the edited sequence duration in seconds.

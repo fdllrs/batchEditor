@@ -8,6 +8,7 @@ from pathlib import Path
 def video_to_cv2(path: str):
     return cv2.VideoCapture(path)
 
+
 def total_duration(listOfDurations):
     duration_minutes = sum(listOfDurations.values())
 

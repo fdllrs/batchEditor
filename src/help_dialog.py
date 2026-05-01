@@ -96,12 +96,12 @@ class HelpDialog(QtWidgets.QDialog):
         """)
         contact_layout = QtWidgets.QVBoxLayout(contact_frame)
         contact_layout.setContentsMargins(12, 12, 12, 12)
-        
+
         contact_title = QtWidgets.QLabel("Contact & Support")
         contact_title_font = contact_title.font()
         contact_title_font.setBold(True)
         contact_title.setFont(contact_title_font)
-        
+
         contact_body = QtWidgets.QLabel(
             "If you encounter issues or have feature requests, please report them on "
             "<a href='https://github.com/fdllrs/batchEditor/issues'>GitHub Issues</a>.<br>"
@@ -110,12 +110,12 @@ class HelpDialog(QtWidgets.QDialog):
         contact_body.setWordWrap(True)
         contact_body.setTextFormat(QtCore.Qt.TextFormat.RichText)
         contact_body.setOpenExternalLinks(True)
-        
+
         contact_layout.addWidget(contact_title)
         contact_layout.addWidget(contact_body)
-        
+
         steps_layout.addWidget(contact_frame)
-        
+
         # Tutorial Title
         tutorial_title = QtWidgets.QLabel("How to use Batch Editor")
         tutorial_title_font = tutorial_title.font()
@@ -123,7 +123,7 @@ class HelpDialog(QtWidgets.QDialog):
         tutorial_title_font.setPointSize(tutorial_title_font.pointSize() + 2)
         tutorial_title.setFont(tutorial_title_font)
         tutorial_title.setContentsMargins(0, 8, 0, 4)
-        
+
         steps_layout.addWidget(tutorial_title)
 
         for title, body in _STEPS:
@@ -135,16 +135,17 @@ class HelpDialog(QtWidgets.QDialog):
 
         # Footer with version and close button
         footer_layout = QtWidgets.QHBoxLayout()
-        
+
         version_label = QtWidgets.QLabel(f"v{__version__} - made by fdllrs")
         version_label.setStyleSheet("color: gray;")
-        
-        buttons = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.StandardButton.Close)
+
+        buttons = QtWidgets.QDialogButtonBox(
+            QtWidgets.QDialogButtonBox.StandardButton.Close)
         buttons.rejected.connect(self.reject)
-        
+
         footer_layout.addWidget(version_label)
         footer_layout.addWidget(buttons)
-        
+
         root.addLayout(footer_layout)
 
     @staticmethod

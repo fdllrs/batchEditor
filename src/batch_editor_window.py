@@ -24,18 +24,17 @@ class BatchEditorWindow(QtWidgets.QMainWindow, Ui_BatchEditor):
 
         self.tabWidget.setCornerWidget(self.helpButton)
 
-
         self.startButton.clicked.connect(self.controller.startProcessing)
-        self.multitrackTuningButton.clicked.connect(self.controller.open_audio_threshold_tuner_dialog)
-        self.selectRootDirectoryButton.clicked.connect(self.controller.set_root_directory)
+        self.multitrackTuningButton.clicked.connect(
+            self.controller.open_audio_threshold_tuner_dialog)
+        self.selectRootDirectoryButton.clicked.connect(
+            self.controller.set_root_directory)
         self.saveConfigButton.clicked.connect(self.controller.save_config)
         self.loadConfigButton.clicked.connect(self.controller.load_config)
         self.showCommandButton.clicked.connect(self.controller.show_command)
-        self.editSelectedFilesButton.clicked.connect(self.controller.open_clip_selector_dialog)
+        self.editSelectedFilesButton.clicked.connect(
+            self.controller.open_clip_selector_dialog)
         self.helpButton.clicked.connect(self._show_help)
-        
-
-
 
     def _show_help(self):
         HelpDialog(parent=self).exec()

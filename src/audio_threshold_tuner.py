@@ -57,7 +57,8 @@ class AudioThresholdTuner(QtWidgets.QDialog):
         # Scroll area so the dialog stays compact even with many tracks ---
         scroll = QtWidgets.QScrollArea()
         scroll.setWidgetResizable(True)
-        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        scroll.setHorizontalScrollBarPolicy(
+            Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
         container = QtWidgets.QWidget()
         grid = QtWidgets.QGridLayout(container)
@@ -110,7 +111,7 @@ class AudioThresholdTuner(QtWidgets.QDialog):
             if index < len(self._initial_thresholds)
             else -1.0
         )
-        
+
         # -1.0 is the definitive "excluded" marker.
         is_enabled = (initial_raw >= 0.0)
         display_val = initial_raw if is_enabled else self._DEFAULT_THRESHOLD
@@ -139,7 +140,8 @@ class AudioThresholdTuner(QtWidgets.QDialog):
         grid.addWidget(slider, index, 1)
         grid.addWidget(spinbox, index, 2)
 
-    def _on_slider_changed(self, value: int, spinbox: QtWidgets.QDoubleSpinBox):
+    def _on_slider_changed(self, value: int,
+                           spinbox: QtWidgets.QDoubleSpinBox):
         spinbox.blockSignals(True)
         spinbox.setValue(value / self._SLIDER_SCALE)
         spinbox.blockSignals(False)

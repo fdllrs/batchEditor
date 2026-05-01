@@ -3,10 +3,10 @@ import subprocess
 from PySide6 import QtWidgets, QtCore
 from batch_editor_controller import BatchEditorController
 
+
 def get_auto_editor_path() -> str:
     settings = QtCore.QSettings("fdllrs", "BatchEditor")
     return settings.value("auto_editor_path", "auto-editor")
-
 
 
 def _is_valid_auto_editor(exe_path: str) -> bool:
@@ -27,6 +27,7 @@ def _is_valid_auto_editor(exe_path: str) -> bool:
     except Exception:
         return False
 
+
 def _check_auto_editor() -> bool:
     """Return True if the configured auto-editor is valid."""
     return _is_valid_auto_editor(get_auto_editor_path())
@@ -35,12 +36,13 @@ def _check_auto_editor() -> bool:
 def _check_python() -> bool:
     """Return True if python or py is available on the system."""
     import shutil
-    return bool(shutil.which("python") or shutil.which("python3") or shutil.which("py"))
+    return bool(shutil.which("python") or shutil.which(
+        "python3") or shutil.which("py"))
 
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
-    
+
     is_frozen = getattr(sys, 'frozen', False)
 
     if is_frozen and not _check_python():
@@ -70,12 +72,15 @@ def main():
         msg_box.setWindowTitle("Missing dependency — auto-editor")
         msg_box.setText(msg)
         msg_box.setIcon(QtWidgets.QMessageBox.Icon.Critical)
-        
-        locate_btn = msg_box.addButton("Locate Executable", QtWidgets.QMessageBox.ButtonRole.ActionRole)
-        exit_btn = msg_box.addButton("Exit", QtWidgets.QMessageBox.ButtonRole.RejectRole)
-        
+
+        locate_btn = msg_box.addButton(
+            "Locate Executable",
+            QtWidgets.QMessageBox.ButtonRole.ActionRole)
+        exit_btn = msg_box.addButton(
+            "Exit", QtWidgets.QMessageBox.ButtonRole.RejectRole)
+
         msg_box.exec()
-        
+
         if msg_box.clickedButton() == locate_btn:
             exe_path, _ = QtWidgets.QFileDialog.getOpenFileName(
                 None, "Locate auto-editor Executable", "", "Executables (*.exe);;All Files (*)"

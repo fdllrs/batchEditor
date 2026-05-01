@@ -4,6 +4,7 @@ from PySide6 import QtCore, QtWidgets
 from PySide6.QtCore import Qt
 from utils import format_duration
 
+
 class ClipSelectorDialog(QtWidgets.QDialog):
     """Modal dialog that lists all clips queued for editing.
 
@@ -40,7 +41,8 @@ class ClipSelectorDialog(QtWidgets.QDialog):
         self._on_selection_changed = on_selection_changed
         self._setup_ui()
         self._populate(files)
-        # Apply the default length filter right away so the initial view is consistent.
+        # Apply the default length filter right away so the initial view is
+        # consistent.
         self._apply_length_filter(self._min_length)
 
     # ------------------------------------------------------------------
@@ -66,7 +68,7 @@ class ClipSelectorDialog(QtWidgets.QDialog):
         self.setWindowTitle("Edit Selected Files")
         self.setMinimumSize(441, 337)
         self.resize(441, 337)
-        
+
         layout = QtWidgets.QVBoxLayout(self)
 
         # Tree widget -------------------------------------------------
@@ -75,10 +77,14 @@ class ClipSelectorDialog(QtWidgets.QDialog):
         self._tree.setRootIsDecorated(False)
         self._tree.setAlternatingRowColors(True)
         self._tree.setSortingEnabled(True)
-        self._tree.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
-        self._tree.header().setSectionResizeMode(self._COL_NAME, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
-        self._tree.header().setSectionResizeMode(self._COL_PATH, QtWidgets.QHeaderView.ResizeMode.Stretch)
-        self._tree.header().setSectionResizeMode(self._COL_DURATION, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
+        self._tree.setSelectionMode(
+            QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
+        self._tree.header().setSectionResizeMode(
+            self._COL_NAME, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
+        self._tree.header().setSectionResizeMode(
+            self._COL_PATH, QtWidgets.QHeaderView.ResizeMode.Stretch)
+        self._tree.header().setSectionResizeMode(
+            self._COL_DURATION, QtWidgets.QHeaderView.ResizeMode.ResizeToContents)
 
         layout.addWidget(self._tree)
 
@@ -89,8 +95,10 @@ class ClipSelectorDialog(QtWidgets.QDialog):
         self._min_length_spinbox.setRange(0, 9999)
         self._min_length_spinbox.setSuffix(" min")
         self._min_length_spinbox.setValue(self._min_length)
-        self._min_length_spinbox.valueChanged.connect(self._apply_length_filter)
-        self._min_length_spinbox.setToolTip("Automatically check all videos strictly longer than this value in minutes")
+        self._min_length_spinbox.valueChanged.connect(
+            self._apply_length_filter)
+        self._min_length_spinbox.setToolTip(
+            "Automatically check all videos strictly longer than this value in minutes")
         filter_layout.addWidget(self._min_length_spinbox)
         filter_layout.addStretch()
         layout.addLayout(filter_layout)
@@ -102,14 +110,16 @@ class ClipSelectorDialog(QtWidgets.QDialog):
         select_all_btn.clicked.connect(self._select_all)
         deselect_all_btn.clicked.connect(self._deselect_all)
         select_all_btn.setToolTip("Mark all discovered videos to be processed")
-        deselect_all_btn.setToolTip("Unmark all videos. Useful for picking only a few specific files out of a large list")
+        deselect_all_btn.setToolTip(
+            "Unmark all videos. Useful for picking only a few specific files out of a large list")
         bulk_layout.addWidget(select_all_btn)
         bulk_layout.addWidget(deselect_all_btn)
 
         self._show_selected_btn = QtWidgets.QPushButton("Show Selected Only")
         self._show_selected_btn.setCheckable(True)
         self._show_selected_btn.toggled.connect(self._toggle_show_selected)
-        self._show_selected_btn.setToolTip("Toggle to hide files that are unchecked, keeping only the included ones on screen")
+        self._show_selected_btn.setToolTip(
+            "Toggle to hide files that are unchecked, keeping only the included ones on screen")
         bulk_layout.addWidget(self._show_selected_btn)
         bulk_layout.addStretch()
 
@@ -127,7 +137,6 @@ class ClipSelectorDialog(QtWidgets.QDialog):
         button_box.rejected.connect(self.reject)
         layout.addWidget(button_box)
 
-
     def _populate(self, files: dict):
         self._tree.setUpdatesEnabled(False)
         for path, duration in files.items():
@@ -137,10 +146,13 @@ class ClipSelectorDialog(QtWidgets.QDialog):
             item.setToolTip(self._COL_NAME, str(path))
 
             try:
-                rel = Path(path).relative_to(self._root.parent) if self._root else None
+                rel = Path(path).relative_to(
+                    self._root.parent) if self._root else None
             except ValueError:
                 rel = None
-            path_text = str(rel.parent) if rel is not None else str(Path(path).parent)
+            path_text = str(
+                rel.parent) if rel is not None else str(
+                Path(path).parent)
 
             item.setText(self._COL_PATH, path_text)
             item.setToolTip(self._COL_PATH, str(path))
@@ -153,7 +165,9 @@ class ClipSelectorDialog(QtWidgets.QDialog):
                 Qt.CheckState.Checked if checked else Qt.CheckState.Unchecked,
             )
             # Right-align duration
-            item.setTextAlignment(self._COL_DURATION, Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
+            item.setTextAlignment(
+                self._COL_DURATION,
+                Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
             self._tree.addTopLevelItem(item)
         self._tree.setUpdatesEnabled(True)
         self._tree.itemChanged.connect(self._on_item_changed)
@@ -193,7 +207,9 @@ class ClipSelectorDialog(QtWidgets.QDialog):
     def _on_item_changed(self, item, column):
         if column == self._COL_NAME:
             if self._show_selected_btn.isChecked():
-                item.setHidden(item.checkState(self._COL_NAME) != Qt.CheckState.Checked)
+                item.setHidden(
+                    item.checkState(
+                        self._COL_NAME) != Qt.CheckState.Checked)
             self._update_selection_label()
 
     def _update_selection_label(self):
@@ -215,6 +231,8 @@ class ClipSelectorDialog(QtWidgets.QDialog):
         for i in range(root.childCount()):
             item = root.child(i)
             if show_only_selected:
-                item.setHidden(item.checkState(self._COL_NAME) != Qt.CheckState.Checked)
+                item.setHidden(
+                    item.checkState(
+                        self._COL_NAME) != Qt.CheckState.Checked)
             else:
                 item.setHidden(False)

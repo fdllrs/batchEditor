@@ -84,7 +84,8 @@ def check_for_updates(parent: QtWidgets.QWidget) -> None:
     pool.start(worker)
 
 
-def _show_update_dialog(parent: QtWidgets.QWidget, latest_version: str) -> None:
+def _show_update_dialog(parent: QtWidgets.QWidget,
+                        latest_version: str) -> None:
     msg_box = QtWidgets.QMessageBox(parent)
     msg_box.setWindowTitle("Update available")
     msg_box.setIcon(QtWidgets.QMessageBox.Icon.Information)
@@ -96,5 +97,6 @@ def _show_update_dialog(parent: QtWidgets.QWidget, latest_version: str) -> None:
         f'<a href="{_RELEASES_PAGE_URL}">Open releases page</a>'
     )
     msg_box.setStandardButtons(QtWidgets.QMessageBox.StandardButton.Ignore)
-    msg_box.button(QtWidgets.QMessageBox.StandardButton.Ignore).setText("Dismiss")
+    msg_box.button(
+        QtWidgets.QMessageBox.StandardButton.Ignore).setText("Dismiss")
     msg_box.exec()

@@ -37,7 +37,8 @@ class ProcessingDialog(QtWidgets.QDialog):
         self._timer.start(1000)
 
     def _reset_status(self):
-        self._orig_secs_map: dict[str, float] = {}  # path_key -> original seconds
+        # path_key -> original seconds
+        self._orig_secs_map: dict[str, float] = {}
         self._row_map: dict[str, int] = {}          # path_key -> table row
         self._start_time = time.monotonic()
         self._is_running = True
@@ -46,7 +47,6 @@ class ProcessingDialog(QtWidgets.QDialog):
         self._skip_count = 0
         self._total_orig_secs = 0.0
         self._total_edit_secs = 0.0
-
 
     def _setup_ui(self):
         self.setWindowTitle("Processing Files")
@@ -61,13 +61,13 @@ class ProcessingDialog(QtWidgets.QDialog):
         self._setup_stats_layout(layout)
         self._setup_buttons(layout)
 
-
     def _setup_buttons(self, layout):
         btn_layout = QtWidgets.QHBoxLayout()
         btn_layout.addStretch()
 
         self._cancel_btn = QtWidgets.QPushButton("Cancel")
-        self._cancel_btn.setToolTip("Stop processing after the current file finishes")
+        self._cancel_btn.setToolTip(
+            "Stop processing after the current file finishes")
         self._cancel_btn.clicked.connect(self._on_cancel_clicked)
 
         self._close_btn = QtWidgets.QPushButton("Close")
@@ -96,7 +96,8 @@ class ProcessingDialog(QtWidgets.QDialog):
 
     def _setup_table_widget(self, layout):
         self._table = QtWidgets.QTableWidget(0, 4)
-        self._table.setHorizontalHeaderLabels(["File", "Status", "Length", "Edited"])
+        self._table.setHorizontalHeaderLabels(
+            ["File", "Status", "Length", "Edited"])
         self._table.setEditTriggers(
             QtWidgets.QAbstractItemView.EditTrigger.NoEditTriggers
         )
@@ -106,9 +107,12 @@ class ProcessingDialog(QtWidgets.QDialog):
         self._table.setAlternatingRowColors(True)
         self._table.verticalHeader().setVisible(False)
         header = self._table.horizontalHeader()
-        header.setSectionResizeMode(self._COL_FILE, QtWidgets.QHeaderView.ResizeMode.Stretch)
+        header.setSectionResizeMode(
+            self._COL_FILE,
+            QtWidgets.QHeaderView.ResizeMode.Stretch)
         for col in (self._COL_STATUS, self._COL_ORIG_LEN, self._COL_EDIT_LEN):
-            header.setSectionResizeMode(col, QtWidgets.QHeaderView.ResizeMode.Fixed)
+            header.setSectionResizeMode(
+                col, QtWidgets.QHeaderView.ResizeMode.Fixed)
         self._table.setColumnWidth(self._COL_STATUS, 140)
         self._table.setColumnWidth(self._COL_ORIG_LEN, 80)
         self._table.setColumnWidth(self._COL_EDIT_LEN, 80)
@@ -184,18 +188,24 @@ class ProcessingDialog(QtWidgets.QDialog):
 
         if cancelled:
             self._mark_remaining_queued_as_cancelled()
-            parts.append(f"⊘ Cancelled after {self._elapsed_str()}  |  {self._success_count} done")
+            parts.append(
+                f"⊘ Cancelled after {
+                    self._elapsed_str()}  |  {
+                    self._success_count} done")
         else:
             total_files = self._success_count + self._fail_count + self._skip_count
-            parts.append(f"✓ {self._success_count}/{total_files} completed in {self._elapsed_str()}")
+            parts.append(
+                f"✓ {self._success_count}/{total_files} completed in {self._elapsed_str()}")
             if self._skip_count:
                 parts.append(f"{self._skip_count} skipped (missing track)")
             if self._fail_count:
                 parts.append(f"{self._fail_count} failed")
 
-        # Length / reduction summary (only if we have completed files with XML data).
+        # Length / reduction summary (only if we have completed files with XML
+        # data).
         if self._total_edit_secs > 0:
-            pct_saved = (1 - self._total_edit_secs / self._total_orig_secs) * 100
+            pct_saved = (1 - self._total_edit_secs /
+                         self._total_orig_secs) * 100
             parts.append(
                 f"Total: {format_duration(self._total_orig_secs)} → "
                 f"{format_duration(self._total_edit_secs)} "
@@ -242,7 +252,10 @@ class ProcessingDialog(QtWidgets.QDialog):
                 orig = self._orig_secs_map.get(path_key, 0.0)
                 self._total_orig_secs += orig
                 self._total_edit_secs += edited_seconds
-                self._set_cell(row, self._COL_EDIT_LEN, format_duration(edited_seconds))
+                self._set_cell(
+                    row,
+                    self._COL_EDIT_LEN,
+                    format_duration(edited_seconds))
         elif error_hint == "missing_track":
             self._skip_count += 1
             self._set_status(
