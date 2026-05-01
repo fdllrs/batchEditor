@@ -3,3 +3,4 @@ opencv-python
 beautifulsoup4
 lxml
 auto-editor
+packaging

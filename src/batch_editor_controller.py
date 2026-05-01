@@ -11,6 +11,7 @@ from batch_editor_window import BatchEditorWindow, EXPORT_OPTIONS
 from clip_selector_dialog import ClipSelectorDialog
 from processing_dialog import ProcessingDialog
 import config_manager
+import update_checker
 
 _DEFAULT_MIN_LENGTH_MINUTES = 1
 
@@ -25,6 +26,7 @@ class BatchEditorController:
 
         self._apply_config(config_manager.default_config())
         self._load_last_saved_config_on_startup()
+        QtCore.QTimer.singleShot(0, self._check_for_updates)
 
     def _load_last_saved_config_on_startup(self):
         """Load the last auto-saved config. Show a warning dialog if not found."""
@@ -38,6 +40,10 @@ class BatchEditorController:
                 "Couldn't find a saved configuration.\n"
                 "Default settings will be used.",
             )
+
+    def _check_for_updates(self):
+        """Trigger a non-blocking background update check."""
+        update_checker.check_for_updates(self.view)
 
 
     def _reset_labels(self):
