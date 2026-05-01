@@ -1,4 +1,5 @@
 from PySide6 import QtWidgets, QtCore, QtGui
+from version import __version__
 
 
 _STEPS = [
@@ -90,10 +91,19 @@ class HelpDialog(QtWidgets.QDialog):
         scroll.setWidget(content)
         root.addWidget(scroll)
 
-        # Close button
+        # Footer with version and close button
+        footer_layout = QtWidgets.QHBoxLayout()
+        
+        version_label = QtWidgets.QLabel(f"v{__version__} - made by fdllrs")
+        version_label.setStyleSheet("color: gray;")
+        
         buttons = QtWidgets.QDialogButtonBox(QtWidgets.QDialogButtonBox.StandardButton.Close)
         buttons.rejected.connect(self.reject)
-        root.addWidget(buttons)
+        
+        footer_layout.addWidget(version_label)
+        footer_layout.addWidget(buttons)
+        
+        root.addLayout(footer_layout)
 
     @staticmethod
     def _make_step_widget(title: str, body: str) -> QtWidgets.QFrame:

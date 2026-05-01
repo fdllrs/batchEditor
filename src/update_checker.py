@@ -95,9 +95,6 @@ def _show_update_dialog(parent: QtWidgets.QWidget, latest_version: str) -> None:
     msg_box.setInformativeText(
         f'<a href="{_RELEASES_PAGE_URL}">Open releases page</a>'
     )
-    msg_box.setStandardButtons(
-        QtWidgets.QMessageBox.StandardButton.Ok
-        | QtWidgets.QMessageBox.StandardButton.Ignore
-    )
+    msg_box.setStandardButtons(QtWidgets.QMessageBox.StandardButton.Ignore)
     msg_box.button(QtWidgets.QMessageBox.StandardButton.Ignore).setText("Dismiss")
     msg_box.exec()
