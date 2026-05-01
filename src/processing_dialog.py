@@ -189,9 +189,7 @@ class ProcessingDialog(QtWidgets.QDialog):
         if cancelled:
             self._mark_remaining_queued_as_cancelled()
             parts.append(
-                f"⊘ Cancelled after {
-                    self._elapsed_str()}  |  {
-                    self._success_count} done")
+                f'⊘ Cancelled after {self._elapsed_str()} | {self._success_count} done')
         else:
             total_files = self._success_count + self._fail_count + self._skip_count
             parts.append(
