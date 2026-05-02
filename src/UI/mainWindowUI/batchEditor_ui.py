@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'batchEditor.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.8.2
+## Created by: Qt User Interface Compiler version 6.10.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -64,38 +64,12 @@ class Ui_BatchEditor(object):
         self.gridLayout_3 = QGridLayout()
         self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.gridLayout_3.setVerticalSpacing(46)
-        self.totalLength = QLabel(self.selectionTab)
-        self.totalLength.setObjectName(u"totalLength")
-        self.totalLength.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.gridLayout_3.addWidget(self.totalLength, 3, 1, 1, 1)
-
         self.line_2 = QFrame(self.selectionTab)
         self.line_2.setObjectName(u"line_2")
         self.line_2.setFrameShape(QFrame.Shape.HLine)
         self.line_2.setFrameShadow(QFrame.Shadow.Sunken)
 
-        self.gridLayout_3.addWidget(self.line_2, 1, 0, 1, 3)
-
-        self.totalLengthToEdit = QLabel(self.selectionTab)
-        self.totalLengthToEdit.setObjectName(u"totalLengthToEdit")
-        self.totalLengthToEdit.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.gridLayout_3.addWidget(self.totalLengthToEdit, 3, 0, 1, 1)
-
-        self.filesToEdit = QLabel(self.selectionTab)
-        self.filesToEdit.setObjectName(u"filesToEdit")
-        self.filesToEdit.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.gridLayout_3.addWidget(self.filesToEdit, 2, 0, 1, 1)
-
-        self.filesFound = QLabel(self.selectionTab)
-        self.filesFound.setObjectName(u"filesFound")
-        self.filesFound.setSizeIncrement(QSize(107, 0))
-        self.filesFound.setBaseSize(QSize(38, 0))
-        self.filesFound.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.gridLayout_3.addWidget(self.filesFound, 2, 1, 1, 1)
+        self.gridLayout_3.addWidget(self.line_2, 1, 1, 1, 3)
 
         self.horizontalLayout_4 = QHBoxLayout()
         self.horizontalLayout_4.setSpacing(11)
@@ -114,7 +88,7 @@ class Ui_BatchEditor(object):
         self.horizontalLayout_4.addWidget(self.rootDirectoryLabel)
 
 
-        self.gridLayout_3.addLayout(self.horizontalLayout_4, 0, 0, 1, 3)
+        self.gridLayout_3.addLayout(self.horizontalLayout_4, 0, 1, 1, 3)
 
         self.editSelectedFilesButton = QPushButton(self.selectionTab)
         self.editSelectedFilesButton.setObjectName(u"editSelectedFilesButton")
@@ -123,7 +97,33 @@ class Ui_BatchEditor(object):
         self.editSelectedFilesButton.setChecked(False)
         self.editSelectedFilesButton.setFlat(False)
 
-        self.gridLayout_3.addWidget(self.editSelectedFilesButton, 2, 2, 1, 1)
+        self.gridLayout_3.addWidget(self.editSelectedFilesButton, 2, 3, 1, 1)
+
+        self.filesToEdit = QLabel(self.selectionTab)
+        self.filesToEdit.setObjectName(u"filesToEdit")
+        self.filesToEdit.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout_3.addWidget(self.filesToEdit, 2, 2, 1, 1)
+
+        self.filesFound = QLabel(self.selectionTab)
+        self.filesFound.setObjectName(u"filesFound")
+        self.filesFound.setSizeIncrement(QSize(107, 0))
+        self.filesFound.setBaseSize(QSize(38, 0))
+        self.filesFound.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout_3.addWidget(self.filesFound, 2, 1, 1, 1)
+
+        self.totalLengthToEdit = QLabel(self.selectionTab)
+        self.totalLengthToEdit.setObjectName(u"totalLengthToEdit")
+        self.totalLengthToEdit.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout_3.addWidget(self.totalLengthToEdit, 3, 2, 1, 1)
+
+        self.totalLength = QLabel(self.selectionTab)
+        self.totalLength.setObjectName(u"totalLength")
+        self.totalLength.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout_3.addWidget(self.totalLength, 3, 1, 1, 1)
 
 
         self.verticalLayout.addLayout(self.gridLayout_3)
@@ -268,10 +268,6 @@ class Ui_BatchEditor(object):
     def retranslateUi(self, BatchEditor):
         BatchEditor.setWindowTitle(QCoreApplication.translate("BatchEditor", u"Batch Editor", None))
         self.helpButton.setText("")
-        self.totalLength.setText(QCoreApplication.translate("BatchEditor", u"0 min total", None))
-        self.totalLengthToEdit.setText(QCoreApplication.translate("BatchEditor", u"0 min to edit", None))
-        self.filesToEdit.setText(QCoreApplication.translate("BatchEditor", u"0 files to edit", None))
-        self.filesFound.setText(QCoreApplication.translate("BatchEditor", u"0 files found", None))
 #if QT_CONFIG(tooltip)
         self.selectRootDirectoryButton.setToolTip(QCoreApplication.translate("BatchEditor", u"Browse and select the base folder containing the videos you want to process", None))
 #endif // QT_CONFIG(tooltip)
@@ -281,6 +277,10 @@ class Ui_BatchEditor(object):
         self.editSelectedFilesButton.setToolTip(QCoreApplication.translate("BatchEditor", u"Open the file list to manually enable/disable certain videos from the batch", None))
 #endif // QT_CONFIG(tooltip)
         self.editSelectedFilesButton.setText(QCoreApplication.translate("BatchEditor", u"edit selected files", None))
+        self.filesToEdit.setText(QCoreApplication.translate("BatchEditor", u"0 files to edit", None))
+        self.filesFound.setText(QCoreApplication.translate("BatchEditor", u"0 files found", None))
+        self.totalLengthToEdit.setText(QCoreApplication.translate("BatchEditor", u"0 min to edit", None))
+        self.totalLength.setText(QCoreApplication.translate("BatchEditor", u"0 min total", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.selectionTab), QCoreApplication.translate("BatchEditor", u"Select", None))
 #if QT_CONFIG(tooltip)
         self.marginLabel.setToolTip(QCoreApplication.translate("BatchEditor", u"control how many seconds of padding are kept around each loud segment. ", None))
