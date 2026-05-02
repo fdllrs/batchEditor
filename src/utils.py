@@ -1,8 +1,5 @@
-from bs4 import BeautifulSoup
-import os
 import subprocess
 import cv2
-from pathlib import Path
 
 def total_duration(listOfDurations):
     duration_minutes = sum(listOfDurations.values())
