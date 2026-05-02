@@ -4,6 +4,7 @@ import threading
 from PySide6 import QtCore
 from processing_options import ProcessingOptions
 from pathlib import Path
+from utils import get_auto_editor_path
 from PySide6 import QtCore
 import subprocess
 
@@ -12,8 +13,7 @@ def _auto_editor_base_cmd(options: ProcessingOptions, path: Path) -> list[str]:
     """Return the base auto-editor invocation for *path*."""
     export_arg = f'{options.export_option}:name="{path.stem}"'
 
-    settings = QtCore.QSettings("fdllrs", "BatchEditor")
-    ae_path = settings.value("auto_editor_path", "auto-editor")
+    ae_path = get_auto_editor_path()
 
     return [ae_path, str(path),
             "--margin", f"{options.margin}sec",

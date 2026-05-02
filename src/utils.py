@@ -1,5 +1,6 @@
 import subprocess
 import cv2
+from PySide6 import QtCore
 
 def total_duration(listOfDurations):
     duration_minutes = sum(listOfDurations.values())
@@ -52,5 +53,27 @@ def format_duration(duration_secs):
     if hours > 0:
         return "{:d}:{:02d}:{:02d}".format(hours, mins, secs)
     return "{:02d}:{:02d}".format(mins, secs)
+
+
+def get_auto_editor_path() -> str:
+    """Return the currently configured path to the auto-editor executable."""
+    settings = QtCore.QSettings("fdllrs", "BatchEditor")
+    return str(settings.value("auto_editor_path", "auto-editor"))
+
+
+def get_auto_editor_version(exe_path: str):
+    """Execute 'auto-editor --version' and return the process result."""
+    cmd = [exe_path, "--version"]
+    kwargs = {}
+    if hasattr(subprocess, 'CREATE_NO_WINDOW'):
+        kwargs['creationflags'] = subprocess.CREATE_NO_WINDOW
+
+    return subprocess.run(
+        cmd,
+        capture_output=True,
+        timeout=10,
+        text=True,
+        **kwargs
+    )
 
 

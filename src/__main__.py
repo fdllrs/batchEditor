@@ -4,41 +4,22 @@ from PySide6 import QtWidgets, QtCore
 from batch_editor_controller import BatchEditorController
 
 
-def get_auto_editor_path() -> str:
-    settings = QtCore.QSettings("fdllrs", "BatchEditor")
-    return str(settings.value("auto_editor_path", "auto-editor"))
+from utils import get_auto_editor_path, get_auto_editor_version
 
 
-def _is_valid_auto_editor() -> bool:
+def _is_valid_auto_editor(exe_path: str) -> bool:
     """Check if the given path points to a valid auto-editor executable."""
-
     try:
-        result = get_auto_editor_version()
+        result = get_auto_editor_version(exe_path)
 
         return result.returncode == 0
     except Exception:
         return False
 
-def get_auto_editor_version():
-    exe_path = get_auto_editor_path()
-
-    cmd = [exe_path, "--version"]
-    kwargs = {}
-    if hasattr(subprocess, 'CREATE_NO_WINDOW'):
-        kwargs['creationflags'] = subprocess.CREATE_NO_WINDOW
-
-    result = subprocess.run(
-            cmd,
-            capture_output=True, timeout=10, text=True,
-            **kwargs
-        )
-    
-    return result
-
 
 def _check_auto_editor() -> bool:
     """Return True if the configured auto-editor is valid."""
-    return _is_valid_auto_editor()
+    return _is_valid_auto_editor(get_auto_editor_path())
 
 
 def _check_python() -> bool:

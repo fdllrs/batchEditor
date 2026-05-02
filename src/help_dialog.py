@@ -1,5 +1,6 @@
 from PySide6 import QtWidgets, QtCore, QtGui
 from version import __version__
+from utils import get_auto_editor_path, get_auto_editor_version
 
 
 _STEPS = [
@@ -136,7 +137,17 @@ class HelpDialog(QtWidgets.QDialog):
         # Footer with version and close button
         footer_layout = QtWidgets.QHBoxLayout()
 
-        version_label = QtWidgets.QLabel(f"v{__version__} - made by fdllrs")
+        ae_path = get_auto_editor_path()
+        ae_version = "unknown"
+        try:
+            res = get_auto_editor_version(ae_path)
+            if res.returncode == 0:
+                ae_version = res.stdout.strip()
+        except Exception:
+            pass
+
+        version_label = QtWidgets.QLabel(
+            f"v{__version__} (auto-editor v{ae_version}) - made by fdllrs")
         version_label.setStyleSheet("color: gray;")
 
         buttons = QtWidgets.QDialogButtonBox(
