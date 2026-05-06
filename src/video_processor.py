@@ -7,9 +7,11 @@ from pathlib import Path
 from utils import get_auto_editor_path
 from PySide6 import QtCore
 import subprocess
+from utils import audio_track_count
 
 
-def _auto_editor_base_cmd(options: ProcessingOptions, path: Path) -> list[str]:
+def _auto_editor_base_cmd(options: ProcessingOptions, path: Path,
+                           track_count: int) -> list[str]:
     """Return the base auto-editor invocation for *path*."""
     export_arg = f'{options.export_option}:name="{path.stem}"'
 
@@ -17,21 +19,22 @@ def _auto_editor_base_cmd(options: ProcessingOptions, path: Path) -> list[str]:
 
     return [ae_path, str(path),
             "--margin", f"{options.margin}sec",
-            "--edit", _build_edit_expr(options.track_thresholds),
+            "--edit", _build_edit_expr(options.track_thresholds, track_count),
             "--export", export_arg,
             ]
 
 
-def _build_edit_expr(track_thresholds: list[float]) -> str:
+def _build_edit_expr(track_thresholds: list[float], track_count: int) -> str:
     """Build the --edit expression from a list of per-track thresholds.
 
     Tracks with threshold < 0.0 are disabled (internal sentinel).
+    Only considers tracks that actually exist in the current file.
     Falls back to auto-editor's default 'audio' when no tracks are active.
     """
     active = [
         f"audio:stream={i},threshold={t / 100}"
         for i, t in enumerate(track_thresholds)
-        if t >= 0.0
+        if t >= 0.0 and i < track_count
     ]
     if len(active) > 1:
         return f"(or {' '.join(active)})"
@@ -40,7 +43,9 @@ def _build_edit_expr(track_thresholds: list[float]) -> str:
 
 def build_command(options: ProcessingOptions, path: Path) -> list[str]:
     """Return the full auto-editor command list for a single file."""
-    command = _auto_editor_base_cmd(options, path)
+    track_count = audio_track_count(path)
+
+    command = _auto_editor_base_cmd(options, path, track_count)
 
     if options.split_only:
         return command + [

@@ -4,7 +4,7 @@ from PySide6 import QtCore
 # Built-in defaults — used when no saved config exists.
 _DEFAULT_CONFIG: dict = {
     "export_option": "premiere",
-    "track_thresholds": [-1.0, 4.0, 2.0, -1.0],
+    "track_thresholds": [4.0, 4.0, 2.0, -1.0],
     "margin": 0.2,
     "split_only": False,
 }

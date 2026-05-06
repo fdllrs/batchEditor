@@ -146,10 +146,15 @@ class BatchEditorController:
         padding with -1.0 for any newly discovered tracks."""
         self.max_audio_channels = max_tracks
         current = self.track_thresholds
-        self.track_thresholds = [
-            current[i] if i < len(current) else -1.0
-            for i in range(max_tracks)
-        ]
+        # Ensure track_thresholds always has at least max_tracks items.
+        # We don't truncate here because we want to preserve loaded settings
+        # that might apply to files with more tracks than the current max.
+        # The processor will handle limiting these to what's available per-file.
+        if len(current) < max_tracks:
+            self.track_thresholds = [
+                current[i] if i < len(current) else -1.0
+                for i in range(max_tracks)
+            ]
 
     def update_to_edit_files(self):
         threshold_secs = _DEFAULT_MIN_LENGTH_MINUTES * 60
@@ -291,15 +296,11 @@ class BatchEditorController:
                 self.view.exportSelector.setCurrentText(label)
 
         if "track_thresholds" in config:
+            # Sync thresholds and the track count so the tuner dialog and
+            # subsequent track-count checks are consistent.
             loaded = config["track_thresholds"]
-            # To ensure we don't truncate loaded settings on startup, we take the
-            # loaded values. We ensure it's at least padded to the current max
-            # known tracks.
-            n = max(len(loaded), self.max_audio_channels)
-            self.track_thresholds = [
-                loaded[i] if i < len(loaded) else -1.0
-                for i in range(n)
-            ]
+            self.track_thresholds = list(loaded)
+            self.max_audio_channels = max(self.max_audio_channels, len(self.track_thresholds))
 
         if "margin" in config:
             self.view.marginSpinbox.setValue(config["margin"])
